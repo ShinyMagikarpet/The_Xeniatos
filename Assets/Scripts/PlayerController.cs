@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
             isDashing = false;
         }
 
-        if (Input.GetKeyUp(KeyCode.W) && isDashing) {
+        if ((Input.GetKeyUp(KeyCode.W) && isDashing)) {
             isDashing = false;
         }
 
