@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
+    #region Variables
     private CharacterController controller;
     public float speed;
     public float dashSpeed;
     private bool isDashing;
     public float airSpeed;
-    public float jump_speed;
-    private float gravity = 6.0f;
+    public float jumpSpeed;
+    private float gravity = -9.81f;
+    private float verticalVelocity = 0;
 
     //Mouse controls
     public float mouseSensitivity;
@@ -21,7 +22,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 movement = Vector3.zero;
 
     public Camera cam;
-    // Start is called before the first frame update
+    #endregion
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -32,7 +34,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        #region Movement
         mouseHorizontal = Input.GetAxis("Mouse X") * mouseSensitivity;
         transform.Rotate(0, mouseHorizontal, 0);
 
@@ -40,25 +42,17 @@ public class PlayerController : MonoBehaviour
         mouseVertical = Mathf.Clamp(mouseVertical, -lookUpRange, lookUpRange);
         cam.transform.localRotation = Quaternion.Euler(mouseVertical, 0, 0);
 
+        float forwardMovement = Input.GetAxis("Vertical") * speed;
+        float sideMovement = Input.GetAxis("Horizontal") * speed;
 
-        //Ground Movement
-        if (controller.isGrounded) {
-            movement = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
-            movement = transform.TransformDirection(movement);
-            movement *= speed;
-            if (Input.GetButton("Jump")) {
-                movement.y = jump_speed;
-            }
+        verticalVelocity += gravity * Time.deltaTime;
+        
+        
+        if(controller.isGrounded && Input.GetButtonDown("Jump")) {
+            verticalVelocity = jumpSpeed;
         }
 
-        //Air Movement
-        if (!controller.isGrounded) {
-            //movement = new Vector3(Input.GetAxis("Horizontal"), 0.0f, Input.GetAxis("Vertical"));
-            //movement = transform.TransformDirection(movement);
-            //movement *= airSpeed;
-            //Debug.Log("Trying to do air movement");
-
-        }
+        movement = new Vector3(sideMovement, verticalVelocity, forwardMovement);
 
         if (Input.GetButtonDown("Dash") && !isDashing) {
             isDashing = true;
@@ -76,8 +70,9 @@ public class PlayerController : MonoBehaviour
             movement *= dashSpeed;
         }
 
-        movement.y -= gravity * Time.deltaTime;
+        movement = transform.rotation * movement;
+
         controller.Move(movement * Time.deltaTime);
-        
+        #endregion
     }
 }
