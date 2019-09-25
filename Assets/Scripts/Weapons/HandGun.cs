@@ -7,7 +7,7 @@ public class HandGun : Weapon
 
         mName = "HandGun";
         mMaxAmmo = 20;
-        mAmmoCount = mMaxAmmo;
+        mAmmoCurrent = mMaxAmmo;
         mDamage = 12.5f;
         mRange = 200.0f;
         mReloadSpeed = 2.5f;

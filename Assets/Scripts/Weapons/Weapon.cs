@@ -1,17 +1,47 @@
-﻿
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
 public abstract class Weapon
 {
-    public string mName;
-    public float mDamage;
-    public float mROF;
-    public float mRange;
-    public float mReloadSpeed;
-    public float mSpread;
-    public int mAmmoCount;
-    public int mMaxAmmo;
-    public bool mIsProjectile;
+    public string mName;        /*<Name of weapon*/
+    public float mDamage;       /*<Amount of damage*/
+    public float mROF;          /*<Rate of fire*/
+    public float mRange;        /*<Max range*/
+    public float mReloadSpeed;  /*<Reload speed*/
+    public float mSpread;       /*<Weapon spread*/
+    public int mAmmoCurrent;      /*<Current loaded ammo*/
+    public int mMaxAmmo;        /*<Maximum carried ammo*/
+    public int mAmmoHeld;       /*<Current ammo being held*/
+    public bool mIsProjectile;  /*<Does weapon shoot projectiles*/
+
+    public Camera mCam;
 
     public void Fire_Weapon() {
+
+        if (mIsProjectile) {
+            Fire_Projectile();
+        } 
+        else {
+            Fire_Hitscan();
+        }
+
+    }
+
+    public void Fire_Hitscan() {
+        Vector3 rayOrigin = mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
+        RaycastHit hit;
+
+        //Debug.DrawRay(rayOrigin, mCam.transform.forward * mRange, Color.cyan);
+
+        if (Physics.Raycast(rayOrigin, mCam.transform.forward, out hit, mRange)) {
+            if (hit.collider.CompareTag("Player"))
+                Debug.Log("You hit " + hit.collider.name);
+        }
+
+    }
+
+    public void Fire_Projectile() {
 
     }
 
