@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     [HideInInspector]
     public bool mIsDead = false;
     public Weapon mPlayerWeapon;
+    public Text ammoText;
 
     void Start()
     {
@@ -17,8 +19,13 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        ammoText.text = mPlayerWeapon.mAmmoLoaded.ToString() + '/' +
+            mPlayerWeapon.mAmmoHeld.ToString();
+
         if (Input.GetButtonDown("Fire1")) {
             mPlayerWeapon.Fire_Weapon();
         }
+
+
     }
 }

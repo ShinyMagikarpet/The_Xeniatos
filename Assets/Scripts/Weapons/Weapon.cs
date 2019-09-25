@@ -10,7 +10,8 @@ public abstract class Weapon
     public float mRange;        /*<Max range*/
     public float mReloadSpeed;  /*<Reload speed*/
     public float mSpread;       /*<Weapon spread*/
-    public int mAmmoCurrent;      /*<Current loaded ammo*/
+    public int mAmmoLoaded;     /*<Current loaded ammo*/
+    public int mMaxAmmoLoaded;  /*<Max Ammo allowed to be loaded*/
     public int mMaxAmmo;        /*<Maximum carried ammo*/
     public int mAmmoHeld;       /*<Current ammo being held*/
     public bool mIsProjectile;  /*<Does weapon shoot projectiles*/
@@ -29,15 +30,24 @@ public abstract class Weapon
     }
 
     public void Fire_Hitscan() {
+
+        if(mAmmoLoaded <= 0){
+            mAmmoLoaded = 0;
+            return;
+        }
+
         Vector3 rayOrigin = mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
+        
         //Debug.DrawRay(rayOrigin, mCam.transform.forward * mRange, Color.cyan);
 
         if (Physics.Raycast(rayOrigin, mCam.transform.forward, out hit, mRange)) {
             if (hit.collider.CompareTag("Player"))
                 Debug.Log("You hit " + hit.collider.name);
         }
+
+        mAmmoLoaded--;  
 
     }
 
