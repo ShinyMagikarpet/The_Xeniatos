@@ -5,15 +5,29 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+
+    public enum PlayerState {
+        Idle,
+        Walking,
+        Sprinting,
+        Jumping,
+        Shooting,
+        Reloading,
+        Dead
+    };
+
     [HideInInspector]
     public bool mIsDead = false;
     public Weapon mPlayerWeapon;
     public Text ammoText;
+    public PlayerState state;
 
     void Start()
     {
         mPlayerWeapon = GetComponentInChildren<Weapon>();
         mPlayerWeapon.mCam = GetComponentInChildren<Camera>();
+        mPlayerWeapon.mOwner = this;
+        state = PlayerState.Idle;
     }
 
     // Update is called once per frame

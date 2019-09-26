@@ -18,9 +18,11 @@ public abstract class Weapon : MonoBehaviour
     public int mMaxAmmo;        /*<Maximum carried ammo*/
     public int mAmmoHeld;       /*<Current ammo being held*/
     public bool mIsProjectile;  /*<Does weapon shoot projectiles*/
+    [HideInInspector]
+    public Player mOwner;
 
     private float mTimeToNextFire;
-    private bool mCanReload = true;
+    private bool mIsReloading = false;
 
     public Camera mCam;
 
@@ -41,6 +43,9 @@ public abstract class Weapon : MonoBehaviour
             mAmmoLoaded = 0;
             return;
         }
+
+        if (mIsReloading)
+            return;
 
         if (Time.time > mTimeToNextFire){
 
@@ -69,34 +74,34 @@ public abstract class Weapon : MonoBehaviour
 
     public void Reload_Weapon() {
 
-        if (!mCanReload || mAmmoLoaded == mMaxAmmoLoaded || mAmmoHeld == 0)
+        if (mIsReloading || mAmmoLoaded == mMaxAmmoLoaded || mAmmoHeld == 0)
             return;
 
 
         StartCoroutine(Reloading(mReloadSpeed));
-        if (mAmmoHeld >= mMaxAmmoLoaded && mAmmoLoaded == 0) {
-            mAmmoHeld -= mMaxAmmoLoaded;
-            mAmmoLoaded = mMaxAmmoLoaded;
-        }
-        else if (mAmmoHeld >= mMaxAmmoLoaded && mAmmoLoaded > 0) {
-            int difference = mMaxAmmoLoaded - mAmmoLoaded;
-            mAmmoLoaded += difference;
-            mAmmoHeld -= difference;
-        }
-        else {
-            mAmmoLoaded = mAmmoHeld;
-            mAmmoHeld = 0;
-        }
         
 
     }
 
     IEnumerator Reloading(float time) {
 
-        mCanReload = false;
-        Debug.Log("Reloading....");
+        mIsReloading = true;
+        mOwner.state = Player.PlayerState.Reloading;
+
         yield return new WaitForSeconds(time);
-        Debug.Log("Finished Reloading!");
-        mCanReload = true;
+
+        if (mAmmoHeld >= mMaxAmmoLoaded && mAmmoLoaded == 0) {
+            mAmmoHeld -= mMaxAmmoLoaded;
+            mAmmoLoaded = mMaxAmmoLoaded;
+        } else if (mAmmoHeld >= mMaxAmmoLoaded && mAmmoLoaded > 0) {
+            int difference = mMaxAmmoLoaded - mAmmoLoaded;
+            mAmmoLoaded += difference;
+            mAmmoHeld -= difference;
+        } else {
+            mAmmoLoaded = mAmmoHeld;
+            mAmmoHeld = 0;
+        }
+
+        mIsReloading = false;
     }
 }
