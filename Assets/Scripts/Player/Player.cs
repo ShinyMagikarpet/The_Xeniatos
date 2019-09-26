@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        mPlayerWeapon = new HandGun();
+        mPlayerWeapon = GetComponentInChildren<Weapon>();
         mPlayerWeapon.mCam = GetComponentInChildren<Camera>();
     }
 
@@ -24,6 +24,10 @@ public class Player : MonoBehaviour
 
         if (Input.GetButtonDown("Fire1")) {
             mPlayerWeapon.Fire_Weapon();
+        }
+
+        if (Input.GetButtonDown("Reload")) {
+            mPlayerWeapon.Reload_Weapon();
         }
 
 

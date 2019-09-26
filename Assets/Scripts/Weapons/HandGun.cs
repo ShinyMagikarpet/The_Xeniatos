@@ -13,7 +13,7 @@ public class HandGun : Weapon
         mDamage = 12.5f;
         mRange = 200.0f;
         mReloadSpeed = 2.5f;
-        mROF = 0.1f;
+        mROF = 0.15f;
         mIsProjectile = false;
 
     }

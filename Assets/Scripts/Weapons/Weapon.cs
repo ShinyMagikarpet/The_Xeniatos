@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Weapon
+
+
+public abstract class Weapon : MonoBehaviour
 {
+
     public string mName;        /*<Name of weapon*/
     public float mDamage;       /*<Amount of damage*/
     public float mROF;          /*<Rate of fire*/
@@ -17,6 +20,7 @@ public abstract class Weapon
     public bool mIsProjectile;  /*<Does weapon shoot projectiles*/
 
     private float mTimeToNextFire;
+    private bool mCanReload = true;
 
     public Camera mCam;
 
@@ -65,5 +69,34 @@ public abstract class Weapon
 
     public void Reload_Weapon() {
 
+        if (!mCanReload || mAmmoLoaded == mMaxAmmoLoaded || mAmmoHeld == 0)
+            return;
+
+
+        StartCoroutine(Reloading(mReloadSpeed));
+        if (mAmmoHeld >= mMaxAmmoLoaded && mAmmoLoaded == 0) {
+            mAmmoHeld -= mMaxAmmoLoaded;
+            mAmmoLoaded = mMaxAmmoLoaded;
+        }
+        else if (mAmmoHeld >= mMaxAmmoLoaded && mAmmoLoaded > 0) {
+            int difference = mMaxAmmoLoaded - mAmmoLoaded;
+            mAmmoLoaded += difference;
+            mAmmoHeld -= difference;
+        }
+        else {
+            mAmmoLoaded = mAmmoHeld;
+            mAmmoHeld = 0;
+        }
+        
+
+    }
+
+    IEnumerator Reloading(float time) {
+
+        mCanReload = false;
+        Debug.Log("Reloading....");
+        yield return new WaitForSeconds(time);
+        Debug.Log("Finished Reloading!");
+        mCanReload = true;
     }
 }
