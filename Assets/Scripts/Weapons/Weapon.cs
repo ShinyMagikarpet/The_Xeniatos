@@ -61,6 +61,11 @@ public abstract class Weapon : MonoBehaviour
             if (Physics.Raycast(rayOrigin, mCam.transform.forward, out hit, mRange)){
                 if (hit.collider.CompareTag("Player"))
                     Debug.Log("You hit " + hit.collider.name);
+
+                if (hit.collider.CompareTag("Environment")) {
+                    hit.collider.GetComponent<Rigidbody>().AddForce(mCam.transform.forward * 100.0f);
+                    Debug.Log("You hit an environmental piece named " + hit.collider.name);
+                }
             }
 
             mAmmoLoaded--;
