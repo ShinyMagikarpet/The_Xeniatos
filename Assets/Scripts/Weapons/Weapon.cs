@@ -18,13 +18,19 @@ public abstract class Weapon : MonoBehaviour
     public int mMaxAmmo;        /*<Maximum carried ammo*/
     public int mAmmoHeld;       /*<Current ammo being held*/
     public bool mIsProjectile;  /*<Does weapon shoot projectiles*/
+    public  Projectile bullet;
     [HideInInspector]
     public Player mOwner;
 
     private float mTimeToNextFire;
     private bool mIsReloading = false;
+    private ObjectPool objectPool;
 
     public Camera mCam;
+
+    public void Start() {
+        objectPool = ObjectPool.Instance;
+    }
 
     public void Fire_Weapon() {
 
@@ -74,6 +80,10 @@ public abstract class Weapon : MonoBehaviour
     }
 
     public void Fire_Projectile() {
+
+        Projectile projectile = objectPool.SpawnFromPool(bullet.mName).GetComponent<Projectile>();
+        projectile.Shoot_Projectile(projectile, mCam.transform, mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.0f, 0)));
+        
 
     }
 

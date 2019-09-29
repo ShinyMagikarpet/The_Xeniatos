@@ -55,6 +55,7 @@ MonoBehaviour:
   mMaxAmmo: 80
   mAmmoHeld: 80
   mIsProjectile: 0
+  bullet: {fileID: -8414112162220268246, guid: f1a4cecf5e76bf84d87d4a7e4d96df28, type: 3}
   mOwner: {fileID: 0}
   mCam: {fileID: 0}
 --- !u!1001 &6161340945628823018

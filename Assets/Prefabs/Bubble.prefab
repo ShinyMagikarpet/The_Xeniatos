@@ -13,8 +13,9 @@ GameObject:
   - component: {fileID: 1263107829922079560}
   - component: {fileID: 3692545344161554629}
   - component: {fileID: 8497802725277083658}
+  - component: {fileID: -8414112162220268246}
   m_Layer: 0
-  m_Name: Bullet
+  m_Name: Bubble
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -101,11 +102,26 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1109893743282492967}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 0.5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
+--- !u!114 &-8414112162220268246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109893743282492967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 565d6efe8bc1b664894c4b8ae2f49066, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mSpeed: 1000
+  mTTL: 3
+  mName: Bubble
