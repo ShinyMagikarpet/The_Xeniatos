@@ -33,6 +33,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         ammoText.text = mPlayerWeapon.mAmmoLoaded.ToString() + '/' +
             mPlayerWeapon.mAmmoHeld.ToString();
 
@@ -44,6 +45,6 @@ public class Player : MonoBehaviour
             mPlayerWeapon.Reload_Weapon();
         }
 
-
+        
     }
 }

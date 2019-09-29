@@ -81,8 +81,23 @@ public abstract class Weapon : MonoBehaviour
 
     public void Fire_Projectile() {
 
-        Projectile projectile = objectPool.SpawnFromPool(bullet.mName).GetComponent<Projectile>();
-        projectile.Shoot_Projectile(projectile, mCam.transform, mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.0f, 0)));
+        if (mAmmoLoaded <= 0) {
+            mAmmoLoaded = 0;
+            return;
+        }
+
+        if (mIsReloading)
+            return;
+
+        if (Time.time > mTimeToNextFire) {
+
+            mTimeToNextFire = Time.time + mROF;
+
+            Projectile projectile = objectPool.SpawnFromPool(bullet.mName).GetComponent<Projectile>();
+            projectile.Shoot_Projectile(projectile, mCam.transform, mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1.5f)));
+
+            mAmmoLoaded--;
+        }
         
 
     }
@@ -110,6 +125,19 @@ public abstract class Weapon : MonoBehaviour
             mAmmoLoaded = mMaxAmmoLoaded;
         } else if (mAmmoHeld >= mMaxAmmoLoaded && mAmmoLoaded > 0) {
             int difference = mMaxAmmoLoaded - mAmmoLoaded;
+            mAmmoLoaded += difference;
+            mAmmoHeld -= difference;
+        } else if (mAmmoHeld < mMaxAmmoLoaded && mAmmoLoaded > 0) {
+
+            int difference;
+            int ammoNeeded = mMaxAmmoLoaded - mAmmoLoaded;
+            Debug.Log("Ammo needed = " + ammoNeeded);
+            if (ammoNeeded < mAmmoHeld)
+                difference = mAmmoHeld - ammoNeeded;
+            else
+                difference = mAmmoHeld;
+            
+
             mAmmoLoaded += difference;
             mAmmoHeld -= difference;
         } else {
