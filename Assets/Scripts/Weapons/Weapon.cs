@@ -7,20 +7,27 @@ using UnityEngine;
 public abstract class Weapon : MonoBehaviour
 {
 
-    public string mName;        /*<Name of weapon*/
-    public float mDamage;       /*<Amount of damage*/
-    public float mROF;          /*<Rate of fire*/
-    public float mRange;        /*<Max range*/
-    public float mReloadSpeed;  /*<Reload speed*/
-    public float mSpread;       /*<Weapon spread*/
-    public int mAmmoLoaded;     /*<Current loaded ammo*/
-    public int mMaxAmmoLoaded;  /*<Max Ammo allowed to be loaded*/
-    public int mMaxAmmo;        /*<Maximum carried ammo*/
-    public int mAmmoHeld;       /*<Current ammo being held*/
-    public bool mIsProjectile;  /*<Does weapon shoot projectiles*/
-    public  Projectile bullet;
+    public enum Fire_Type{
+        single,
+        Burst,
+        fully_Auto
+    }
+
+    public string mName;            /*<Name of weapon*/
+    public float mDamage;           /*<Amount of damage*/
+    public float mROF;              /*<Rate of fire*/
+    public float mRange;            /*<Max range*/
+    public float mReloadSpeed;      /*<Reload speed*/
+    public float mSpread;           /*<Weapon spread*/
+    public int mAmmoLoaded;         /*<Current loaded ammo*/
+    public int mMaxAmmoLoaded;      /*<Max Ammo allowed to be loaded*/
+    public int mMaxAmmo;            /*<Maximum carried ammo*/
+    public int mAmmoHeld;           /*<Current ammo being held*/
+    public Fire_Type mFire_Type;    /*<Fire mode for weapon*/
+    public bool mIsProjectile;      /*<Does weapon shoot projectiles*/
+    public  Projectile bullet;      /*<What projectile the weapon will be firing*/
     [HideInInspector]
-    public Player mOwner;
+    public Player mOwner;           /*<The owner of the weapon*/
 
     private float mTimeToNextFire;
     private bool mIsReloading = false;

@@ -42,7 +42,12 @@ public class Player : MonoBehaviour
 
         healthText.text = mCurrentHealth.ToString() + '/' + mMaxHealth.ToString();
 
-        if (Input.GetButtonDown("Fire1")) {
+        if (Input.GetButtonDown("Fire1") && mPlayerWeapon.mFire_Type == Weapon.Fire_Type.single) {
+            mPlayerWeapon.Fire_Weapon();
+        }
+
+        if(Input.GetButton("Fire1") && mPlayerWeapon.mFire_Type == Weapon.Fire_Type.fully_Auto) {
+            Debug.Log("Fire fully auto");
             mPlayerWeapon.Fire_Weapon();
         }
 
@@ -50,6 +55,9 @@ public class Player : MonoBehaviour
             mPlayerWeapon.Reload_Weapon();
         }
 
+        if (mPlayerWeapon.mOwner) {
+            mPlayerWeapon.tag = "Player";
+        }
         
     }
 }

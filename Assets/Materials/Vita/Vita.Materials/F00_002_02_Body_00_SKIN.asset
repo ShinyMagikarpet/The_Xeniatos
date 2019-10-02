@@ -16,13 +16,13 @@ Material:
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2450
   stringTagMap:
-    RenderType: Opaque
+    RenderType: TransparentCutout
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 56d8a4d8354f8fd4f90d8cd15bd78fde, type: 3}
+        m_Texture: {fileID: 2800000, guid: 795f81b0d2b86924fbfea06093fc1bcf, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
@@ -30,7 +30,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: a80022a4f8b6b5e48aff219af71757aa, type: 3}
+        m_Texture: {fileID: 2800000, guid: 93c4f5dd85e440e4586adc8fdb357ceb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OutlineWidthTexture:
@@ -46,7 +46,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShadeTexture:
-        m_Texture: {fileID: 2800000, guid: a80022a4f8b6b5e48aff219af71757aa, type: 3}
+        m_Texture: {fileID: 2800000, guid: 93c4f5dd85e440e4586adc8fdb357ceb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ShadingGradeTexture:

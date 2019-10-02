@@ -12,9 +12,10 @@ public class HandGun : Weapon
         mAmmoLoaded = mMaxAmmoLoaded;
         mDamage = 12.5f;
         mRange = 200.0f;
-        mReloadSpeed = 2.5f;
+        mReloadSpeed = 1.7f;
         mROF = 0.15f;
         mIsProjectile = false;
+        mFire_Type = Fire_Type.single;
 
     }
 
