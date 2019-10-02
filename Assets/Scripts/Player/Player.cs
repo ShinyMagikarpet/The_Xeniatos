@@ -18,8 +18,11 @@ public class Player : MonoBehaviour
 
     [HideInInspector]
     public bool mIsDead = false;
+    public int mMaxHealth = 100;
+    public int mCurrentHealth = 100;
     public Weapon mPlayerWeapon;
     public Text ammoText;
+    public Text healthText;
     public PlayerState state;
 
     void Start()
@@ -37,11 +40,13 @@ public class Player : MonoBehaviour
         ammoText.text = mPlayerWeapon.mAmmoLoaded.ToString() + '/' +
             mPlayerWeapon.mAmmoHeld.ToString();
 
+        healthText.text = mCurrentHealth.ToString() + '/' + mMaxHealth.ToString();
+
         if (Input.GetButtonDown("Fire1")) {
             mPlayerWeapon.Fire_Weapon();
         }
 
-        if (Input.GetButtonDown("Reload")) {
+        if (Input.GetButtonDown("Reload") || mPlayerWeapon.mAmmoLoaded == 0) {
             mPlayerWeapon.Reload_Weapon();
         }
 
