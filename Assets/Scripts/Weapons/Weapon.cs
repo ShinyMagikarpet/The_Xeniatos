@@ -9,7 +9,7 @@ public abstract class Weapon : MonoBehaviour
 
     public enum Fire_Type{
         single,
-        Burst,
+        Semi_Auto,
         fully_Auto
     }
 

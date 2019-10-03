@@ -31,6 +31,8 @@ public class Player : MonoBehaviour
         mPlayerWeapon.mCam = GetComponentInChildren<Camera>();
         mPlayerWeapon.mOwner = this;
         state = PlayerState.Idle;
+        ammoText = GameObject.Find("AmmoText").GetComponent<Text>();
+        healthText = GameObject.Find("HealthText").GetComponent<Text>();
     }
 
     // Update is called once per frame
