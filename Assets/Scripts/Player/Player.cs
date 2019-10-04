@@ -7,6 +7,8 @@ using Photon.Pun;
 public class Player : MonoBehaviourPunCallbacks
 {
 
+    
+
     public enum PlayerState {
         Idle,
         Walking,
@@ -66,6 +68,18 @@ public class Player : MonoBehaviourPunCallbacks
             mPlayerWeapon.tag = "Player";
         }
         */
+
+
+        Player_Inputs();
+
+        Debug.Log(WeaponRecipes.WeaponRecipeString(WeaponRecipes.gWeaponRecipes["Assault Rifle"]));
+
+        //foreach (KeyValuePair<string, int[]> entry in WeaponRecipes.gWeaponRecipes)
+        //{
+        //    Debug.Log(entry.Key);
+        //}
+
+
 
     }
 
