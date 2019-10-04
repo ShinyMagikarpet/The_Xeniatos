@@ -22,12 +22,14 @@ public class PlayerController : MonoBehaviour
     private Vector3 movement = Vector3.zero;
 
     public Camera cam;
+    private Player mPlayer;
     #endregion
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
         cam = GetComponentInChildren<Camera>();
+        mPlayer = GetComponent<Player>();
         isDashing = false;
     }
 
@@ -35,6 +37,11 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         #region Movement
+
+        if(mPlayer.state == Player.PlayerState.InMenu) {
+            return;
+        }
+
         mouseHorizontal = Input.GetAxis("Mouse X") * mouseSensitivity;
         transform.Rotate(0, mouseHorizontal, 0);
 

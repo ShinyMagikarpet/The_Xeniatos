@@ -62,7 +62,6 @@ public abstract class Weapon : MonoBehaviour
 
         if (Time.time > mTimeToNextFire){
 
-
             mTimeToNextFire = Time.time + mROF;
 
             Vector3 rayOrigin = mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));

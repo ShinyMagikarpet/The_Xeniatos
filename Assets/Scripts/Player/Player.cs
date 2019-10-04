@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class Player : MonoBehaviour
 {
@@ -13,7 +14,8 @@ public class Player : MonoBehaviour
         Jumping,
         Shooting,
         Reloading,
-        Dead
+        Dead,
+        InMenu
     };
 
     [HideInInspector]
@@ -33,6 +35,7 @@ public class Player : MonoBehaviour
         state = PlayerState.Idle;
         ammoText = GameObject.Find("AmmoText").GetComponent<Text>();
         healthText = GameObject.Find("HealthText").GetComponent<Text>();
+        name = PhotonNetwork.NickName;
     }
 
     // Update is called once per frame
@@ -44,21 +47,33 @@ public class Player : MonoBehaviour
 
         healthText.text = mCurrentHealth.ToString() + '/' + mMaxHealth.ToString();
 
-        if (Input.GetButtonDown("Fire1") && mPlayerWeapon.mFire_Type == Weapon.Fire_Type.single) {
+        if (Input.GetButtonDown("Cancel")) {
+
+            if(state != PlayerState.InMenu) {
+                Debug.Log("Entering menu");
+                state = PlayerState.InMenu;
+            } else {
+                Debug.Log("Leaving menu");
+                state = PlayerState.Idle;
+            }
+
+        }
+
+        if (Input.GetButtonDown("Fire1") && mPlayerWeapon.mFire_Type == Weapon.Fire_Type.single && state != PlayerState.InMenu) {
             mPlayerWeapon.Fire_Weapon();
         }
 
-        if(Input.GetButton("Fire1") && mPlayerWeapon.mFire_Type == Weapon.Fire_Type.fully_Auto) {
+        if(Input.GetButton("Fire1") && mPlayerWeapon.mFire_Type == Weapon.Fire_Type.fully_Auto && state != PlayerState.InMenu) {
             Debug.Log("Fire fully auto");
             mPlayerWeapon.Fire_Weapon();
         }
 
-        if (Input.GetButtonDown("Reload") || mPlayerWeapon.mAmmoLoaded == 0) {
+        if (Input.GetButtonDown("Reload") || mPlayerWeapon.mAmmoLoaded == 0 && state != PlayerState.InMenu) {
             mPlayerWeapon.Reload_Weapon();
         }
 
         if (mPlayerWeapon.mOwner) {
-            mPlayerWeapon.tag = "Player";
+            mPlayerWeapon.tag = name;
         }
         
     }

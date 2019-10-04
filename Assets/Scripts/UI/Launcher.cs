@@ -1,39 +1,38 @@
-﻿using Photon.Pun;
-using Photon.Realtime;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class NetworkController : MonoBehaviourPunCallbacks
+public class Launcher : MonoBehaviourPunCallbacks
 {
 
+    public InputField input;
+    [SerializeField]
+    private GameObject controlPanel;
+    [SerializeField]
+    private GameObject progressLabel;
 
-    public override void OnLeftRoom() {
-        SceneManager.LoadScene(0);
-    }
-
-    public void Leave_Room() {
-        PhotonNetwork.LeaveRoom();
-    }
-
-    /*
-    public Player_Spawn spawnSpot;
+    //public Player_Spawn spawnSpot;
     [SerializeField]
     private byte maxPlayersPerRoom = 8;
-    
 
     private void Awake() {
         PhotonNetwork.AutomaticallySyncScene = true;
     }
 
-    void Start()
-    {
-        Connect();
-        spawnSpot = FindObjectOfType<Player_Spawn>();
+    private void Start() {
+        controlPanel.SetActive(true);
+        progressLabel.SetActive(false);
     }
 
-    void Connect() {
+    public void Connect() {
+
+        controlPanel.SetActive(false);
+        progressLabel.SetActive(true);
+
         if (PhotonNetwork.IsConnected) {
             PhotonNetwork.JoinRandomRoom();
         } else {
@@ -41,8 +40,32 @@ public class NetworkController : MonoBehaviourPunCallbacks
         }
     }
 
+    public void Find_Game() {
+
+        if (!Valid_Input(input.text)) {
+            Debug.Log("Not valid input");
+            return;
+        }
+
+        Connect();
+
+        //Debug.Log("Switching scenes");
+        //SceneManager.LoadScene("Debug");
+    }
+
+    bool Valid_Input(string inputText) {
+
+        if (inputText.Length > 10 || string.IsNullOrWhiteSpace(inputText)) {
+            input.text = "";
+            return false;
+        }
+
+        PhotonNetwork.NickName = inputText;
+        return true;
+    }
+
     void OnGUI() {
-        GUILayout.Label(PhotonNetwork.NetworkClientState.ToString());    
+        GUILayout.Label(PhotonNetwork.NetworkClientState.ToString());
     }
 
     public override void OnConnectedToMaster() {
@@ -52,6 +75,8 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause) {
         Debug.LogWarningFormat("PUN Basics Tutorial/Launcher: OnDisconnected() was called by PUN with reason {0}", cause);
+        controlPanel.SetActive(true);
+        progressLabel.SetActive(false);
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message) {
@@ -63,7 +88,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom() {
         Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
-        PhotonNetwork.Instantiate("player", spawnSpot.transform.position, spawnSpot.transform.rotation, 0);
+        //PhotonNetwork.Instantiate("player", spawnSpot.transform.position, spawnSpot.transform.rotation, 0);
     }
-    */
+
 }
