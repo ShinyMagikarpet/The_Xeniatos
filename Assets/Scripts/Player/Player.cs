@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviourPunCallbacks
 {
 
     public enum PlayerState {
@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     };
 
     [HideInInspector]
-    public bool mIsDead = false;
+    public bool mIsDead = false;                    
     public int mMaxHealth = 100;
     public int mCurrentHealth = 100;
     public Weapon mPlayerWeapon;
@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
     public Text healthText;
     public PlayerState state;
     public GameObject mMenu;
+    public Dictionary<string, int> mResourceDict;
 
     void Start()
     {
@@ -36,9 +37,13 @@ public class Player : MonoBehaviour
         state = PlayerState.Idle;
         ammoText = GameObject.Find("AmmoText").GetComponent<Text>();
         healthText = GameObject.Find("HealthText").GetComponent<Text>();
-        Debug.Log("Nick name is " + PhotonNetwork.NickName);
-        name = PhotonNetwork.NickName;
+        this.name = PhotonNetwork.NickName;
         mMenu.SetActive(false);
+        mResourceDict = new Dictionary<string, int>();
+        mResourceDict.Add("Iron", 0);
+        mResourceDict.Add("Stone", 0);
+        mResourceDict.Add("Wood", 0);
+
     }
 
     // Update is called once per frame
@@ -50,9 +55,26 @@ public class Player : MonoBehaviour
 
         healthText.text = mCurrentHealth.ToString() + '/' + mMaxHealth.ToString();
 
+
+        if (photonView.IsMine) {
+            Player_Inputs();
+        }
+
+        /*
+         * If the weapon is owned, tag it for player
+        if (mPlayerWeapon.mOwner) {
+            mPlayerWeapon.tag = "Player";
+        }
+        */
+
+    }
+
+    void Player_Inputs() {
+
+        //Menu
         if (Input.GetButtonDown("Cancel")) {
 
-            if(state != PlayerState.InMenu) {
+            if (state != PlayerState.InMenu) {
                 Debug.Log("Entering menu");
                 state = PlayerState.InMenu;
                 mMenu.SetActive(true);
@@ -64,22 +86,22 @@ public class Player : MonoBehaviour
 
         }
 
+        //Single fire
         if (Input.GetButtonDown("Fire1") && mPlayerWeapon.mFire_Type == Weapon.Fire_Type.single && state != PlayerState.InMenu) {
             mPlayerWeapon.Fire_Weapon();
         }
 
-        if(Input.GetButton("Fire1") && mPlayerWeapon.mFire_Type == Weapon.Fire_Type.fully_Auto && state != PlayerState.InMenu) {
+        //Automatic fire
+        if (Input.GetButton("Fire1") && mPlayerWeapon.mFire_Type == Weapon.Fire_Type.fully_Auto && state != PlayerState.InMenu) {
             Debug.Log("Fire fully auto");
             mPlayerWeapon.Fire_Weapon();
         }
 
+        //Reload
         if (Input.GetButtonDown("Reload") || mPlayerWeapon.mAmmoLoaded == 0 && state != PlayerState.InMenu) {
             mPlayerWeapon.Reload_Weapon();
         }
 
-        if (mPlayerWeapon.mOwner) {
-            mPlayerWeapon.tag = "Player";
-        }
-        
     }
+
 }
