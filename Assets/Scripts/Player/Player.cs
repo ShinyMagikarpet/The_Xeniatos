@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     public Text ammoText;
     public Text healthText;
     public PlayerState state;
+    public GameObject mMenu;
 
     void Start()
     {
@@ -35,7 +36,9 @@ public class Player : MonoBehaviour
         state = PlayerState.Idle;
         ammoText = GameObject.Find("AmmoText").GetComponent<Text>();
         healthText = GameObject.Find("HealthText").GetComponent<Text>();
+        Debug.Log("Nick name is " + PhotonNetwork.NickName);
         name = PhotonNetwork.NickName;
+        mMenu.SetActive(false);
     }
 
     // Update is called once per frame
@@ -52,9 +55,11 @@ public class Player : MonoBehaviour
             if(state != PlayerState.InMenu) {
                 Debug.Log("Entering menu");
                 state = PlayerState.InMenu;
+                mMenu.SetActive(true);
             } else {
                 Debug.Log("Leaving menu");
                 state = PlayerState.Idle;
+                mMenu.SetActive(false);
             }
 
         }
@@ -73,7 +78,7 @@ public class Player : MonoBehaviour
         }
 
         if (mPlayerWeapon.mOwner) {
-            mPlayerWeapon.tag = name;
+            mPlayerWeapon.tag = "Player";
         }
         
     }

@@ -15,6 +15,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField]
     private GameObject progressLabel;
 
+    private bool isConnecting;
+
     //public Player_Spawn spawnSpot;
     [SerializeField]
     private byte maxPlayersPerRoom = 8;
@@ -30,6 +32,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void Connect() {
 
+        isConnecting = true;
         controlPanel.SetActive(false);
         progressLabel.SetActive(true);
 
@@ -48,9 +51,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
 
         Connect();
-
-        //Debug.Log("Switching scenes");
-        //SceneManager.LoadScene("Debug");
+        PhotonNetwork.NickName = input.text;
     }
 
     bool Valid_Input(string inputText) {
@@ -59,8 +60,6 @@ public class Launcher : MonoBehaviourPunCallbacks
             input.text = "";
             return false;
         }
-
-        PhotonNetwork.NickName = inputText;
         return true;
     }
 
@@ -70,7 +69,9 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster() {
         Debug.Log("PUN Basics Tutorial/Launcher: OnConnectedToMaster() was called by PUN");
-        PhotonNetwork.JoinRandomRoom();
+        if (isConnecting) {
+            PhotonNetwork.JoinRandomRoom();
+        }
     }
 
     public override void OnDisconnected(DisconnectCause cause) {
@@ -88,6 +89,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom() {
         Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
+        PhotonNetwork.LoadLevel("Debug");
         //PhotonNetwork.Instantiate("player", spawnSpot.transform.position, spawnSpot.transform.rotation, 0);
     }
 
