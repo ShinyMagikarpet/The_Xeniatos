@@ -27,8 +27,10 @@ public class Player : MonoBehaviourPunCallbacks
     public Weapon mPlayerWeapon;
     public Text ammoText;
     public Text healthText;
+    public Text collectText;
     public PlayerState state;
     public GameObject mMenu;
+    public GameObject mFullBodyMesh;
     public Dictionary<string, int> mResourceDict;
 
     void Start()
@@ -39,6 +41,7 @@ public class Player : MonoBehaviourPunCallbacks
         state = PlayerState.Idle;
         ammoText = GameObject.Find("AmmoText").GetComponent<Text>();
         healthText = GameObject.Find("HealthText").GetComponent<Text>();
+        mFullBodyMesh = Get_Player_Mesh(); 
         this.name = PhotonNetwork.NickName;
         mMenu.SetActive(false);
         mResourceDict = new Dictionary<string, int>();
@@ -72,18 +75,16 @@ public class Player : MonoBehaviourPunCallbacks
 
         Player_Inputs();
 
-        Debug.Log(WeaponRecipes.WeaponRecipeString(WeaponRecipes.gWeaponRecipes["Assault Rifle"]));
 
-        //foreach (KeyValuePair<string, int[]> entry in WeaponRecipes.gWeaponRecipes)
-        //{
-        //    Debug.Log(entry.Key);
-        //}
+        Player_Near_Object();
 
 
 
     }
 
     void Player_Inputs() {
+
+        Debug.DrawRay(mPlayerWeapon.mCam.transform.position, mPlayerWeapon.mCam.transform.TransformDirection(Vector3.forward) * 3, Color.cyan);
 
         //Menu
         if (Input.GetButtonDown("Cancel")) {
@@ -98,6 +99,18 @@ public class Player : MonoBehaviourPunCallbacks
                 mMenu.SetActive(false);
             }
 
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (!mFullBodyMesh.activeInHierarchy)
+            {
+                mFullBodyMesh.SetActive(true);
+            }
+            else
+            {
+                mFullBodyMesh.SetActive(false);
+            }
         }
 
         //Single fire
@@ -115,6 +128,45 @@ public class Player : MonoBehaviourPunCallbacks
         if (Input.GetButtonDown("Reload") || mPlayerWeapon.mAmmoLoaded == 0 && state != PlayerState.InMenu) {
             mPlayerWeapon.Reload_Weapon();
         }
+
+    }
+
+    public void Player_Near_Object()
+    {
+
+        Vector3 rayOrigin = mPlayerWeapon.mCam.transform.position;
+        RaycastHit hit;
+
+        if (Physics.Raycast(rayOrigin, mPlayerWeapon.mCam.transform.forward, out hit, 3.0f))
+        {
+            if (hit.collider.CompareTag("Resource"))
+            {
+                collectText.gameObject.SetActive(true);
+                collectText.text = ("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name());
+                return;
+            }
+        }
+        else
+        {
+            collectText.gameObject.SetActive(false);
+        }
+
+    }
+
+    GameObject Get_Player_Mesh(){
+
+        GameObject mesh = null;
+
+        for(int i = 0; i < transform.childCount; i++){
+            if (transform.GetChild(i).CompareTag("Mesh")){
+                mesh = transform.GetChild(i).gameObject;
+            }
+        }
+
+        if(mesh == null){
+            Debug.LogError("Mesh is null");
+        }
+        return mesh;
 
     }
 

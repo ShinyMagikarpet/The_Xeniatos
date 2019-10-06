@@ -7,6 +7,7 @@ TagManager:
   - Environment
   - Weapon_Pickup
   - Resource
+  - Mesh
   layers:
   - Default
   - TransparentFX
