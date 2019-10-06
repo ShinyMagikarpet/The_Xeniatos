@@ -17,7 +17,8 @@ public class Player : MonoBehaviourPunCallbacks
         Shooting,
         Reloading,
         Dead,
-        InMenu
+        InMenu,
+        Collecting
     };
 
     [HideInInspector]
@@ -65,19 +66,11 @@ public class Player : MonoBehaviourPunCallbacks
             Player_Inputs();
         }
 
-        /*
-         * If the weapon is owned, tag it for player
-        if (mPlayerWeapon.mOwner) {
-            mPlayerWeapon.tag = "Player";
-        }
-        */
-
 
         Player_Inputs();
 
-
-        Player_Near_Object();
-
+        if (state == PlayerState.Collecting)
+            Debug.Log("Player is currently collecting");
 
 
     }
@@ -85,6 +78,11 @@ public class Player : MonoBehaviourPunCallbacks
     void Player_Inputs() {
 
         Debug.DrawRay(mPlayerWeapon.mCam.transform.position, mPlayerWeapon.mCam.transform.TransformDirection(Vector3.forward) * 3, Color.cyan);
+
+        if(Player_Near_Resource() && Input.GetButtonDown("Interact"))
+        {
+            state = PlayerState.Collecting;
+        }
 
         //Menu
         if (Input.GetButtonDown("Cancel")) {
@@ -131,26 +129,37 @@ public class Player : MonoBehaviourPunCallbacks
 
     }
 
-    public void Player_Near_Object()
+    public bool Player_Near_Resource()
     {
 
         Vector3 rayOrigin = mPlayerWeapon.mCam.transform.position;
-        RaycastHit hit;
+        RaycastHit[] hits;
 
-        if (Physics.Raycast(rayOrigin, mPlayerWeapon.mCam.transform.forward, out hit, 3.0f))
-        {
+        hits = Physics.RaycastAll(rayOrigin, mPlayerWeapon.mCam.transform.TransformDirection(Vector3.forward), 3.0f);
+
+        foreach(RaycastHit hit in hits){
+
+            if (hit.collider.CompareTag("Resource") && state != PlayerState.Collecting){
+                collectText.gameObject.SetActive(true);
+                collectText.text = ("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name());
+                return true;
+            }
+        }
+
+        /*
+        if (Physics.Raycast(rayOrigin, mPlayerWeapon.mCam.transform.TransformDirection(Vector3.forward), out hit, 3.0f))
+        { 
+
             if (hit.collider.CompareTag("Resource"))
             {
                 collectText.gameObject.SetActive(true);
                 collectText.text = ("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name());
-                return;
+                return true;
             }
         }
-        else
-        {
-            collectText.gameObject.SetActive(false);
-        }
-
+        */
+        collectText.gameObject.SetActive(false);
+        return false;
     }
 
     GameObject Get_Player_Mesh(){

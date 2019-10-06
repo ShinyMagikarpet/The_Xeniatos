@@ -79,6 +79,8 @@ public class PlayerController : MonoBehaviour
 
         movement = transform.rotation * movement;
 
+        
+
         controller.Move(movement * Time.deltaTime);
         #endregion
     }
