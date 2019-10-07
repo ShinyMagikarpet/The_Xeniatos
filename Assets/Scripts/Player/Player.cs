@@ -29,13 +29,13 @@ public class Player : MonoBehaviourPunCallbacks
     public Text ammoText;
     public Text healthText;
     public Text collectText;
+    public Text[] resourceTexts;
     public PlayerState state;
     public GameObject mMenu;
     public GameObject mFullBodyMesh;
     public Dictionary<string, int> mResourceDict;
 
-    void Start()
-    {
+    void Start(){
         mPlayerWeapon = GetComponentInChildren<Weapon>();
         mPlayerWeapon.mCam = GetComponentInChildren<Camera>();
         mPlayerWeapon.mOwner = this;
@@ -46,21 +46,27 @@ public class Player : MonoBehaviourPunCallbacks
         this.name = PhotonNetwork.NickName;
         mMenu.SetActive(false);
         mResourceDict = new Dictionary<string, int>();
-        mResourceDict.Add("Iron", 0);
-        mResourceDict.Add("Stone", 0);
-        mResourceDict.Add("Wood", 0);
+        mResourceDict.Add("Iron", 1);
+        mResourceDict.Add("Stone", 2);
+        mResourceDict.Add("Wood", 3);
+        resourceTexts = new Text[3];
+        resourceTexts[0] = GameObject.Find("IronText").GetComponent<Text>();
+        resourceTexts[1] = GameObject.Find("StoneText").GetComponent<Text>();
+        resourceTexts[2] = GameObject.Find("WoodText").GetComponent<Text>();
 
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update(){
 
         ammoText.text = mPlayerWeapon.mAmmoLoaded.ToString() + '/' +
             mPlayerWeapon.mAmmoHeld.ToString();
 
         healthText.text = mCurrentHealth.ToString() + '/' + mMaxHealth.ToString();
 
+        for(int i = 0; i < 3; i++) {
+            resourceTexts[i].text = "x" + mResourceDict[resourceTexts[i].name.Substring(0, resourceTexts[i].name.Length - 4)];
+        }
 
         if (photonView.IsMine) {
             Player_Inputs();
@@ -99,8 +105,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
+        if (Input.GetKeyDown(KeyCode.Q)){
             if (!mFullBodyMesh.activeInHierarchy)
             {
                 mFullBodyMesh.SetActive(true);
