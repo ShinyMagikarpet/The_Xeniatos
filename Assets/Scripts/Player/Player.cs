@@ -46,9 +46,9 @@ public class Player : MonoBehaviourPunCallbacks
         this.name = PhotonNetwork.NickName;
         mMenu.SetActive(false);
         mResourceDict = new Dictionary<string, int>();
-        mResourceDict.Add("Iron", 1);
-        mResourceDict.Add("Stone", 2);
-        mResourceDict.Add("Wood", 3);
+        mResourceDict.Add("Iron", 100);
+        mResourceDict.Add("Stone", 200);
+        mResourceDict.Add("Wood", 300);
         resourceTexts = new Text[3];
         resourceTexts[0] = GameObject.Find("IronText").GetComponent<Text>();
         resourceTexts[1] = GameObject.Find("StoneText").GetComponent<Text>();
