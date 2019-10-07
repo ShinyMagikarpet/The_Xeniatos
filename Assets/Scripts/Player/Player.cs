@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
-public class Player : MonoBehaviourPunCallbacks
+public class Player : MonoBehaviour
 {
 
     
@@ -23,8 +23,8 @@ public class Player : MonoBehaviourPunCallbacks
 
     [HideInInspector]
     public bool mIsDead = false;                    
-    public int mMaxHealth = 100;
-    public int mCurrentHealth = 100;
+    public float mMaxHealth = 100f;
+    public float mCurrentHealth = 100f;
     public Weapon mPlayerWeapon;
     public Text ammoText;
     public Text healthText;
@@ -35,6 +35,8 @@ public class Player : MonoBehaviourPunCallbacks
     public GameObject mFullBodyMesh;
     public Dictionary<string, int> mResourceDict;
 
+    public static GameObject LocalPlayerInstance;
+
     void Start(){
         mPlayerWeapon = GetComponentInChildren<Weapon>();
         mPlayerWeapon.mCam = GetComponentInChildren<Camera>();
@@ -44,6 +46,8 @@ public class Player : MonoBehaviourPunCallbacks
         healthText = GameObject.Find("HealthText").GetComponent<Text>();
         mFullBodyMesh = Get_Player_Mesh(); 
         this.name = PhotonNetwork.NickName;
+        mMenu = GameObject.Find("MenuPanel");
+        collectText = GameObject.Find("CollectText").GetComponent<Text>();
         mMenu.SetActive(false);
         mResourceDict = new Dictionary<string, int>();
         mResourceDict.Add("Iron", 100);
@@ -68,18 +72,22 @@ public class Player : MonoBehaviourPunCallbacks
             resourceTexts[i].text = "x" + mResourceDict[resourceTexts[i].name.Substring(0, resourceTexts[i].name.Length - 4)];
         }
 
-        if (photonView.IsMine) {
-            Player_Inputs();
+        /*
+        if (!photonView.IsMine && PhotonNetwork.IsConnected) {
+            return;
         }
-
+        */
 
         Player_Inputs();
+
+        //Player_Inputs();
 
         if (state == PlayerState.Collecting)
             Debug.Log("Player is currently collecting");
 
 
     }
+
 
     void Player_Inputs() {
 

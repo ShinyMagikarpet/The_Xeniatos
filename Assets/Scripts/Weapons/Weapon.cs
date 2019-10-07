@@ -71,8 +71,10 @@ public abstract class Weapon : MonoBehaviour
             //Debug.DrawRay(rayOrigin, mCam.transform.forward * mRange, Color.cyan);
 
             if (Physics.Raycast(rayOrigin, mCam.transform.forward, out hit, mRange)){
-                if (hit.collider.CompareTag("Player"))
-                    Debug.Log("You hit " + hit.collider.name);
+                if (hit.collider.CompareTag("Player")) {
+                    hit.collider.GetComponent<Player>().mCurrentHealth -= mDamage;
+                }
+                    
 
                 if (hit.collider.CompareTag("Environment")) {
                     hit.collider.GetComponent<Rigidbody>().AddForce(mCam.transform.forward * 100.0f);

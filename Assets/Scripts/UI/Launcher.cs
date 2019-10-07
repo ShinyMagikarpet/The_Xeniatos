@@ -22,12 +22,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     private byte maxPlayersPerRoom = 8;
 
     private void Awake() {
-        PhotonNetwork.AutomaticallySyncScene = true;
+        Screen.fullScreenMode = FullScreenMode.Windowed;
     }
 
     private void Start() {
         controlPanel.SetActive(true);
         progressLabel.SetActive(false);
+        PhotonNetwork.ConnectUsingSettings();
     }
 
     public void Connect() {
@@ -37,9 +38,11 @@ public class Launcher : MonoBehaviourPunCallbacks
         progressLabel.SetActive(true);
 
         if (PhotonNetwork.IsConnected) {
+            Debug.Log("You are already connected");
             PhotonNetwork.JoinRandomRoom();
         } else {
-            PhotonNetwork.ConnectUsingSettings();
+            //PhotonNetwork.ConnectUsingSettings();
+            
         }
     }
 
@@ -69,6 +72,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster() {
         Debug.Log("PUN Basics Tutorial/Launcher: OnConnectedToMaster() was called by PUN");
+        PhotonNetwork.AutomaticallySyncScene = true;
         if (isConnecting) {
             PhotonNetwork.JoinRandomRoom();
         }
@@ -83,8 +87,9 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinRandomFailed(short returnCode, string message) {
         Debug.Log("PUN Basics Tutorial/Launcher:OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
 
+        RoomOptions roomOptions = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = maxPlayersPerRoom };
         // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
-        PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = maxPlayersPerRoom });
+        PhotonNetwork.CreateRoom(null, roomOptions);
     }
 
     public override void OnJoinedRoom() {

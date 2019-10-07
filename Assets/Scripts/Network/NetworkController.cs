@@ -8,6 +8,20 @@ using Photon.Realtime;
 public class NetworkController : MonoBehaviourPunCallbacks
 {
 
+    public GameObject mPlayerPrefab;
+
+    private void Start() {
+        
+        if(mPlayerPrefab == null) {
+            Debug.LogError("Need to place player prefab in this instance of the script", this);
+        } 
+        else {
+            if (Player.LocalPlayerInstance == null) {
+
+                PhotonNetwork.Instantiate(mPlayerPrefab.name, new Vector3(0, 1, 0), Quaternion.identity);
+            }
+        }
+    }
 
     public override void OnLeftRoom() {
         //PhotonNetwork.Disconnect();
@@ -34,6 +48,15 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient) {
             Debug.LogFormat("OnPlayerLeftRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
+        }
+    }
+
+    private void Update() {
+        if(PhotonNetwork.InRoom)
+            Debug.Log("There are " + PhotonNetwork.CurrentRoom.PlayerCount + " in this room");
+
+        foreach(Photon.Realtime.Player player in PhotonNetwork.PlayerList) {
+            Debug.Log(PhotonNetwork.NickName);
         }
     }
 
