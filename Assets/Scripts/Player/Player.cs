@@ -21,8 +21,7 @@ public class Player : MonoBehaviourPunCallbacks
         Collecting
     };
 
-    [HideInInspector]
-    public bool mIsDead = false;                    
+    [HideInInspector] public bool mIsDead = false;                    
     public float mMaxHealth = 100f;
     public float mCurrentHealth = 100f;
     public Weapon mPlayerWeapon;
@@ -38,6 +37,11 @@ public class Player : MonoBehaviourPunCallbacks
     public static GameObject LocalPlayerInstance;
 
     void Start(){
+        Camera camera = GetComponentInChildren<Camera>();
+        if (!photonView.IsMine) {
+            camera.enabled = false;
+            return;
+        }
         mPlayerWeapon = GetComponentInChildren<Weapon>();
         mPlayerWeapon.mCam = GetComponentInChildren<Camera>();
         mPlayerWeapon.mOwner = this;
@@ -57,10 +61,6 @@ public class Player : MonoBehaviourPunCallbacks
         resourceTexts[0] = GameObject.Find("IronText").GetComponent<Text>();
         resourceTexts[1] = GameObject.Find("StoneText").GetComponent<Text>();
         resourceTexts[2] = GameObject.Find("WoodText").GetComponent<Text>();
-        PlayerCamera camera = GetComponentInChildren<PlayerCamera>();
-        if (!photonView.IsMine) {
-            camera.gameObject.SetActive(false);
-        }
         if (photonView.IsMine) {
             mFullBodyMesh.SetActive(false);
         }

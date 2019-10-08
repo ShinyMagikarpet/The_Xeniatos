@@ -276,6 +276,7 @@ MonoBehaviour:
   state: 0
   mMenu: {fileID: 1091384523471950185, guid: eada7929ca5560a4d9bacc4b13c8ea87, type: 3}
   mFullBodyMesh: {fileID: 0}
+  mPlayerArmsMesh: {fileID: 1666254401502085625}
 --- !u!114 &8637115982040772044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,7 +339,7 @@ PrefabInstance:
     - target: {fileID: 6161340945064802417, guid: 9aa3d967a0f9074409194b535c9d1833,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.098
       objectReference: {fileID: 0}
     - target: {fileID: 6161340945064802417, guid: 9aa3d967a0f9074409194b535c9d1833,
         type: 3}
@@ -413,7 +414,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: aed0e1cc98fc9b64f8fd3b5398cc7e66,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.219
+      value: 0.117
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: aed0e1cc98fc9b64f8fd3b5398cc7e66,
         type: 3}
@@ -562,6 +563,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aed0e1cc98fc9b64f8fd3b5398cc7e66, type: 3}
+--- !u!1 &1666254401502085625 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: aed0e1cc98fc9b64f8fd3b5398cc7e66,
+    type: 3}
+  m_PrefabInstance: {fileID: 7223303875518388464}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2397287553676899306 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: aed0e1cc98fc9b64f8fd3b5398cc7e66,
