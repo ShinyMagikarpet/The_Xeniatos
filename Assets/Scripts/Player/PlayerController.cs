@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourPunCallbacks
 {
     #region Variables
     private CharacterController controller;
@@ -31,12 +32,20 @@ public class PlayerController : MonoBehaviour
         cam = GetComponentInChildren<Camera>();
         mPlayer = GetComponent<Player>();
         isDashing = false;
+
+        if (!photonView.IsMine) {
+            cam.enabled = false;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         #region Movement
+
+        if (!photonView.IsMine) {
+            return;
+        }
 
         if(mPlayer.state == Player.PlayerState.InMenu) {
             return;

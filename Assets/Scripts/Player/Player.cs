@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviourPunCallbacks
 {
 
     
@@ -57,6 +57,13 @@ public class Player : MonoBehaviour
         resourceTexts[0] = GameObject.Find("IronText").GetComponent<Text>();
         resourceTexts[1] = GameObject.Find("StoneText").GetComponent<Text>();
         resourceTexts[2] = GameObject.Find("WoodText").GetComponent<Text>();
+        PlayerCamera camera = GetComponentInChildren<PlayerCamera>();
+        if (!photonView.IsMine) {
+            camera.gameObject.SetActive(false);
+        }
+        if (photonView.IsMine) {
+            mFullBodyMesh.SetActive(false);
+        }
 
     }
 
@@ -72,11 +79,11 @@ public class Player : MonoBehaviour
             resourceTexts[i].text = "x" + mResourceDict[resourceTexts[i].name.Substring(0, resourceTexts[i].name.Length - 4)];
         }
 
-        /*
+        
         if (!photonView.IsMine && PhotonNetwork.IsConnected) {
             return;
         }
-        */
+        
 
         Player_Inputs();
 
