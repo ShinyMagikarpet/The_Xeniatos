@@ -125,3 +125,4 @@ MonoBehaviour:
   mSpeed: 500
   mTTL: 2
   mName: Bubble
+  mDamage: 10

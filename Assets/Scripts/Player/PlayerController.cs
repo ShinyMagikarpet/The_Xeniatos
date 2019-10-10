@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         mPlayer = GetComponent<Player>();
         isDashing = false;
 
-        if (!photonView.IsMine) {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected == true) {
             cam.enabled = false;
         }
     }
@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         #region Movement
 
-        if (!photonView.IsMine) {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected == true) {
             return;
         }
 

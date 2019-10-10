@@ -38,13 +38,13 @@ public class Player : MonoBehaviourPunCallbacks
 
     void Start(){
         Camera camera = GetComponentInChildren<Camera>();
-        if (!photonView.IsMine) {
-            camera.enabled = false;
+        if (!photonView.IsMine && PhotonNetwork.IsConnected == true) {
+            //camera.enabled = false;
             return;
         }
         mPlayerWeapon = GetComponentInChildren<Weapon>();
         mPlayerWeapon.mCam = GetComponentInChildren<Camera>();
-        mPlayerWeapon.mOwner = this;
+        //mPlayerWeapon.mOwner = this;
         state = PlayerState.Idle;
         ammoText = GameObject.Find("AmmoText").GetComponent<Text>();
         healthText = GameObject.Find("HealthText").GetComponent<Text>();
@@ -61,7 +61,7 @@ public class Player : MonoBehaviourPunCallbacks
         resourceTexts[0] = GameObject.Find("IronText").GetComponent<Text>();
         resourceTexts[1] = GameObject.Find("StoneText").GetComponent<Text>();
         resourceTexts[2] = GameObject.Find("WoodText").GetComponent<Text>();
-        if (photonView.IsMine) {
+        if (photonView.IsMine && PhotonNetwork.IsConnected == true) {
             mFullBodyMesh.SetActive(false);
         }
 
@@ -70,10 +70,12 @@ public class Player : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update(){
 
+        int healthRounded = (int)Mathf.Round(mCurrentHealth);
+
         ammoText.text = mPlayerWeapon.mAmmoLoaded.ToString() + '/' +
             mPlayerWeapon.mAmmoHeld.ToString();
 
-        healthText.text = mCurrentHealth.ToString() + '/' + mMaxHealth.ToString();
+        healthText.text = healthRounded.ToString() + '/' + mMaxHealth.ToString();
 
         for(int i = 0; i < 3; i++) {
             resourceTexts[i].text = "x" + mResourceDict[resourceTexts[i].name.Substring(0, resourceTexts[i].name.Length - 4)];
@@ -137,14 +139,18 @@ public class Player : MonoBehaviourPunCallbacks
         }
 
         //Automatic fire
-        if (Input.GetButton("Fire1") && mPlayerWeapon.mFire_Type == Weapon.Fire_Type.fully_Auto && state != PlayerState.InMenu) {
-            Debug.Log("Fire fully auto");
+        else if (Input.GetButton("Fire1") && (mPlayerWeapon.mFire_Type == Weapon.Fire_Type.fully_Auto || mPlayerWeapon.mFire_Type == Weapon.Fire_Type.Beam) && state != PlayerState.InMenu) {
+            //Debug.Log("Fire fully auto");
             mPlayerWeapon.Fire_Weapon();
         }
 
         //Reload
         if (Input.GetButtonDown("Reload") || mPlayerWeapon.mAmmoLoaded == 0 && state != PlayerState.InMenu) {
             mPlayerWeapon.Reload_Weapon();
+        }
+
+        if(mPlayerWeapon.mIsParticle && !Input.GetButton("Fire1")) {
+            mPlayerWeapon.mParticleProjectile.mParticles.Stop();
         }
 
     }
@@ -197,6 +203,15 @@ public class Player : MonoBehaviourPunCallbacks
         }
         return mesh;
 
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+
+        if (stream.IsWriting) {
+            stream.SendNext(this.mCurrentHealth);
+        } else {
+            this.mCurrentHealth = (float)stream.ReceiveNext();
+        }
     }
 
 }

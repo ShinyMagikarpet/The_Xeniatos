@@ -1,33 +1,37 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 
 
-public abstract class Weapon : MonoBehaviour
+public abstract class Weapon : MonoBehaviourPunCallbacks
 {
 
     public enum Fire_Type{
         single,
         Semi_Auto,
-        fully_Auto
+        fully_Auto,
+        Beam
     }
 
-    public string mName;            /*<Name of weapon*/
-    public float mDamage;           /*<Amount of damage*/
-    public float mROF;              /*<Rate of fire*/
-    public float mRange;            /*<Max range*/
-    public float mReloadSpeed;      /*<Reload speed*/
-    public float mSpread;           /*<Weapon spread*/
-    public int mAmmoLoaded;         /*<Current loaded ammo*/
-    public int mMaxAmmoLoaded;      /*<Max Ammo allowed to be loaded*/
-    public int mMaxAmmo;            /*<Maximum carried ammo*/
-    public int mAmmoHeld;           /*<Current ammo being held*/
-    public Fire_Type mFire_Type;    /*<Fire mode for weapon*/
-    public bool mIsProjectile;      /*<Does weapon shoot projectiles*/
-    public  Projectile bullet;      /*<What projectile the weapon will be firing*/
-    [HideInInspector]
-    public Player mOwner;           /*<The owner of the weapon*/
+    public string mName;                    /*<mName Name of weapon*/
+    public float mDamage;                   /*<Amount of damage*/
+    public float mROF;                      /*<Rate of fire*/
+    public float mRange;                    /*<Max range*/
+    public float mReloadSpeed;              /*<Reload speed*/
+    public float mSpread;                   /*<Weapon spread*/
+    public int mAmmoLoaded;                 /*<Current loaded ammo*/
+    public int mMaxAmmoLoaded;              /*<Max Ammo allowed to be loaded*/
+    public int mMaxAmmo;                    /*<Maximum carried ammo*/
+    public int mAmmoHeld;                   /*<Current ammo being held*/
+    public Fire_Type mFire_Type;            /*<Fire mode for weapon*/
+    public bool mIsProjectile;              /*<Does weapon shoot projectiles*/
+    public bool mIsParticle;                /*<Does the weapon shoot particles*/
+    public ParticleSystem mParticleSystem;  /*<Particle system that the weapon will use for visual effects*/
+    public ParticleProjectile mParticleProjectile;  /*<Particle system that the weapon will be firing*/
+    public Projectile bullet;               /*<What projectile the weapon will be firing*/
+    public Player mOwner;                   /*<The owner of the weapon*/
 
     private float mTimeToNextFire;
     private bool mIsReloading = false;
@@ -35,14 +39,22 @@ public abstract class Weapon : MonoBehaviour
 
     public Camera mCam;
 
+    private PhotonView PV;
+
     public void Start() {
         objectPool = ObjectPool.Instance;
+        mOwner = GetComponentInParent<Player>();
+        PV = mOwner.GetComponent<PhotonView>();
     }
 
     public void Fire_Weapon() {
 
-        if (mIsProjectile) {
-            Fire_Projectile();
+        if (mIsProjectile || mIsParticle) {
+            if (mIsProjectile)
+                Fire_Projectile();
+            else
+                Fire_Particles();
+            
         } 
         else {
             Fire_Hitscan();
@@ -62,6 +74,7 @@ public abstract class Weapon : MonoBehaviour
 
         if (Time.time > mTimeToNextFire){
 
+            mOwner.state = Player.PlayerState.Shooting;
             mTimeToNextFire = Time.time + mROF;
 
             Vector3 rayOrigin = mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
@@ -71,7 +84,8 @@ public abstract class Weapon : MonoBehaviour
             //Debug.DrawRay(rayOrigin, mCam.transform.forward * mRange, Color.cyan);
 
             if (Physics.Raycast(rayOrigin, mCam.transform.forward, out hit, mRange)){
-                if (hit.collider.CompareTag("Player")) {
+                if (hit.collider.CompareTag("Player") && !PV.IsMine) {
+                    Debug.Log("You hit " + hit.collider.name + "!");
                     hit.collider.GetComponent<Player>().mCurrentHealth -= mDamage;
                 }
                     
@@ -99,6 +113,7 @@ public abstract class Weapon : MonoBehaviour
 
         if (Time.time > mTimeToNextFire) {
 
+            mOwner.state = Player.PlayerState.Shooting;
             mTimeToNextFire = Time.time + mROF;
 
             Projectile projectile = objectPool.SpawnFromPool(bullet.mName).GetComponent<Projectile>();
@@ -107,6 +122,36 @@ public abstract class Weapon : MonoBehaviour
             mAmmoLoaded--;
         }
         
+
+    }
+
+    public void Fire_Particles() {
+
+        if (mAmmoLoaded <= 0) {
+            mAmmoLoaded = 0;
+            if (mParticleProjectile.mParticles.isPlaying) {
+                mParticleProjectile.mParticles.Stop();
+            }
+            return;
+        }
+
+        if (mIsReloading) {
+            mParticleProjectile.mParticles.Stop();
+            return;
+        }
+            
+
+        if (Time.time > mTimeToNextFire) {
+
+            mOwner.state = Player.PlayerState.Shooting;
+            mTimeToNextFire = Time.time + mROF;
+
+            Debug.Log(mParticleProjectile.mParticles.name);
+            mParticleProjectile.Fire_Particles(mParticleProjectile.mParticles);
+
+            mAmmoLoaded--;
+        }
+
 
     }
 
@@ -153,6 +198,9 @@ public abstract class Weapon : MonoBehaviour
             mAmmoHeld = 0;
         }
 
+        mOwner.state = Player.PlayerState.Idle;
         mIsReloading = false;
     }
 }
+
+

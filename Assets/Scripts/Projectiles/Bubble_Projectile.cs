@@ -9,6 +9,7 @@ public class Bubble_Projectile : Projectile
         mName = "Bubble";
         mSpeed = 100.0f;
         mTTL = 1.0f;
+        mDamage = 10.0f;
     }
 
 }
