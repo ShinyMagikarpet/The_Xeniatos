@@ -7,6 +7,7 @@ public abstract class ParticleProjectile : MonoBehaviour
     public string mName;
     public float mDamage;
     public ParticleSystem mParticles;
+    public GameObject mOwner;
 
     private void Start() {
         mParticles = GetComponent<ParticleSystem>();
@@ -21,7 +22,7 @@ public abstract class ParticleProjectile : MonoBehaviour
 
     private void OnParticleCollision(GameObject other) {
 
-        if (other.CompareTag("Player") && !other.CompareTag("Ground")) {
+        if (other.CompareTag("Player") && other != mOwner) {
             other.GetComponent<Player>().mCurrentHealth -= mDamage;
         }
     }

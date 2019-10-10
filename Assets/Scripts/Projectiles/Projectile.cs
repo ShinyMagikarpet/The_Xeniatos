@@ -9,6 +9,7 @@ public abstract class Projectile : MonoBehaviour
     public float mTTL;
     public string mName;
     public float mDamage;
+    public GameObject mOwner;
 
     public void Shoot_Projectile(Projectile projectile, Transform transform, Vector3 pos) {
 
