@@ -269,13 +269,15 @@ MonoBehaviour:
   mIsDead: 0
   mMaxHealth: 100
   mCurrentHealth: 100
-  mPlayerWeapon: {fileID: 0}
+  mPlayerWeapon: {fileID: 7223303876824017022}
   ammoText: {fileID: 0}
   healthText: {fileID: 0}
   collectText: {fileID: 0}
   resourceTexts: []
   state: 0
   mMenu: {fileID: 1091384523471950185, guid: eada7929ca5560a4d9bacc4b13c8ea87, type: 3}
+  mPlayerUIPrefab: {fileID: 6087490771331069635, guid: 8f79432e4655e9b4d9ffe5695f8f6965,
+    type: 3}
   mFullBodyMesh: {fileID: 0}
 --- !u!114 &8637115982040772044
 MonoBehaviour:
@@ -325,6 +327,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HandGun
+      objectReference: {fileID: 0}
+    - target: {fileID: 6161340945064802416, guid: 9aa3d967a0f9074409194b535c9d1833,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6161340945064802417, guid: 9aa3d967a0f9074409194b535c9d1833,
         type: 3}
@@ -389,6 +396,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3584634856654770188}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7223303876824017022 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6161340945064802418, guid: 9aa3d967a0f9074409194b535c9d1833,
+    type: 3}
+  m_PrefabInstance: {fileID: 3584634856654770188}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b87f2bafbd66df47af5d7b3150819ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7223303875518388464
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -661,6 +680,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Confetti_Gun
       objectReference: {fileID: 0}
+    - target: {fileID: 6939417155001638823, guid: 86b3d724990c58d47a30901ecf994e74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6939417155001140103, guid: 86b3d724990c58d47a30901ecf994e74,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -769,7 +793,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 4e6856102307148b8b58a1b342912d8e,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 4e6856102307148b8b58a1b342912d8e,
         type: 3}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
+using Photon.Realtime;
 
 public class Player : MonoBehaviourPunCallbacks
 {
@@ -31,6 +32,7 @@ public class Player : MonoBehaviourPunCallbacks
     public Text[] resourceTexts;
     public PlayerState state;
     public GameObject mMenu;
+    public GameObject mPlayerUIPrefab;
     public GameObject mFullBodyMesh;
     public Dictionary<string, int> mResourceDict;
 
@@ -39,47 +41,33 @@ public class Player : MonoBehaviourPunCallbacks
     void Start(){
         Camera camera = GetComponentInChildren<Camera>();
         if (!photonView.IsMine && PhotonNetwork.IsConnected == true) {
-            //camera.enabled = false;
+            camera.enabled = false;
             return;
         }
         mPlayerWeapon = GetComponentInChildren<Weapon>();
         mPlayerWeapon.mCam = GetComponentInChildren<Camera>();
-        //mPlayerWeapon.mOwner = this;
+        mPlayerWeapon.mOwner = this;
         state = PlayerState.Idle;
-        ammoText = GameObject.Find("AmmoText").GetComponent<Text>();
-        healthText = GameObject.Find("HealthText").GetComponent<Text>();
-        mFullBodyMesh = Get_Player_Mesh(); 
+        mFullBodyMesh = Get_Player_Mesh();
         this.name = PhotonNetwork.NickName;
         mMenu = GameObject.Find("MenuPanel");
-        collectText = GameObject.Find("CollectText").GetComponent<Text>();
-        mMenu.SetActive(false);
         mResourceDict = new Dictionary<string, int>();
-        mResourceDict.Add("Iron", 100);
-        mResourceDict.Add("Stone", 200);
-        mResourceDict.Add("Wood", 300);
-        resourceTexts = new Text[3];
-        resourceTexts[0] = GameObject.Find("IronText").GetComponent<Text>();
-        resourceTexts[1] = GameObject.Find("StoneText").GetComponent<Text>();
-        resourceTexts[2] = GameObject.Find("WoodText").GetComponent<Text>();
+        mResourceDict.Add("Iron", 0);
+        mResourceDict.Add("Stone", 0);
+        mResourceDict.Add("Wood", 0);
+
+        mPlayerUIPrefab = Instantiate(mPlayerUIPrefab);
+        mPlayerUIPrefab.GetComponent<PlayerUI>().SetTarget(this);
+
         if (photonView.IsMine && PhotonNetwork.IsConnected == true) {
             mFullBodyMesh.SetActive(false);
         }
-
+        
     }
 
     // Update is called once per frame
     void Update(){
 
-        int healthRounded = (int)Mathf.Round(mCurrentHealth);
-
-        ammoText.text = mPlayerWeapon.mAmmoLoaded.ToString() + '/' +
-            mPlayerWeapon.mAmmoHeld.ToString();
-
-        healthText.text = healthRounded.ToString() + '/' + mMaxHealth.ToString();
-
-        for(int i = 0; i < 3; i++) {
-            resourceTexts[i].text = "x" + mResourceDict[resourceTexts[i].name.Substring(0, resourceTexts[i].name.Length - 4)];
-        }
 
         
         if (!photonView.IsMine && PhotonNetwork.IsConnected) {
@@ -166,12 +154,12 @@ public class Player : MonoBehaviourPunCallbacks
         foreach(RaycastHit hit in hits){
 
             if (hit.collider.CompareTag("Resource") && state != PlayerState.Collecting){
-                collectText.gameObject.SetActive(true);
-                collectText.text = ("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name());
+                mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Near_Resource_Text(("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name()));
+                //collectText.text = ("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name());
                 return true;
             }
         }
-
+        mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Near_Resource_Text("");
         /*
         if (Physics.Raycast(rayOrigin, mPlayerWeapon.mCam.transform.TransformDirection(Vector3.forward), out hit, 3.0f))
         { 
@@ -184,7 +172,7 @@ public class Player : MonoBehaviourPunCallbacks
             }
         }
         */
-        collectText.gameObject.SetActive(false);
+        //collectText.gameObject.SetActive(false);
         return false;
     }
 
@@ -205,13 +193,25 @@ public class Player : MonoBehaviourPunCallbacks
 
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+    [PunRPC]
+    public void Take_Damage(float damage) {
 
-        if (stream.IsWriting) {
-            stream.SendNext(this.mCurrentHealth);
-        } else {
-            this.mCurrentHealth = (float)stream.ReceiveNext();
+        mCurrentHealth -= damage;
+
+        if(mCurrentHealth < 0) {
+            mCurrentHealth = 0;
         }
     }
+
+    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+
+    //    if (stream.IsWriting) {
+    //        stream.SendNext(this.mCurrentHealth);
+    //    } else {
+    //        this.mCurrentHealth = (float)stream.ReceiveNext();
+    //    }
+    //}
+
+    
 
 }

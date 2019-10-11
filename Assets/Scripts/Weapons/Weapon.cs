@@ -61,7 +61,8 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
         }
 
     }
-
+    
+    [PunRPC]
     public void Fire_Hitscan() {
 
         if(mAmmoLoaded <= 0){
@@ -84,9 +85,10 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
             //Debug.DrawRay(rayOrigin, mCam.transform.forward * mRange, Color.cyan);
 
             if (Physics.Raycast(rayOrigin, mCam.transform.forward, out hit, mRange)){
-                if (hit.collider.CompareTag("Player") && !PV.IsMine) {
+                if (hit.collider.CompareTag("Player") && hit.collider.gameObject != mOwner.gameObject) {
+                    
                     Debug.Log("You hit " + hit.collider.name + "!");
-                    hit.collider.GetComponent<Player>().mCurrentHealth -= mDamage;
+                    hit.collider.GetComponent<PhotonView>().RPC("Take_Damage", RpcTarget.All, mDamage);
                 }
                     
 
