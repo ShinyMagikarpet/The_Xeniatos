@@ -36,5 +36,8 @@ MonoBehaviour:
   - RespawnSpaceship
   - Fire_Hitscan
   - Take_Damage
+  - Fire_Particles
+  - Play_Particles_Weapon
+  - Stop_Particles_Weapon
   DisableAutoOpenWizard: 1
   ShowSettings: 1

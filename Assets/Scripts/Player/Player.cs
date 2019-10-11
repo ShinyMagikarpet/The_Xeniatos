@@ -138,7 +138,8 @@ public class Player : MonoBehaviourPunCallbacks
         }
 
         if(mPlayerWeapon.mIsParticle && !Input.GetButton("Fire1")) {
-            mPlayerWeapon.mParticleProjectile.mParticles.Stop();
+            //mPlayerWeapon.mParticleProjectile.mParticles.Stop();
+            mPlayerWeapon.mParticleProjectile.gameObject.GetComponent<PhotonView>().RPC("Stop_Particles_Weapon", RpcTarget.All);
         }
 
     }

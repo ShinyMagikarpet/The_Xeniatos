@@ -62,7 +62,6 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
 
     }
     
-    [PunRPC]
     public void Fire_Hitscan() {
 
         if(mAmmoLoaded <= 0){
@@ -145,12 +144,15 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
             
 
         if (Time.time > mTimeToNextFire) {
-            mParticleProjectile.mOwner = mOwner.gameObject;
+            Player owner = mParticleProjectile.Get_Owner();
+            owner = mOwner;
             mOwner.state = Player.PlayerState.Shooting;
             mTimeToNextFire = Time.time + mROF;
 
             Debug.Log(mParticleProjectile.mParticles.name);
-            mParticleProjectile.Fire_Particles(mParticleProjectile.mParticles);
+            //mParticleProjectile.Fire_Particles();
+
+            mParticleProjectile.gameObject.GetComponent<PhotonView>().RPC("Play_Particles_Weapon", RpcTarget.All);
 
             mAmmoLoaded--;
         }
