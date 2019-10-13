@@ -12,6 +12,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Text playerIronText;
     [SerializeField] private Text playerStoneText;
     [SerializeField] private Text playerWoodText;
+    [SerializeField] private GameObject playerPauseMenu;
     private Player target;
 
     void Awake()
@@ -20,7 +21,8 @@ public class PlayerUI : MonoBehaviour
     }
 
     private void Start() {
-
+        playerPauseMenu = Instantiate(playerPauseMenu, GameObject.Find("Canvas").transform);
+        playerPauseMenu.SetActive(false);
     }
 
     // Update is called once per frame
@@ -63,6 +65,16 @@ public class PlayerUI : MonoBehaviour
 
         target = _target;
 
+    }
+
+    public void Use_Pause_Menu() {
+
+        if (!playerPauseMenu.activeSelf) {
+            playerPauseMenu.SetActive(true);
+        } 
+        else {
+            playerPauseMenu.SetActive(false);
+        }
     }
 
     public void Player_Near_Resource_Text(string message) {

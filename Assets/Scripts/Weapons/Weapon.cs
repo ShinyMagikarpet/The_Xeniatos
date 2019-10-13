@@ -131,14 +131,16 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
 
         if (mAmmoLoaded <= 0) {
             mAmmoLoaded = 0;
-            if (mParticleProjectile.mParticles.isPlaying) {
-                mParticleProjectile.mParticles.Stop();
+            if (mParticleProjectile.mParticles.isEmitting) {
+                mOwner.photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
             }
             return;
         }
 
         if (mIsReloading) {
-            mParticleProjectile.mParticles.Stop();
+            if (mParticleProjectile.mParticles.isEmitting) {
+                mOwner.photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
+            }
             return;
         }
             
@@ -152,7 +154,9 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
             Debug.Log(mParticleProjectile.mParticles.name);
             //mParticleProjectile.Fire_Particles();
 
-            mParticleProjectile.gameObject.GetComponent<PhotonView>().RPC("Play_Particles_Weapon", RpcTarget.All);
+            if (!mParticleProjectile.mParticles.isEmitting)
+                //mParticleProjectile.gameObject.GetComponent<PhotonView>().RPC("Play_Particles_Weapon", RpcTarget.All);
+                mOwner.photonView.RPC("Play_Particle_Projectile", RpcTarget.All);
 
             mAmmoLoaded--;
         }

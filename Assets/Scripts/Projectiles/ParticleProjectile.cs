@@ -10,21 +10,17 @@ public abstract class ParticleProjectile : MonoBehaviour
     public ParticleSystem mParticles;
     private Player mOwner;
     private PhotonView mPV;
+    //private ParticleSystem.EmissionModule emissionModule;
 
 
     private void Start() {
         mParticles = GetComponent<ParticleSystem>();
         mOwner = GetComponentInParent<Player>();
         mPV = mOwner.gameObject.GetComponent<PhotonView>();
-        
-
-        //mParticles.Play();
     }
 
     [PunRPC]
     public void Play_Particles_Weapon() {
-
-        //Debug.Log("Play animation");
         mParticles.Play();
 
     }
@@ -32,14 +28,12 @@ public abstract class ParticleProjectile : MonoBehaviour
     [PunRPC]
     public void Stop_Particles_Weapon()
     {
-
         mParticles.Stop();
-
     }
 
     private void OnParticleCollision(GameObject other) {
 
-        if (other.CompareTag("Player") && other != mOwner) {
+        if (other.CompareTag("Player") && other.GetComponent<Player>() != mOwner) {
             other.GetComponent<PhotonView>().RPC("Take_Damage", RpcTarget.All, mDamage);
         }
     }

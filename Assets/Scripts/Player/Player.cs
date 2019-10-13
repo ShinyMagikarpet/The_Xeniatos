@@ -31,26 +31,31 @@ public class Player : MonoBehaviourPunCallbacks
     public Text collectText;
     public Text[] resourceTexts;
     public PlayerState state;
-    public GameObject mMenu;
     public GameObject mPlayerUIPrefab;
+    public GameObject mArmsMesh;
     public GameObject mFullBodyMesh;
     public Dictionary<string, int> mResourceDict;
 
     public static GameObject LocalPlayerInstance;
 
     void Start(){
-        Camera camera = GetComponentInChildren<Camera>();
+        
+        //Disable/Enable whatever you want the local client to see for remote users here
         if (!photonView.IsMine && PhotonNetwork.IsConnected == true) {
+            Camera camera = GetComponentInChildren<Camera>();
             camera.enabled = false;
+            camera.GetComponent<AudioListener>().enabled = false;
+            mArmsMesh.SetActive(false);
+            mFullBodyMesh.SetActive(true);
+            GetComponent<PlayerController>().enabled = false;
             return;
         }
         mPlayerWeapon = GetComponentInChildren<Weapon>();
         mPlayerWeapon.mCam = GetComponentInChildren<Camera>();
         mPlayerWeapon.mOwner = this;
         state = PlayerState.Idle;
-        mFullBodyMesh = Get_Player_Mesh();
+        //mFullBodyMesh = Get_Player_Mesh();
         this.name = PhotonNetwork.NickName;
-        mMenu = GameObject.Find("MenuPanel");
         mResourceDict = new Dictionary<string, int>();
         mResourceDict.Add("Iron", 0);
         mResourceDict.Add("Stone", 0);
@@ -58,10 +63,6 @@ public class Player : MonoBehaviourPunCallbacks
 
         mPlayerUIPrefab = Instantiate(mPlayerUIPrefab);
         mPlayerUIPrefab.GetComponent<PlayerUI>().SetTarget(this);
-
-        if (photonView.IsMine && PhotonNetwork.IsConnected == true) {
-            mFullBodyMesh.SetActive(false);
-        }
         
     }
 
@@ -101,11 +102,11 @@ public class Player : MonoBehaviourPunCallbacks
             if (state != PlayerState.InMenu) {
                 Debug.Log("Entering menu");
                 state = PlayerState.InMenu;
-                mMenu.SetActive(true);
+                mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Pause_Menu();
             } else {
                 Debug.Log("Leaving menu");
                 state = PlayerState.Idle;
-                mMenu.SetActive(false);
+                mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Pause_Menu();
             }
 
         }
@@ -137,9 +138,9 @@ public class Player : MonoBehaviourPunCallbacks
             mPlayerWeapon.Reload_Weapon();
         }
 
-        if(mPlayerWeapon.mIsParticle && !Input.GetButton("Fire1")) {
+        if(mPlayerWeapon.mIsParticle && mPlayerWeapon.mParticleProjectile.mParticles.isEmitting && !Input.GetButton("Fire1")) {
             //mPlayerWeapon.mParticleProjectile.mParticles.Stop();
-            mPlayerWeapon.mParticleProjectile.gameObject.GetComponent<PhotonView>().RPC("Stop_Particles_Weapon", RpcTarget.All);
+            photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
         }
 
     }
@@ -156,7 +157,6 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (hit.collider.CompareTag("Resource") && state != PlayerState.Collecting){
                 mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Near_Resource_Text(("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name()));
-                //collectText.text = ("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name());
                 return true;
             }
         }
@@ -194,6 +194,8 @@ public class Player : MonoBehaviourPunCallbacks
 
     }
 
+    #region RPC_Functions
+
     [PunRPC]
     public void Take_Damage(float damage) {
 
@@ -204,6 +206,22 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
+    public void Play_Particle_Projectile() {
+        mPlayerWeapon.mParticleProjectile.mParticles.Play();
+    }
+
+    [PunRPC]
+    public void Stop_Particle_Projectile() {
+        mPlayerWeapon.mParticleProjectile.mParticles.Stop();
+    }
+
+    [PunRPC]
+    public void Player_Die() {
+
+    }
+
+    #endregion
     //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
 
     //    if (stream.IsWriting) {
@@ -213,6 +231,6 @@ public class Player : MonoBehaviourPunCallbacks
     //    }
     //}
 
-    
+
 
 }
