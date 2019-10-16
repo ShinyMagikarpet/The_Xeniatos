@@ -7,8 +7,5 @@ public class IronNode : ResourceNode
     public IronNode(){
 
         mName = "Iron";
-        mResourceCount = 150;
-
     }
-    
 }

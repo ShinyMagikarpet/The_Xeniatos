@@ -42,5 +42,7 @@ MonoBehaviour:
   - Play_Particle_Projectile
   - Stop_Particle_Projectile
   - Player_Die
+  - Give_Resource
+  - Remove_Resource_Count
   DisableAutoOpenWizard: 1
   ShowSettings: 1

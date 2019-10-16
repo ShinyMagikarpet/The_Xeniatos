@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private bool isDashing;
     public float airSpeed;
     public float jumpSpeed;
-    private float gravity = -9.81f;
+    [SerializeField] private float gravity = -12f;
     private float verticalVelocity = 0;
 
     //Mouse controls
@@ -32,7 +32,6 @@ public class PlayerController : MonoBehaviourPunCallbacks
         cam = GetComponentInChildren<Camera>();
         mPlayer = GetComponent<Player>();
         isDashing = false;
-
         if (!photonView.IsMine && PhotonNetwork.IsConnected == true) {
             cam.enabled = false;
         }
@@ -42,6 +41,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     void Update()
     {
         #region Movement
+
 
         if (!photonView.IsMine && PhotonNetwork.IsConnected == true) {
             return;
@@ -61,11 +61,17 @@ public class PlayerController : MonoBehaviourPunCallbacks
         float forwardMovement = Input.GetAxis("Vertical") * speed;
         float sideMovement = Input.GetAxis("Horizontal") * speed;
 
-        verticalVelocity += gravity * Time.deltaTime;
+        if(!controller.isGrounded)
+            verticalVelocity += gravity * Time.deltaTime;
         
         
         if(controller.isGrounded && Input.GetButtonDown("Jump")) {
-            verticalVelocity = jumpSpeed;
+            if (isDashing) {
+                verticalVelocity = jumpSpeed / 1.6f;
+            } 
+            else {
+                verticalVelocity = jumpSpeed;
+            }
         }
 
         movement = new Vector3(sideMovement, verticalVelocity, forwardMovement);
@@ -74,15 +80,15 @@ public class PlayerController : MonoBehaviourPunCallbacks
             isDashing = true;
         }
 
-        if(isDashing && Input.GetAxis("Vertical") <= 0) {
+        if(isDashing && Input.GetAxis("Vertical") <= 0 && controller.isGrounded) {
             isDashing = false;
         }
 
-        if ((Input.GetKeyUp(KeyCode.W) && isDashing)) {
+        if ((Input.GetKeyUp(KeyCode.W) && isDashing && controller.isGrounded)) {
             isDashing = false;
         }
 
-        if (isDashing && controller.isGrounded) {
+        if (isDashing) {
             movement *= dashSpeed;
         }
 

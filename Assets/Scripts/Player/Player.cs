@@ -26,17 +26,21 @@ public class Player : MonoBehaviourPunCallbacks
     public float mMaxHealth = 100f;
     public float mCurrentHealth = 100f;
     public Weapon mPlayerWeapon;
-    public Text ammoText;
-    public Text healthText;
-    public Text collectText;
-    public Text[] resourceTexts;
+    public Weapon mPlayerSubWeapon;
     public PlayerState state;
     public GameObject mPlayerUIPrefab;
     public GameObject mArmsMesh;
     public GameObject mFullBodyMesh;
+    public GameObject mRagdoll;
     public Dictionary<string, int> mResourceDict;
 
     public static GameObject LocalPlayerInstance;
+    [SerializeField]
+    private ResourceNode _targetNode;
+    [SerializeField]
+    private float mCollectRate = 1.3f;
+    private float mTimeToNextCollect;
+    private bool mIsCollecting = false;
 
     void Start(){
         
@@ -50,8 +54,6 @@ public class Player : MonoBehaviourPunCallbacks
             GetComponent<PlayerController>().enabled = false;
             return;
         }
-        mPlayerWeapon = GetComponentInChildren<Weapon>();
-        mPlayerWeapon.mCam = GetComponentInChildren<Camera>();
         mPlayerWeapon.mOwner = this;
         state = PlayerState.Idle;
         //mFullBodyMesh = Get_Player_Mesh();
@@ -74,26 +76,31 @@ public class Player : MonoBehaviourPunCallbacks
         if (!photonView.IsMine && PhotonNetwork.IsConnected) {
             return;
         }
+
+        if(mIsCollecting) {
+            Player_Gather_Resource();
+        }
+
+        //TODO: Needs better 3rd person camera to better show rigidbody
+        if(mCurrentHealth <= 0 && !mIsDead) {
+            //Player_Die();
+            //return;
+            Debug.Log("Want to play around with this later");
+        }
         
 
         Player_Inputs();
-
-        //Player_Inputs();
-
-        if (state == PlayerState.Collecting)
-            Debug.Log("Player is currently collecting");
-
 
     }
 
 
     void Player_Inputs() {
 
-        Debug.DrawRay(mPlayerWeapon.mCam.transform.position, mPlayerWeapon.mCam.transform.TransformDirection(Vector3.forward) * 3, Color.cyan);
+        //Debug.DrawRay(mPlayerWeapon.mCam.transform.position, mPlayerWeapon.mCam.transform.TransformDirection(Vector3.forward) * 3, Color.cyan);
 
         if(Player_Near_Resource() && Input.GetButtonDown("Interact"))
         {
-            state = PlayerState.Collecting;
+            mIsCollecting = true;
         }
 
         //Menu
@@ -109,17 +116,6 @@ public class Player : MonoBehaviourPunCallbacks
                 mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Pause_Menu();
             }
 
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q)){
-            if (!mFullBodyMesh.activeInHierarchy)
-            {
-                mFullBodyMesh.SetActive(true);
-            }
-            else
-            {
-                mFullBodyMesh.SetActive(false);
-            }
         }
 
         //Single fire
@@ -143,6 +139,22 @@ public class Player : MonoBehaviourPunCallbacks
             photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
         }
 
+        if (Input.GetKeyDown(KeyCode.Y)) {
+            //mCurrentHealth = 0;
+            Player_Switch_Weapons();
+        }
+
+    }
+
+    public void Player_Switch_Weapons() {
+        if(mPlayerSubWeapon == null) {
+            return;
+        }
+        GameObject tempWeapon = mPlayerWeapon.gameObject;
+        mPlayerWeapon = mPlayerSubWeapon;
+        mPlayerSubWeapon = tempWeapon.GetComponent<Weapon>();
+        mPlayerWeapon.gameObject.SetActive(true);
+        mPlayerSubWeapon.gameObject.SetActive(false);
     }
 
     public bool Player_Near_Resource()
@@ -155,43 +167,33 @@ public class Player : MonoBehaviourPunCallbacks
 
         foreach(RaycastHit hit in hits){
 
-            if (hit.collider.CompareTag("Resource") && state != PlayerState.Collecting){
-                mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Near_Resource_Text(("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name()));
+            if (hit.collider.CompareTag("Resource")){
+                //We are already collecting or node is empty
+                if (mIsCollecting || !hit.collider.GetComponent<ResourceNode>().enabled) {
+                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Near_Resource_Text("");
+                } 
+                else {
+                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Near_Resource_Text(("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name()));
+                }
+                _targetNode = hit.collider.GetComponent<ResourceNode>();
                 return true;
             }
         }
         mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Near_Resource_Text("");
-        /*
-        if (Physics.Raycast(rayOrigin, mPlayerWeapon.mCam.transform.TransformDirection(Vector3.forward), out hit, 3.0f))
-        { 
-
-            if (hit.collider.CompareTag("Resource"))
-            {
-                collectText.gameObject.SetActive(true);
-                collectText.text = ("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name());
-                return true;
-            }
-        }
-        */
-        //collectText.gameObject.SetActive(false);
+        mIsCollecting = false;
+        _targetNode = null;
         return false;
     }
 
-    GameObject Get_Player_Mesh(){
-
-        GameObject mesh = null;
-
-        for(int i = 0; i < transform.childCount; i++){
-            if (transform.GetChild(i).CompareTag("Mesh")){
-                mesh = transform.GetChild(i).gameObject;
+    public void Player_Gather_Resource() {
+        if (Time.time > mTimeToNextCollect) {
+            mTimeToNextCollect = Time.time + mCollectRate;
+            if(_targetNode.Get_Resource_Count() <= 0) {
+                return;
             }
+            mResourceDict[_targetNode.Get_Name()] += _targetNode.Give_Resource();
+            
         }
-
-        if(mesh == null){
-            Debug.LogError("Mesh is null");
-        }
-        return mesh;
-
     }
 
     #region RPC_Functions
@@ -218,19 +220,13 @@ public class Player : MonoBehaviourPunCallbacks
 
     [PunRPC]
     public void Player_Die() {
-
+        mArmsMesh.SetActive(false);
+        mFullBodyMesh.SetActive(false);
+        mRagdoll.SetActive(true);
+        mPlayerWeapon.mCam.transform.Translate(0, 0, -5);
+        mPlayerWeapon.gameObject.SetActive(false);
+        mIsDead = true;
     }
 
     #endregion
-    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
-
-    //    if (stream.IsWriting) {
-    //        stream.SendNext(this.mCurrentHealth);
-    //    } else {
-    //        this.mCurrentHealth = (float)stream.ReceiveNext();
-    //    }
-    //}
-
-
-
 }

@@ -53,7 +53,7 @@
             v2f vert (appdata v)
             {
                 v2f o;
-				v.vertex.x += sin(_Time.y * _Speed * v.vertex.y * _Amplitude) * _Distance * _Amount;
+				v.vertex.x += sin(_Time.x * _Speed * v.vertex.z * _Amplitude) * _Distance * _Amount;
 				o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
@@ -62,7 +62,7 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 // sample the texture
-                fixed4 col = tex2D(_MainTex, i.uv) + _TintCol;
+                fixed4 col = tex2D(_MainTex, i.uv) * _TintCol;
 				col.a = _Transparency;
 				clip(col.g - _CutoutThresh);
                 return col;

@@ -9,6 +9,7 @@ TagManager:
   - Resource
   - Mesh
   - Ground
+  - Hitbox
   layers:
   - Default
   - TransparentFX

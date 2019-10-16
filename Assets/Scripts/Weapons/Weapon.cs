@@ -41,10 +41,15 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
 
     private PhotonView PV;
 
-    public void Start() {
+    private void Awake() {
+        mCam = GetComponentInParent<Camera>();
+    }
+
+    private void Start() {
         objectPool = ObjectPool.Instance;
         mOwner = GetComponentInParent<Player>();
         PV = mOwner.GetComponent<PhotonView>();
+        
     }
 
     public void Fire_Weapon() {
@@ -81,7 +86,7 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
             RaycastHit hit;
 
 
-            //Debug.DrawRay(rayOrigin, mCam.transform.forward * mRange, Color.cyan);
+            Debug.DrawRay(rayOrigin, mCam.transform.forward * mRange, Color.cyan);
 
             if (Physics.Raycast(rayOrigin, mCam.transform.forward, out hit, mRange)){
                 if (hit.collider.CompareTag("Player") && hit.collider.gameObject != mOwner.gameObject) {
