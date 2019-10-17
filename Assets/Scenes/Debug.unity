@@ -1082,6 +1082,7 @@ MonoBehaviour:
   mRagdoll: {fileID: 0}
   _targetNode: {fileID: 0}
   mCollectRate: 1.3
+  mCam: {fileID: 0}
 --- !u!1 &2124753961
 GameObject:
   m_ObjectHideFlags: 0

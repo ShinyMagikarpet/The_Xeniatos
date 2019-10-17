@@ -10,7 +10,6 @@ public abstract class ParticleProjectile : MonoBehaviour
     public ParticleSystem mParticles;
     private Player mOwner;
     private PhotonView mPV;
-    //private ParticleSystem.EmissionModule emissionModule;
 
 
     private void Start() {

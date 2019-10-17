@@ -12,7 +12,8 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
         single,
         Semi_Auto,
         fully_Auto,
-        Beam
+        Beam,
+        Particle
     }
 
     public string mName;                    /*<mName Name of weapon*/
@@ -28,6 +29,7 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
     public Fire_Type mFire_Type;            /*<Fire mode for weapon*/
     public bool mIsProjectile;              /*<Does weapon shoot projectiles*/
     public bool mIsParticle;                /*<Does the weapon shoot particles*/
+    public bool mIsBeam;                    /*<Is the weapon a Beam Type*/
     public ParticleSystem mParticleSystem;  /*<Particle system that the weapon will use for visual effects*/
     public ParticleProjectile mParticleProjectile;  /*<Particle system that the weapon will be firing*/
     public Projectile bullet;               /*<What projectile the weapon will be firing*/
@@ -54,13 +56,15 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
 
     public void Fire_Weapon() {
 
-        if (mIsProjectile || mIsParticle) {
-            if (mIsProjectile)
-                Fire_Projectile();
-            else
-                Fire_Particles();
-            
+        if (mIsProjectile) {
+            Fire_Projectile();
         } 
+        else if (mIsParticle) {
+            Fire_Particles();
+        }
+        else if (mIsBeam) {
+            Fire_Beam();
+        }
         else {
             Fire_Hitscan();
         }
@@ -69,12 +73,8 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
     
     public void Fire_Hitscan() {
 
-        if(mAmmoLoaded <= 0){
-            mAmmoLoaded = 0;
-            return;
-        }
 
-        if (mIsReloading)
+        if (!Can_Fire())
             return;
 
         if (Time.time > mTimeToNextFire){
@@ -109,12 +109,8 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
 
     public void Fire_Projectile() {
 
-        if (mAmmoLoaded <= 0) {
-            mAmmoLoaded = 0;
-            return;
-        }
 
-        if (mIsReloading)
+        if (!Can_Fire())
             return;
 
         if (Time.time > mTimeToNextFire) {
@@ -134,21 +130,9 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
 
     public void Fire_Particles() {
 
-        if (mAmmoLoaded <= 0) {
-            mAmmoLoaded = 0;
-            if (mParticleProjectile.mParticles.isEmitting) {
-                mOwner.photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
-            }
-            return;
-        }
 
-        if (mIsReloading) {
-            if (mParticleProjectile.mParticles.isEmitting) {
-                mOwner.photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
-            }
+        if (!Can_Fire())
             return;
-        }
-            
 
         if (Time.time > mTimeToNextFire) {
             Player owner = mParticleProjectile.Get_Owner();
@@ -167,6 +151,59 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
         }
 
 
+    }
+
+    void Fire_Beam() {
+
+        if (!Can_Fire())
+            return;
+
+        if (Time.time > mTimeToNextFire) {
+
+            mTimeToNextFire = Time.time + mROF;
+
+
+            if (!mParticleSystem.isEmitting)
+                //mParticleProjectile.gameObject.GetComponent<PhotonView>().RPC("Play_Particles_Weapon", RpcTarget.All);
+                mOwner.photonView.RPC("Play_Particle_System", RpcTarget.All);
+
+            mAmmoLoaded--;
+        }
+
+    }
+
+    bool Can_Fire() {
+
+        if (mAmmoLoaded <= 0) {
+            mAmmoLoaded = 0;
+            if (mFire_Type == Fire_Type.Particle) {
+                if (mParticleProjectile.mParticles.isEmitting) {
+                    mOwner.photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
+                }
+            } 
+            else if(mFire_Type == Fire_Type.Beam){
+                if (mParticleSystem.isEmitting) {
+                    mOwner.photonView.RPC("Stop_Particle_System", RpcTarget.All);
+                }
+            }
+            return false;
+        }
+
+        if (mIsReloading) {
+            if (mFire_Type == Fire_Type.Particle) {
+                if (mParticleProjectile.mParticles.isEmitting) {
+                    mOwner.photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
+                }
+            }
+            else if(mFire_Type == Fire_Type.Beam) {
+                if (mParticleSystem.isEmitting) {
+                    mOwner.photonView.RPC("Stop_Particle_System", RpcTarget.All);
+                }
+            }
+            return false;
+        }
+
+        return true;
     }
 
     public void Reload_Weapon() {

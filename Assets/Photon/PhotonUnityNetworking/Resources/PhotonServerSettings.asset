@@ -44,5 +44,9 @@ MonoBehaviour:
   - Player_Die
   - Give_Resource
   - Remove_Resource_Count
+  - Play_Particle_System
+  - Play_Weapon_Particles
+  - Stop_Particle_System
+  - Stop_Weapon_Particles
   DisableAutoOpenWizard: 1
   ShowSettings: 1

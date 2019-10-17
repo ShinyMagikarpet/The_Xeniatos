@@ -41,14 +41,15 @@ public class Player : MonoBehaviourPunCallbacks
     private float mCollectRate = 1.3f;
     private float mTimeToNextCollect;
     private bool mIsCollecting = false;
+    [SerializeField] private Camera mCam;
 
     void Start(){
         
         //Disable/Enable whatever you want the local client to see for remote users here
         if (!photonView.IsMine && PhotonNetwork.IsConnected == true) {
-            Camera camera = GetComponentInChildren<Camera>();
-            camera.enabled = false;
-            camera.GetComponent<AudioListener>().enabled = false;
+            mCam.enabled = false;
+            mCam.GetComponent<AudioListener>().enabled = false;
+            mPlayerWeapon = mCam.gameObject.GetComponentInChildren<Weapon>();
             mArmsMesh.SetActive(false);
             mFullBodyMesh.SetActive(true);
             GetComponent<PlayerController>().enabled = false;
@@ -124,10 +125,11 @@ public class Player : MonoBehaviourPunCallbacks
         }
 
         //Automatic fire
-        else if (Input.GetButton("Fire1") && (mPlayerWeapon.mFire_Type == Weapon.Fire_Type.fully_Auto || mPlayerWeapon.mFire_Type == Weapon.Fire_Type.Beam) && state != PlayerState.InMenu) {
-            //Debug.Log("Fire fully auto");
-            mPlayerWeapon.Fire_Weapon();
-        }
+        else if (Input.GetButton("Fire1") && (mPlayerWeapon.mFire_Type == Weapon.Fire_Type.fully_Auto || mPlayerWeapon.mFire_Type == Weapon.Fire_Type.Beam || mPlayerWeapon.mFire_Type == Weapon.Fire_Type.Particle) && 
+            state != PlayerState.InMenu) {
+
+                mPlayerWeapon.Fire_Weapon();
+             }
 
         //Reload
         if (Input.GetButtonDown("Reload") || mPlayerWeapon.mAmmoLoaded == 0 && state != PlayerState.InMenu) {
@@ -137,6 +139,10 @@ public class Player : MonoBehaviourPunCallbacks
         if(mPlayerWeapon.mIsParticle && mPlayerWeapon.mParticleProjectile.mParticles.isEmitting && !Input.GetButton("Fire1")) {
             //mPlayerWeapon.mParticleProjectile.mParticles.Stop();
             photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
+        }
+
+        if(mPlayerWeapon.mIsBeam && mPlayerWeapon.mParticleSystem.isEmitting && !Input.GetButton("Fire1")) {
+            photonView.RPC("Stop_Particle_System", RpcTarget.All);
         }
 
         if (Input.GetKeyDown(KeyCode.Y)) {
@@ -160,10 +166,10 @@ public class Player : MonoBehaviourPunCallbacks
     public bool Player_Near_Resource()
     {
 
-        Vector3 rayOrigin = mPlayerWeapon.mCam.transform.position;
+        Vector3 rayOrigin = mCam.transform.position;
         RaycastHit[] hits;
 
-        hits = Physics.RaycastAll(rayOrigin, mPlayerWeapon.mCam.transform.TransformDirection(Vector3.forward), 3.0f);
+        hits = Physics.RaycastAll(rayOrigin, mCam.transform.TransformDirection(Vector3.forward), 3.0f);
 
         foreach(RaycastHit hit in hits){
 
@@ -216,6 +222,16 @@ public class Player : MonoBehaviourPunCallbacks
     [PunRPC]
     public void Stop_Particle_Projectile() {
         mPlayerWeapon.mParticleProjectile.mParticles.Stop();
+    }
+
+    [PunRPC]
+    public void Play_Particle_System() {
+        mPlayerWeapon.mParticleSystem.Play();
+    }
+
+    [PunRPC]
+    public void Stop_Particle_System() {
+        mPlayerWeapon.mParticleSystem.Stop();
     }
 
     [PunRPC]

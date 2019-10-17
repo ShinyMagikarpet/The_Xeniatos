@@ -14,7 +14,7 @@ public class ConfettiGun : Weapon
         mAmmoLoaded = 150;
         mMaxAmmoLoaded = 150;
         mROF = 2f;
-        mFire_Type = Fire_Type.Beam;
+        mFire_Type = Fire_Type.Particle;
         mReloadSpeed = 2.0f;
     }
 
