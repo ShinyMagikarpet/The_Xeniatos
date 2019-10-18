@@ -37,11 +37,11 @@ public class Player : MonoBehaviourPunCallbacks
     public static GameObject LocalPlayerInstance;
     [SerializeField]
     private ResourceNode _targetNode;
-    [SerializeField]
     private float mCollectRate = 1.3f;
     private float mTimeToNextCollect;
     private bool mIsCollecting = false;
     [SerializeField] private Camera mCam;
+    [SerializeField] private Camera mMinimapCam;
 
     void Start(){
         
@@ -49,6 +49,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (!photonView.IsMine && PhotonNetwork.IsConnected == true) {
             mCam.enabled = false;
             mCam.GetComponent<AudioListener>().enabled = false;
+            mMinimapCam.enabled = false;
             mPlayerWeapon = mCam.gameObject.GetComponentInChildren<Weapon>();
             mArmsMesh.SetActive(false);
             mFullBodyMesh.SetActive(true);

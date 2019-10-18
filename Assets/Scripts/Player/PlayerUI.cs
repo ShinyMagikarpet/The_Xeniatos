@@ -13,6 +13,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private Text playerStoneText;
     [SerializeField] private Text playerWoodText;
     [SerializeField] private GameObject playerPauseMenu;
+    [SerializeField] private GameObject playerMiniMap;
     private Player target;
 
     void Awake()
@@ -22,6 +23,7 @@ public class PlayerUI : MonoBehaviour
 
     private void Start() {
         playerPauseMenu = Instantiate(playerPauseMenu, GameObject.Find("Canvas").transform);
+        playerMiniMap = Instantiate(playerMiniMap, GameObject.Find("Canvas").transform);
         playerPauseMenu.SetActive(false);
     }
 

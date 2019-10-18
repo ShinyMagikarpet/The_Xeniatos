@@ -529,6 +529,8 @@ MonoBehaviour:
   playerWoodText: {fileID: 6177786170719338306}
   playerPauseMenu: {fileID: 1091384523471950185, guid: eada7929ca5560a4d9bacc4b13c8ea87,
     type: 3}
+  playerMiniMap: {fileID: 4591379654311618537, guid: d6dcca43038499945a3c6f18329aed86,
+    type: 3}
 --- !u!1 &6408208028608855018
 GameObject:
   m_ObjectHideFlags: 0
