@@ -11,7 +11,7 @@ public class WeaponRecipes : MonoBehaviour
     static WeaponRecipes(){
 
         gWeaponRecipes = new Dictionary<string, int[]>();
-        gWeaponRecipes.Add("Assault Rifle", new int[] { 1, 2, 3});
+        gWeaponRecipes.Add("Assault Rifle", new int[] { 100, 150, 100});
 
     }
 

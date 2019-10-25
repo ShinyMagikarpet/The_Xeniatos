@@ -19,7 +19,8 @@ public class Player : MonoBehaviourPunCallbacks
         Reloading,
         Dead,
         InMenu,
-        Collecting
+        Collecting,
+        Crafting
     };
 
     [HideInInspector] public bool mIsDead = false;                    
@@ -37,9 +38,11 @@ public class Player : MonoBehaviourPunCallbacks
     public static GameObject LocalPlayerInstance;
     [SerializeField]
     private ResourceNode _targetNode;
+    private Workbench mWorkbench;
     private float mCollectRate = 1.3f;
     private float mTimeToNextCollect;
     private bool mIsCollecting = false;
+    private bool mIsCrafting = false;
     [SerializeField] private Camera mCam;
     [SerializeField] private Camera mMinimapCam;
 
@@ -105,10 +108,18 @@ public class Player : MonoBehaviourPunCallbacks
             mIsCollecting = true;
         }
 
+        if (Player_Near_Workbench() && Input.GetButtonDown("Interact")) {
+            state = PlayerState.Crafting;
+            mIsCrafting = true;
+        }
+
         //Menu
         if (Input.GetButtonDown("Cancel")) {
 
-            if (state != PlayerState.InMenu) {
+            if(state == PlayerState.Crafting) {
+                state = PlayerState.Idle;
+            }
+            else if (state != PlayerState.InMenu) {
                 Debug.Log("Entering menu");
                 state = PlayerState.InMenu;
                 mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Pause_Menu();
@@ -118,6 +129,10 @@ public class Player : MonoBehaviourPunCallbacks
                 mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Pause_Menu();
             }
 
+        }
+
+        if(state == PlayerState.Crafting) {
+            return;
         }
 
         //Single fire
@@ -164,8 +179,7 @@ public class Player : MonoBehaviourPunCallbacks
         mPlayerSubWeapon.gameObject.SetActive(false);
     }
 
-    public bool Player_Near_Resource()
-    {
+    public bool Player_Near_Resource(){
 
         Vector3 rayOrigin = mCam.transform.position;
         RaycastHit[] hits;
@@ -177,18 +191,44 @@ public class Player : MonoBehaviourPunCallbacks
             if (hit.collider.CompareTag("Resource")){
                 //We are already collecting or node is empty
                 if (mIsCollecting || !hit.collider.GetComponent<ResourceNode>().enabled) {
-                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Near_Resource_Text("");
+                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Action_Text("");
                 } 
                 else {
-                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Near_Resource_Text(("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name()));
+                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Action_Text(("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name()));
                 }
                 _targetNode = hit.collider.GetComponent<ResourceNode>();
                 return true;
             }
+            
         }
-        mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Near_Resource_Text("");
+        mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Action_Text("");
         mIsCollecting = false;
         _targetNode = null;
+        return false;
+    }
+
+    public bool Player_Near_Workbench() {
+
+        Vector3 rayOrigin = mCam.transform.position;
+        RaycastHit[] hits;
+
+        hits = Physics.RaycastAll(rayOrigin, mCam.transform.TransformDirection(Vector3.forward), 3.0f);
+        foreach (RaycastHit hit in hits) {
+
+            if (hit.collider.CompareTag("Workbench")) {
+                if (mIsCrafting) {
+                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Action_Text("");
+                    return false;
+                }
+                else {
+                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Action_Text(("Press F To Craft"));
+                    return true;
+                }
+            }
+        }
+
+        mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Action_Text("");
+        mIsCrafting = false;
         return false;
     }
 

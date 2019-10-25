@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             return;
         }
 
-        if(mPlayer.state == Player.PlayerState.InMenu) {
+        if(mPlayer.state == Player.PlayerState.InMenu || mPlayer.state == Player.PlayerState.Crafting) {
             return;
         }
 

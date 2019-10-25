@@ -10,6 +10,7 @@ TagManager:
   - Mesh
   - Ground
   - Hitbox
+  - Workbench
   layers:
   - Default
   - TransparentFX

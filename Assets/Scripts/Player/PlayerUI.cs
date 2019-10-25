@@ -79,7 +79,7 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
-    public void Player_Near_Resource_Text(string message) {
+    public void Player_Action_Text(string message) {
         playerActionText.text = message;
     }
 }
