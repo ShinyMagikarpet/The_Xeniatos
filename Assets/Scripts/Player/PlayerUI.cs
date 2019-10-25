@@ -8,12 +8,14 @@ public class PlayerUI : MonoBehaviour
 
     [SerializeField] private Text playerAmmoText;
     [SerializeField] private Text playerHealthText;
-    [SerializeField] private Text playerActionText;
+    [SerializeField] private Text playerCollectText;
+    [SerializeField] private Text playerCraftText;
     [SerializeField] private Text playerIronText;
     [SerializeField] private Text playerStoneText;
     [SerializeField] private Text playerWoodText;
     [SerializeField] private GameObject playerPauseMenu;
     [SerializeField] private GameObject playerMiniMap;
+    [SerializeField] private GameObject playerCraftMenu;
     private Player target;
 
     void Awake()
@@ -24,7 +26,10 @@ public class PlayerUI : MonoBehaviour
     private void Start() {
         playerPauseMenu = Instantiate(playerPauseMenu, GameObject.Find("Canvas").transform);
         playerMiniMap = Instantiate(playerMiniMap, GameObject.Find("Canvas").transform);
+        playerCraftMenu = Instantiate(playerCraftMenu, GameObject.Find("Canvas").transform);
+        playerCraftMenu.GetComponent<CraftMenuButton>().playerUI = this;
         playerPauseMenu.SetActive(false);
+        playerCraftMenu.SetActive(false);
     }
 
     // Update is called once per frame
@@ -79,7 +84,24 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
-    public void Player_Action_Text(string message) {
-        playerActionText.text = message;
+    public void Use_Craft_Menu() {
+
+        if (!playerCraftMenu.activeSelf) {
+            playerCraftMenu.SetActive(true);
+        }
+        else {
+            playerCraftMenu.SetActive(false);
+            if(target.state != Player.PlayerState.Idle) {
+               target.state = Player.PlayerState.Idle;
+            }
+        }
+    }
+
+    public void Player_Resource_Text(string message) {
+        playerCollectText.text = message;
+    }
+
+    public void Player_Craft_Text(string message) {
+        playerCraftText.text = message;
     }
 }

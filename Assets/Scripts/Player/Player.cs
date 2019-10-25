@@ -75,8 +75,6 @@ public class Player : MonoBehaviourPunCallbacks
 
     // Update is called once per frame
     void Update(){
-
-
         
         if (!photonView.IsMine && PhotonNetwork.IsConnected) {
             return;
@@ -110,6 +108,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (Player_Near_Workbench() && Input.GetButtonDown("Interact")) {
             state = PlayerState.Crafting;
+            mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Craft_Menu();
             mIsCrafting = true;
         }
 
@@ -118,6 +117,7 @@ public class Player : MonoBehaviourPunCallbacks
 
             if(state == PlayerState.Crafting) {
                 state = PlayerState.Idle;
+                mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Craft_Menu();
             }
             else if (state != PlayerState.InMenu) {
                 Debug.Log("Entering menu");
@@ -189,19 +189,20 @@ public class Player : MonoBehaviourPunCallbacks
         foreach(RaycastHit hit in hits){
 
             if (hit.collider.CompareTag("Resource")){
+
                 //We are already collecting or node is empty
                 if (mIsCollecting || !hit.collider.GetComponent<ResourceNode>().enabled) {
-                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Action_Text("");
+                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Resource_Text("");
                 } 
                 else {
-                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Action_Text(("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name()));
+                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Resource_Text(("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name()));
                 }
                 _targetNode = hit.collider.GetComponent<ResourceNode>();
                 return true;
             }
             
         }
-        mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Action_Text("");
+        mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Resource_Text("");
         mIsCollecting = false;
         _targetNode = null;
         return false;
@@ -217,17 +218,17 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (hit.collider.CompareTag("Workbench")) {
                 if (mIsCrafting) {
-                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Action_Text("");
+                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Craft_Text("");
                     return false;
                 }
                 else {
-                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Action_Text(("Press F To Craft"));
+                    mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Craft_Text(("Press F To Craft"));
                     return true;
                 }
             }
         }
 
-        mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Action_Text("");
+        mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Craft_Text("");
         mIsCrafting = false;
         return false;
     }
