@@ -184,6 +184,11 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8371754185497673215, guid: 690e3374ba965854c809afeddfe2424a,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b44244b03037c9e4fab5a43697aec37d, type: 2}
     - target: {fileID: 7526964460790712669, guid: 690e3374ba965854c809afeddfe2424a,
         type: 3}
       propertyPath: mSize

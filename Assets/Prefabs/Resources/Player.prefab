@@ -309,7 +309,7 @@ Transform:
   m_Children:
   - {fileID: 7223303875046803887}
   - {fileID: 4035663392618016712}
-  - {fileID: 567875615123619520}
+  - {fileID: 7820942156111311154}
   - {fileID: 996411348881382992}
   - {fileID: 3823901174424827828}
   m_Father: {fileID: 0}
@@ -377,7 +377,7 @@ MonoBehaviour:
     type: 3}
   mArmsMesh: {fileID: 1666254401502085625}
   mFullBodyMesh: {fileID: 4216063218678627272}
-  mRagdoll: {fileID: 388020459564313280}
+  mRagdoll: {fileID: 7820942156111311995}
   _targetNode: {fileID: 0}
   mCam: {fileID: 7223303875046803886}
   mMinimapCam: {fileID: 7360472579873805000}
@@ -1066,13 +1066,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0ef3f38b0772f7d47b0bbfa545e1c7ae, type: 3}
---- !u!1 &388020459564313280 stripped
+--- !u!1 &7820942156111311995 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7632220353704386017, guid: 0ef3f38b0772f7d47b0bbfa545e1c7ae,
     type: 3}
   m_PrefabInstance: {fileID: 7820942156111312673}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &567875615123619520 stripped
+--- !u!4 &7820942156111311154 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7739698368513362401, guid: 0ef3f38b0772f7d47b0bbfa545e1c7ae,
     type: 3}

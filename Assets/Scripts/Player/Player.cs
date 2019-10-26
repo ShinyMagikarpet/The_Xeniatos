@@ -38,11 +38,13 @@ public class Player : MonoBehaviourPunCallbacks
     public static GameObject LocalPlayerInstance;
     [SerializeField]
     private ResourceNode _targetNode;
-    private Workbench mWorkbench;
+    private GameObject _lastWorkBench;
     private float mCollectRate = 1.3f;
     private float mTimeToNextCollect;
     private bool mIsCollecting = false;
     private bool mIsCrafting = false;
+    private MaterialPropertyBlock _propblock;
+
     [SerializeField] private Camera mCam;
     [SerializeField] private Camera mMinimapCam;
 
@@ -57,6 +59,7 @@ public class Player : MonoBehaviourPunCallbacks
             mArmsMesh.SetActive(false);
             mFullBodyMesh.SetActive(true);
             GetComponent<PlayerController>().enabled = false;
+            this.name = PhotonNetwork.NickName;
             return;
         }
         mPlayerWeapon.mOwner = this;
@@ -70,6 +73,8 @@ public class Player : MonoBehaviourPunCallbacks
 
         mPlayerUIPrefab = Instantiate(mPlayerUIPrefab);
         mPlayerUIPrefab.GetComponent<PlayerUI>().SetTarget(this);
+
+        _propblock = new MaterialPropertyBlock();
         
     }
 
@@ -189,19 +194,27 @@ public class Player : MonoBehaviourPunCallbacks
         foreach(RaycastHit hit in hits){
 
             if (hit.collider.CompareTag("Resource")){
+                Renderer outline = hit.collider.GetComponent<Renderer>();
 
                 //We are already collecting or node is empty
                 if (mIsCollecting || !hit.collider.GetComponent<ResourceNode>().enabled) {
                     mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Resource_Text("");
+                    Set_Shader_Outline(outline, _propblock, 1.0f);
                 } 
                 else {
                     mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Resource_Text(("Press F To Collect " + hit.collider.GetComponent<ResourceNode>().Get_Name()));
+                    Set_Shader_Outline(outline, _propblock, 1.02f);
                 }
                 _targetNode = hit.collider.GetComponent<ResourceNode>();
                 return true;
             }
             
         }
+
+        if(_targetNode != null) {
+            Set_Shader_Outline(_targetNode.gameObject.GetComponent<Renderer>(), _propblock, 1.0f);
+        }
+
         mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Resource_Text("");
         mIsCollecting = false;
         _targetNode = null;
@@ -217,22 +230,35 @@ public class Player : MonoBehaviourPunCallbacks
         foreach (RaycastHit hit in hits) {
 
             if (hit.collider.CompareTag("Workbench")) {
+                _lastWorkBench = hit.collider.gameObject;
+                Renderer outline = _lastWorkBench.GetComponent<Renderer>();
                 if (mIsCrafting) {
                     mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Craft_Text("");
+                    Set_Shader_Outline(outline, _propblock, 1.0f);
                     return false;
                 }
                 else {
                     mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Craft_Text(("Press F To Craft"));
+                    Set_Shader_Outline(outline, _propblock, 1.02f);
                     return true;
                 }
             }
         }
 
+        if(_lastWorkBench != null) {
+            Set_Shader_Outline(_lastWorkBench.GetComponent<Renderer>(), _propblock, 1.0f);
+        }
         mPlayerUIPrefab.GetComponent<PlayerUI>().Player_Craft_Text("");
         mIsCrafting = false;
         return false;
     }
 
+    private void Set_Shader_Outline(Renderer outline, MaterialPropertyBlock propblock, float value) {
+
+        outline.GetPropertyBlock(propblock);
+        propblock.SetFloat("_OutlineWidth", value);
+        outline.SetPropertyBlock(propblock);
+    }
     public void Player_Gather_Resource() {
         if (Time.time > mTimeToNextCollect) {
             mTimeToNextCollect = Time.time + mCollectRate;

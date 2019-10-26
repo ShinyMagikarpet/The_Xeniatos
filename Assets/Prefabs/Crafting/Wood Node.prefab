@@ -119,11 +119,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4796446446227076392}
     m_Modifications:
-    - target: {fileID: 8040076169985376270, guid: 9be296f87e524ee4abfb3a0f4e543b95,
-        type: 3}
-      propertyPath: m_Name
-      value: WoodMapSprite
-      objectReference: {fileID: 0}
     - target: {fileID: 4631907816933632039, guid: 9be296f87e524ee4abfb3a0f4e543b95,
         type: 3}
       propertyPath: m_Name
@@ -149,15 +144,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8258741565026184705, guid: 9be296f87e524ee4abfb3a0f4e543b95,
+        type: 3}
+      propertyPath: mSize
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4631907816933632034, guid: 9be296f87e524ee4abfb3a0f4e543b95,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b44244b03037c9e4fab5a43697aec37d, type: 2}
     - target: {fileID: 152765472731005468, guid: 9be296f87e524ee4abfb3a0f4e543b95,
         type: 3}
       propertyPath: viewIdField
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8258741565026184705, guid: 9be296f87e524ee4abfb3a0f4e543b95,
+    - target: {fileID: 8040076169985376270, guid: 9be296f87e524ee4abfb3a0f4e543b95,
         type: 3}
-      propertyPath: mSize
-      value: 2
+      propertyPath: m_Name
+      value: WoodMapSprite
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9be296f87e524ee4abfb3a0f4e543b95, type: 3}

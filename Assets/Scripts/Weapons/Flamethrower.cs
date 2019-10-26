@@ -41,9 +41,8 @@ public class Flamethrower : Weapon
     }
 
     private void Change_Material() {
-        //value = (float)mAmmoLoaded / (float)mMaxAmmoLoaded;
+
         value = (float)mAmmoLoaded / (float)mMaxAmmoLoaded;
-        Debug.Log(value);
 
         weaponBase.GetPropertyBlock(_propBlock);
         _propBlock.SetFloat("_Transition", value);
