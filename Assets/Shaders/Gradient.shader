@@ -5,8 +5,10 @@ Shader "Unlit/Gradient"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+		_SecondTex("Texture", 2D) = "white" {}
+		[PerRendererData]_Transition("Transition", Range(0, 1)) = 1
 		_Color("Color", color) = (1, 1, 1, 1)
-		_Invert("Invert Color", Range(0, 1)) = 0
+		[PerRendererData]_Invert("Invert Color", Range(0, 1)) = 1
 		[Header(Scroll Material Speed)]
 		_ScrollSpeedX ("Scroll x", Range(-10, 10)) = 0
 		_ScrollSpeedY ("Scroll y", Range(-10, 10)) = 0
@@ -50,6 +52,8 @@ Shader "Unlit/Gradient"
             };
 
             sampler2D _MainTex;
+			sampler2D _SecondTex;
+			float _Transition;
 			float4 _Color;
 			float _Invert;
 			float _ScrollSpeedX;
@@ -88,7 +92,7 @@ Shader "Unlit/Gradient"
 
 
 				//float4 color = tex2D(_MainTex, i.uv) * _Color; 
-				float4 color = tex2D(_MainTex, scrollUV + disp + uv)  * (_Color); 
+				float4 color = lerp(tex2D(_SecondTex, i.uv), tex2D(_MainTex, scrollUV + disp + uv), (_Transition));
 				//float4 color = float4(i.uv.x, i.uv.y, 1, 1);
 				color.rgb = abs(_Invert - color.rgb); //Inverts the color
 				return color;

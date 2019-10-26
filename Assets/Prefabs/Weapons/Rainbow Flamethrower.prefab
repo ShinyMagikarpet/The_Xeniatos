@@ -66,6 +66,9 @@ MonoBehaviour:
   mOwner: {fileID: 0}
   mCam: {fileID: 0}
   grow: {fileID: 0}
+  weaponBase: {fileID: 9219745770827443557}
+  weaponBolt: {fileID: 9219745770827443559}
+  weaponMag: {fileID: 9219745770827443555}
 --- !u!1001 &2302100053199611673
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -323,6 +326,24 @@ PrefabInstance:
 --- !u!4 &9219745770829344645 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400002, guid: a0e70037533056249a1bcaf8b480c5cb,
+    type: 3}
+  m_PrefabInstance: {fileID: 9219745770829739271}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &9219745770827443557 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300002, guid: a0e70037533056249a1bcaf8b480c5cb,
+    type: 3}
+  m_PrefabInstance: {fileID: 9219745770829739271}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &9219745770827443559 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300000, guid: a0e70037533056249a1bcaf8b480c5cb,
+    type: 3}
+  m_PrefabInstance: {fileID: 9219745770829739271}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &9219745770827443555 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2300004, guid: a0e70037533056249a1bcaf8b480c5cb,
     type: 3}
   m_PrefabInstance: {fileID: 9219745770829739271}
   m_PrefabAsset: {fileID: 0}

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be17c44b761d4054aa409aa8550e30b9, type: 3}
   m_Name: ConfettiButton
   m_EditorClassIdentifier: 
-  image: {fileID: 0}
-  mName: 
+  image: {fileID: 21300000, guid: ebfe61281a67d5c4984592439d4ceccd, type: 3}
+  mName: Confetti Gun

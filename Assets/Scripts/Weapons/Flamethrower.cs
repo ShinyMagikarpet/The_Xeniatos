@@ -6,7 +6,13 @@ public class Flamethrower : Weapon
 {
 
     public Grow_Height grow;
-    
+    public Renderer weaponBase;
+    public Renderer weaponBolt;
+    public Renderer weaponMag;
+    //private Renderer _renderer;
+    private MaterialPropertyBlock _propBlock;
+    private float value = 100.0f;
+
     public Flamethrower() {
 
         mName = "Rainbow Flamethrower";
@@ -27,9 +33,28 @@ public class Flamethrower : Weapon
     private void Awake() {
         mParticleSystem = GetComponentInChildren<ParticleSystem>();
         grow = GetComponentInChildren<Grow_Height>();
+        _propBlock = new MaterialPropertyBlock();
     }
 
     private void Update() {
-        
+        Change_Material();
+    }
+
+    private void Change_Material() {
+        //value = (float)mAmmoLoaded / (float)mMaxAmmoLoaded;
+        value = (float)mAmmoLoaded / (float)mMaxAmmoLoaded;
+        Debug.Log(value);
+
+        weaponBase.GetPropertyBlock(_propBlock);
+        _propBlock.SetFloat("_Transition", value);
+        weaponBase.SetPropertyBlock(_propBlock);
+
+        weaponBolt.GetPropertyBlock(_propBlock);
+        _propBlock.SetFloat("_Transition", value);
+        weaponBolt.SetPropertyBlock(_propBlock);
+
+        weaponMag.GetPropertyBlock(_propBlock);
+        _propBlock.SetFloat("_Transition", value);
+        weaponMag.SetPropertyBlock(_propBlock);
     }
 }
