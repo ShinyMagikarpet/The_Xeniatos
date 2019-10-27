@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class WeaponRecipes : MonoBehaviour
 {
-
+    //Recipe list note: int[] will always be iron -> stone -> wood
     public static Dictionary<string, int[]> gWeaponRecipes;
-
 
     static WeaponRecipes(){
 

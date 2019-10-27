@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
             return;
         }
 
-        if(mPlayer.state == Player.PlayerState.InMenu || mPlayer.state == Player.PlayerState.Crafting) {
+        if(mPlayer.state == Player.PlayerState.InMenu || mPlayer.state == Player.PlayerState.Crafting || mPlayer.state == Player.PlayerState.Dead) {
             return;
         }
 
@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         
         if(controller.isGrounded && Input.GetButtonDown("Jump")) {
             if (isDashing) {
-                verticalVelocity = jumpSpeed / 1.6f;
+                verticalVelocity = jumpSpeed / 1.2f;
             } 
             else {
                 verticalVelocity = jumpSpeed;

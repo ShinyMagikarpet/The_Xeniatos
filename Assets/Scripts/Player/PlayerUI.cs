@@ -91,7 +91,9 @@ public class PlayerUI : MonoBehaviour
         }
         else {
             playerCraftMenu.SetActive(false);
-            if(target.state != Player.PlayerState.Idle) {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            if (target.state != Player.PlayerState.Idle) {
                target.state = Player.PlayerState.Idle;
             }
         }

@@ -44,6 +44,7 @@ public class Player : MonoBehaviourPunCallbacks
     private bool mIsCollecting = false;
     private bool mIsCrafting = false;
     private MaterialPropertyBlock _propblock;
+    public static Player mLocalPlayer;
 
     [SerializeField] private Camera mCam;
     [SerializeField] private Camera mMinimapCam;
@@ -62,19 +63,22 @@ public class Player : MonoBehaviourPunCallbacks
             this.name = PhotonNetwork.NickName;
             return;
         }
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false; //Hide the cursor
         mPlayerWeapon.mOwner = this;
         state = PlayerState.Idle;
         //mFullBodyMesh = Get_Player_Mesh();
         this.name = PhotonNetwork.NickName;
         mResourceDict = new Dictionary<string, int>();
-        mResourceDict.Add("Iron", 0);
-        mResourceDict.Add("Stone", 0);
-        mResourceDict.Add("Wood", 0);
+        mResourceDict.Add("Iron", 200);
+        mResourceDict.Add("Stone", 200);
+        mResourceDict.Add("Wood", 200);
 
         mPlayerUIPrefab = Instantiate(mPlayerUIPrefab);
         mPlayerUIPrefab.GetComponent<PlayerUI>().SetTarget(this);
 
         _propblock = new MaterialPropertyBlock();
+        mLocalPlayer = this;
         
     }
 
@@ -85,55 +89,76 @@ public class Player : MonoBehaviourPunCallbacks
             return;
         }
 
-        if(mIsCollecting) {
+        if (mIsCollecting) {
             Player_Gather_Resource();
         }
 
         //TODO: Needs better 3rd person camera to better show rigidbody
         if(mCurrentHealth <= 0 && !mIsDead) {
-            //Player_Die();
-            //return;
-            Debug.Log("Want to play around with this later");
+            if (PhotonNetwork.IsConnected) {
+                photonView.RPC("Player_Die", RpcTarget.All);
+            }
+            else {
+                Player_Die();
+            }
+
+            return;
         }
-        
+
+        if (Input.GetKeyDown(KeyCode.P)) {
+            mCurrentHealth = 0;
+        }
 
         Player_Inputs();
 
     }
 
-
     void Player_Inputs() {
 
         //Debug.DrawRay(mPlayerWeapon.mCam.transform.position, mPlayerWeapon.mCam.transform.TransformDirection(Vector3.forward) * 3, Color.cyan);
 
-        if(Player_Near_Resource() && Input.GetButtonDown("Interact"))
+        //The player should be allowed to access the main menu when dead
+        //Menu
+        if (Input.GetButtonDown("Cancel")) {
+
+            if (state == PlayerState.Crafting) {
+                state = PlayerState.Idle;
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = false;
+                mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Craft_Menu();
+            }
+            else if (state != PlayerState.InMenu) {
+                Debug.Log("Entering menu");
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                state = PlayerState.InMenu;
+                mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Pause_Menu();
+            }
+            else {
+                Debug.Log("Leaving menu");
+                state = PlayerState.Idle;
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+                mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Pause_Menu();
+            }
+
+        }
+
+        if (mIsDead) {
+            return;
+        }
+
+        if (Player_Near_Resource() && Input.GetButtonDown("Interact"))
         {
             mIsCollecting = true;
         }
 
         if (Player_Near_Workbench() && Input.GetButtonDown("Interact")) {
             state = PlayerState.Crafting;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
             mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Craft_Menu();
             mIsCrafting = true;
-        }
-
-        //Menu
-        if (Input.GetButtonDown("Cancel")) {
-
-            if(state == PlayerState.Crafting) {
-                state = PlayerState.Idle;
-                mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Craft_Menu();
-            }
-            else if (state != PlayerState.InMenu) {
-                Debug.Log("Entering menu");
-                state = PlayerState.InMenu;
-                mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Pause_Menu();
-            } else {
-                Debug.Log("Leaving menu");
-                state = PlayerState.Idle;
-                mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Pause_Menu();
-            }
-
         }
 
         if(state == PlayerState.Crafting) {
@@ -159,30 +184,30 @@ public class Player : MonoBehaviourPunCallbacks
 
         if(mPlayerWeapon.mIsParticle && mPlayerWeapon.mParticleProjectile.mParticles.isEmitting && !Input.GetButton("Fire1")) {
             //mPlayerWeapon.mParticleProjectile.mParticles.Stop();
-            photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
+            if (PhotonNetwork.IsConnected)
+                photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
+            else
+                Stop_Particle_Projectile();
         }
 
         if(mPlayerWeapon.mIsBeam && mPlayerWeapon.mParticleSystem.isEmitting && !Input.GetButton("Fire1")) {
-            photonView.RPC("Stop_Particle_System", RpcTarget.All);
+
+            if (PhotonNetwork.IsConnected)
+                photonView.RPC("Stop_Particle_System", RpcTarget.All);
+            else
+                Stop_Particle_System();
         }
 
-        if (Input.GetKeyDown(KeyCode.Y)) {
-            //mCurrentHealth = 0;
-            Player_Switch_Weapons();
+        if(Input.GetAxis("Mouse ScrollWheel") != 0) {
+            if (PhotonNetwork.IsConnected)
+                photonView.RPC("Player_Switch_Weapons", RpcTarget.All);
+            else
+                Player_Switch_Weapons();
         }
 
     }
 
-    public void Player_Switch_Weapons() {
-        if(mPlayerSubWeapon == null) {
-            return;
-        }
-        GameObject tempWeapon = mPlayerWeapon.gameObject;
-        mPlayerWeapon = mPlayerSubWeapon;
-        mPlayerSubWeapon = tempWeapon.GetComponent<Weapon>();
-        mPlayerWeapon.gameObject.SetActive(true);
-        mPlayerSubWeapon.gameObject.SetActive(false);
-    }
+
 
     public bool Player_Near_Resource(){
 
@@ -270,6 +295,10 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
+    public Player Get_Local_Player() {
+        return mLocalPlayer;
+    }
+
     #region RPC_Functions
 
     [PunRPC]
@@ -304,12 +333,32 @@ public class Player : MonoBehaviourPunCallbacks
 
     [PunRPC]
     public void Player_Die() {
+        GetComponent<CharacterController>().enabled = false;
         mArmsMesh.SetActive(false);
         mFullBodyMesh.SetActive(false);
         mRagdoll.SetActive(true);
-        mPlayerWeapon.mCam.transform.Translate(0, 0, -5);
+        mPlayerWeapon.mCam.transform.Translate(0, 0, -2);
+        mPlayerWeapon.mCam.transform.Rotate(10, 0, 0);
         mPlayerWeapon.gameObject.SetActive(false);
         mIsDead = true;
+        state = PlayerState.Dead;
+    }
+
+    [PunRPC]
+    public void Player_Respawn() {
+
+    }
+
+    [PunRPC]
+    public void Player_Switch_Weapons() {
+        if (mPlayerSubWeapon == null) {
+            return;
+        }
+        GameObject tempWeapon = mPlayerWeapon.gameObject;
+        mPlayerWeapon = mPlayerSubWeapon;
+        mPlayerSubWeapon = tempWeapon.GetComponent<Weapon>();
+        mPlayerWeapon.gameObject.SetActive(true);
+        mPlayerSubWeapon.gameObject.SetActive(false);
     }
 
     #endregion

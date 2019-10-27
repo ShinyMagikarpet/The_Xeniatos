@@ -48,5 +48,9 @@ MonoBehaviour:
   - Play_Weapon_Particles
   - Stop_Particle_System
   - Stop_Weapon_Particles
+  - Player_Switch_Weapons
+  - Player_Respawn
+  - Match_Countdown_Timer
+  - Send_Timer
   DisableAutoOpenWizard: 1
   ShowSettings: 1

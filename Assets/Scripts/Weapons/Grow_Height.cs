@@ -38,7 +38,7 @@ public class Grow_Height : MonoBehaviour
     }
 
     private void OnTriggerStay(Collider other) {
-        if (other.CompareTag("Player")) {
+        if (other.CompareTag("Player") && other.GetComponent<Player>() != mWeapon.mOwner) {
             other.GetComponent<PhotonView>().RPC("Take_Damage", RpcTarget.All, mWeapon.mDamage);
         }
     }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5285334870521425664}
   - component: {fileID: 5285334870521425665}
   m_Layer: 0
-  m_Name: NetworkManager
+  m_Name: _NetworkManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,3 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e08383d6a07789f46b674ca99441afce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mPlayerPrefab: {fileID: 0}
