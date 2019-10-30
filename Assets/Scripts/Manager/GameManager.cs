@@ -9,11 +9,15 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     private float matchTime = 20f * 60;
     private float timer;
-    public Text timeText;
-    public GameObject sun;
+    [SerializeField]private Text timeText;
 
-    // Start is called before the first frame update
+    public static GameManager Instance { get; private set; }
     void Awake() {
+
+        if (!Instance) {
+            Instance = this;
+        }
+
         if (PhotonNetwork.IsMasterClient) {
             timer = matchTime;
             timeText.text = timer.ToString();
@@ -46,10 +50,18 @@ public class GameManager : MonoBehaviourPunCallbacks
             int minutes = (int)(timer / 60) % 60;
             string timerText = string.Format("{0:00}:{1:00}", minutes, seconds);
             timeText.text = timerText;
-            sun.transform.Rotate(0.008f, 0, 0);
+            //sun.transform.Rotate(0.0008f, 0, 0);
         }
         else {
             Debug.Log("GAME OVER");
         }
+    }
+
+    public float Get_Timer() {
+        return timer;
+    }
+
+    public float Get_Match_Time() {
+        return matchTime;
     }
 }
