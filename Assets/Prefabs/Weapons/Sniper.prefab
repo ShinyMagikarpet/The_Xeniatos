@@ -60,7 +60,7 @@ MonoBehaviour:
   mIsBeam: 0
   mParticleSystem: {fileID: 0}
   mParticleProjectile: {fileID: 0}
-  bullet: {fileID: 4046872929185918444, guid: 1c4785c930c5a4304af8e8f36813fd06, type: 3}
+  bullet: {fileID: 7182187736846105632, guid: 1c4785c930c5a4304af8e8f36813fd06, type: 3}
   mOwner: {fileID: 0}
   mCam: {fileID: 0}
 --- !u!1001 &6444997093636682032

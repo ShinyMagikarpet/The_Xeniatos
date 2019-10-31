@@ -125,8 +125,10 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
 
             mOwner.state = Player.PlayerState.Shooting;
             mTimeToNextFire = Time.time + mROF;
-
             Projectile projectile = objectPool.SpawnFromPool(bullet.mName).GetComponent<Projectile>();
+            if(projectile == null) {
+                projectile = objectPool.SpawnFromPool(bullet.mName).GetComponentInChildren<Projectile>();
+            }
             projectile.mOwner = mOwner.gameObject;
             projectile.Shoot_Projectile(projectile, mCam.transform, mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1.5f)));
 

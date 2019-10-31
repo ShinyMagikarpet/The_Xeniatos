@@ -13,9 +13,9 @@ public abstract class Projectile : MonoBehaviour
 
     public void Shoot_Projectile(Projectile projectile, Transform transform, Vector3 pos) {
 
+        
         projectile.transform.position = pos;
-        projectile.transform.rotation = transform.rotation;
-        projectile.transform.forward = transform.forward;
+        projectile.transform.up = transform.forward;
         projectile.GetComponent<Rigidbody>().AddForce(transform.forward * mSpeed, ForceMode.Force);
         
         StartCoroutine(Despawn_Time(mTTL, projectile));
@@ -31,15 +31,15 @@ public abstract class Projectile : MonoBehaviour
         Despawn_Projectile(projectile);
     }
 
-    void Despawn_Projectile(Projectile projectile) {
+    protected void Despawn_Projectile(Projectile projectile) {
         projectile.gameObject.transform.position = new Vector3(0, 0, 0);
         projectile.gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
         projectile.gameObject.GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
         projectile.gameObject.SetActive(false);
     }
 
-    private void OnCollisionEnter(Collision collision) {
-        if (collision.collider.CompareTag("Player")) {
+    protected virtual void OnCollisionEnter(Collision collision) {
+        if (collision.collider.CompareTag("Player") && collision.gameObject != mOwner) {
             Debug.Log("Projectile hit player");
             collision.gameObject.GetComponent<Player>().mCurrentHealth -= mDamage;
             Despawn_Projectile(this);
