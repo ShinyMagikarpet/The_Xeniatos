@@ -125,4 +125,5 @@ Shader "Unlit/Wireframe Light"
 				ENDCG
 			}
 		}
+        Fallback "Diffuse"
 }

@@ -29,6 +29,6 @@ Material:
     - _CutoutThresh: 0
     - _Distance: 0
     - _Speed: 0
-    - _Transparency: 0
+    - _Transparency: 1
     m_Colors:
     - _TintCol: {r: 0.14751692, g: 0.62621945, b: 0.8018868, a: 1}

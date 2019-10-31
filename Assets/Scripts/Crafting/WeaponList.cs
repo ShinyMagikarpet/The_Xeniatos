@@ -7,7 +7,8 @@ public class WeaponList : MonoBehaviour {
     {
         {"Assault Rifle", new Assault_Rifle() },
         {"Confetti Gun", new ConfettiGun() },
-        {"Rainbow Flamethrower", new Flamethrower() }
+        {"Rainbow Flamethrower", new Flamethrower() },
+        {"Sniper", new Sniper() }
     };
 
 }

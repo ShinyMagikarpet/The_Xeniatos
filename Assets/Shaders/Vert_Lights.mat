@@ -28,12 +28,12 @@ Material:
     - _Diffuse: 1
     - _Glossiness: 0.5
     - _Intensity: 0
-    - _Light: 10
+    - _Light: 0
     - _Metallic: 0
     - _Rim: 0
     - _Size: 4
     - _Threshold: 1
-    - _WireframeVal: 0.01
+    - _WireframeVal: 0
     m_Colors:
     - _BackColor: {r: 0, g: 1, b: 1, a: 1}
     - _Color: {r: 0, g: 1, b: 0.97032166, a: 1}
