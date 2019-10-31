@@ -5,7 +5,7 @@ using UnityEngine;
 public class Assault_Rifle : Weapon
 {
     public Assault_Rifle() {
-        mName = "Assault_Rifle";
+        mName = "Assault Rifle";
         mMaxAmmo = 150;
         mAmmoHeld = mMaxAmmo;
         mMaxAmmoLoaded = 30;

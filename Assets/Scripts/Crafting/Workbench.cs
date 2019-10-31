@@ -14,8 +14,17 @@ public class Workbench : MonoBehaviour
         if(targetPlayer.mResourceDict["Iron"] >= WeaponRecipes.gWeaponRecipes[weaponName][0] &&
             targetPlayer.mResourceDict["Stone"] >= WeaponRecipes.gWeaponRecipes[weaponName][1] &&
             targetPlayer.mResourceDict["Wood"] >= WeaponRecipes.gWeaponRecipes[weaponName][2]) {
+            Debug.Log(weaponName);
+            targetPlayer.mPlayerWeapon.gameObject.SetActive(false);
+            foreach (GameObject weaponObject in targetPlayer.mPlayerWeapons) {
+                Debug.Log("Name of object is: " + weaponObject.GetComponent<Weapon>().mName);
+                if (weaponObject.GetComponent<Weapon>().mName.Equals(weaponName)) {
+                    targetPlayer.mPlayerWeapon = weaponObject.GetComponent<Weapon>();
+                    weaponObject.SetActive(true);
+                }
+            }
+            targetPlayer.mPlayerWeapon.Weapon_Setup();
 
-            targetPlayer.mPlayerWeapon = WeaponList.gWeaponList[weaponName];
             targetPlayer.mResourceDict["Iron"] -= WeaponRecipes.gWeaponRecipes[weaponName][0];
             targetPlayer.mResourceDict["Stone"] -= WeaponRecipes.gWeaponRecipes[weaponName][1];
             targetPlayer.mResourceDict["Wood"] -= WeaponRecipes.gWeaponRecipes[weaponName][2];

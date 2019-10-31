@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponList : MonoBehaviour {
-    public static Dictionary<string, Weapon> gWeaponList = new Dictionary<string, Weapon>();
+    public static Dictionary<string, Weapon> gWeaponList = new Dictionary<string, Weapon>() 
+    {
+        {"Assault Rifle", new Assault_Rifle() },
+        {"Confetti Gun", new ConfettiGun() },
+    };
 
-    static WeaponList(){
-        gWeaponList.Add("Assault Rifle", new Flamethrower());
-        gWeaponList.Add("Confetti Gun", new ConfettiGun());
-    }
 }

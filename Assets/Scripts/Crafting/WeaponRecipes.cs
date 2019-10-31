@@ -15,8 +15,6 @@ public class WeaponRecipes : MonoBehaviour
 
     }
 
-    ~WeaponRecipes() { }
-
     public static string WeaponRecipeString(int[] recipe){
 
         string message = "The recipe cost is - Iron: " + recipe[0] +

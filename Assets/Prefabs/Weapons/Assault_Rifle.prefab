@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 853a299731f38984786573269d7be427, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mName: Assault_Rifle
+  mName: Assault Rifle
   mDamage: 8.5
   mROF: 0.1
   mRange: 250
@@ -56,6 +56,10 @@ MonoBehaviour:
   mAmmoHeld: 150
   mFire_Type: 2
   mIsProjectile: 0
+  mIsParticle: 0
+  mIsBeam: 0
+  mParticleSystem: {fileID: 0}
+  mParticleProjectile: {fileID: 0}
   bullet: {fileID: 0}
   mOwner: {fileID: 0}
   mCam: {fileID: 0}

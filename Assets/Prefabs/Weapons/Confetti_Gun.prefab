@@ -339,9 +339,10 @@ MonoBehaviour:
   mMaxAmmoLoaded: 150
   mMaxAmmo: 300
   mAmmoHeld: 300
-  mFire_Type: 3
+  mFire_Type: 4
   mIsProjectile: 0
   mIsParticle: 1
+  mIsBeam: 0
   mParticleSystem: {fileID: 0}
   mParticleProjectile: {fileID: 3085843861224500417}
   bullet: {fileID: 0}
@@ -418,6 +419,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7641164762369751032, guid: b0980dda3ab73dc4a87f0bae2e075b8f,
+        type: 3}
+      propertyPath: m_SortingOrder
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b0980dda3ab73dc4a87f0bae2e075b8f, type: 3}

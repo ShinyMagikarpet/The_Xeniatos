@@ -48,6 +48,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     [SerializeField] private Camera mCam;
     [SerializeField] private Camera mMinimapCam;
+    public GameObject[] mPlayerWeapons;
 
     void Start(){
         
@@ -65,7 +66,6 @@ public class Player : MonoBehaviourPunCallbacks
         }
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false; //Hide the cursor
-        mPlayerWeapon.mOwner = this;
         state = PlayerState.Idle;
         //mFullBodyMesh = Get_Player_Mesh();
         this.name = PhotonNetwork.NickName;
@@ -73,13 +73,11 @@ public class Player : MonoBehaviourPunCallbacks
         mResourceDict.Add("Iron", 200);
         mResourceDict.Add("Stone", 200);
         mResourceDict.Add("Wood", 200);
-
         mPlayerUIPrefab = Instantiate(mPlayerUIPrefab);
         mPlayerUIPrefab.GetComponent<PlayerUI>().SetTarget(this);
 
         _propblock = new MaterialPropertyBlock();
         mLocalPlayer = this;
-        
     }
 
     // Update is called once per frame
@@ -106,7 +104,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
 
         if (Input.GetKeyDown(KeyCode.P)) {
-            mCurrentHealth = 0;
+            mPlayerWeapon.Weapon_Setup();
         }
 
         Player_Inputs();

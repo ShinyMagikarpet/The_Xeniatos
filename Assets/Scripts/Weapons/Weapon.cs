@@ -45,11 +45,18 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
 
 
     private void Start() {
+        Weapon_Setup();
+
+    }
+
+    public void Weapon_Setup() {
         objectPool = ObjectPool.Instance;
         mOwner = GetComponentInParent<Player>();
+        mOwner.mPlayerWeapon = this;
         PV = mOwner.GetComponent<PhotonView>();
         mCam = GetComponentInParent<Camera>();
-
+        mAmmoHeld = mMaxAmmo;
+        mAmmoLoaded = mMaxAmmoLoaded;
     }
 
     public void Fire_Weapon() {
