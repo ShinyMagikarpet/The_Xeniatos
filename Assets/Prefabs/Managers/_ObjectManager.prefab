@@ -48,3 +48,7 @@ MonoBehaviour:
     prefab: {fileID: 1109893743282492967, guid: f1a4cecf5e76bf84d87d4a7e4d96df28,
       type: 3}
     size: 80
+  - name: Sniper
+    prefab: {fileID: 1543878967570990398, guid: 1c4785c930c5a4304af8e8f36813fd06,
+      type: 3}
+    size: 50
