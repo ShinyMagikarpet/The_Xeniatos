@@ -401,8 +401,8 @@ MonoBehaviour:
   mIsDead: 0
   mMaxHealth: 100
   mCurrentHealth: 100
-  mPlayerWeapon: {fileID: 0}
-  mPlayerSubWeapon: {fileID: 7223303876824017022}
+  mPlayerWeapon: {fileID: 7223303876824017022}
+  mPlayerSubWeapon: {fileID: 0}
   state: 0
   mPlayerUIPrefab: {fileID: 6087490771331069635, guid: 8f79432e4655e9b4d9ffe5695f8f6965,
     type: 3}
@@ -543,7 +543,7 @@ PrefabInstance:
     - target: {fileID: 5366959320653186117, guid: ccdb59cd354162f43a3f9033e6debc01,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8140879985494420323, guid: ccdb59cd354162f43a3f9033e6debc01,
         type: 3}
@@ -659,7 +659,12 @@ PrefabInstance:
     - target: {fileID: 6161340945064802416, guid: 9aa3d967a0f9074409194b535c9d1833,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6161340945064802418, guid: 9aa3d967a0f9074409194b535c9d1833,
+        type: 3}
+      propertyPath: mIsProjectile
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6161340945064802417, guid: 9aa3d967a0f9074409194b535c9d1833,
         type: 3}

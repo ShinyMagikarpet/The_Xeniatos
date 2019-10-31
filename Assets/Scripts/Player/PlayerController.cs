@@ -77,6 +77,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         movement = new Vector3(sideMovement, verticalVelocity, forwardMovement);
 
         if (Input.GetButtonDown("Dash") && !isDashing) {
+            mPlayer.state = Player.PlayerState.Sprinting;
             isDashing = true;
         }
 
@@ -88,8 +89,12 @@ public class PlayerController : MonoBehaviourPunCallbacks
             isDashing = false;
         }
 
-        if (isDashing) {
+        if (isDashing && mPlayer.state == Player.PlayerState.Sprinting) {
             movement *= dashSpeed;
+        }
+
+        if(mPlayer.state != Player.PlayerState.Sprinting) {
+            isDashing = false;
         }
 
         movement = transform.rotation * movement;

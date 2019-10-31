@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be17c44b761d4054aa409aa8550e30b9, type: 3}
   m_Name: Rainbow Flamethrower
   m_EditorClassIdentifier: 
-  image: {fileID: 0}
-  mName: 
+  image: {fileID: 21300000, guid: 59d0af16ba0a7e341bfb96ecae2822a1, type: 3}
+  mName: Rainbow Flamethrower

@@ -99,5 +99,5 @@
 		}
     }
 
-	Fallback "VertexLit"
+	Fallback "Diffuse"
 }
