@@ -66,9 +66,9 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
 
         if (mIsProjectile) {
             if(PhotonNetwork.IsConnected)
-                photonView.RPC("Fire_Projectile", RpcTarget.All);
+                photonView.RPC("Fire_Projectile", RpcTarget.All, mCam.transform.forward, mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1.5f)));
             else
-                Fire_Projectile();
+                Fire_Projectile(mCam.transform.forward, mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1.5f)));
         } 
         else if (mIsParticle) {
             Fire_Particles();
@@ -122,7 +122,7 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void Fire_Projectile() {
+    public void Fire_Projectile(Vector3 camForward, Vector3 position) {
 
 
         if (!Can_Fire())
@@ -137,7 +137,8 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
                 projectile = objectPool.SpawnFromPool(bullet.mName).GetComponentInChildren<Projectile>();
             }
             projectile.mOwner = mOwner.gameObject;
-            projectile.Shoot_Projectile(projectile, mCam.transform, mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1.5f)));
+            //mCam.transform, mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1.5f))
+            projectile.Shoot_Projectile(projectile, camForward, position);
 
             mAmmoLoaded--;
         }

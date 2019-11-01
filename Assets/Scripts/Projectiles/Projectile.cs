@@ -12,12 +12,12 @@ public abstract class Projectile : MonoBehaviourPunCallbacks
     public float mDamage;
     public GameObject mOwner;
 
-    public void Shoot_Projectile(Projectile projectile, Transform transform, Vector3 pos) {
+    public void Shoot_Projectile(Projectile projectile, Vector3 camForward, Vector3 pos) {
 
         
         projectile.transform.position = pos;
         projectile.transform.up = transform.forward;
-        projectile.GetComponent<Rigidbody>().AddForce(transform.forward * mSpeed, ForceMode.Force);
+        projectile.GetComponent<Rigidbody>().AddForce(camForward * mSpeed, ForceMode.Force);
         
         StartCoroutine(Despawn_Time(mTTL, projectile));
         //Debug.Log("projectile active is " + projectile.gameObject.activeSelf);
