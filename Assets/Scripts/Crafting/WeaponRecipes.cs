@@ -5,17 +5,12 @@ using UnityEngine;
 public class WeaponRecipes : MonoBehaviour
 {
     //Recipe list note: int[] will always be iron -> stone -> wood
-    public static Dictionary<string, int[]> gWeaponRecipes;
-
-    static WeaponRecipes(){
-
-        gWeaponRecipes = new Dictionary<string, int[]>();
-        gWeaponRecipes.Add("Assault Rifle", new int[] { 100, 150, 100});
-        gWeaponRecipes.Add("Confetti Gun", new int[] { 50, 100, 150});
-        gWeaponRecipes.Add("Rainbow Flamethrower", new int[] { 100, 100, 200 });
-        gWeaponRecipes.Add("Sniper", new int[] { 200, 200, 200 });
-
-    }
+    public static Dictionary<string, int[]> gWeaponRecipes = new Dictionary<string, int[]> {
+        { "Assault Rifle", new int[] { 100, 150, 100} },
+        { "Confetti Gun", new int[] { 50, 100, 150} },
+        { "Rainbow Flamethrower", new int[] { 100, 100, 200 } },
+        { "Sniper", new int[] { 200, 200, 200 } }
+    };
 
     public static string WeaponRecipeString(int[] recipe){
 

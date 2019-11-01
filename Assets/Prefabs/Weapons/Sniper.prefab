@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4433055457537064130}
   - component: {fileID: 6481994124746250377}
+  - component: {fileID: -6957842398240006854}
   m_Layer: 0
   m_Name: Sniper
   m_TagString: Untagged
@@ -63,6 +64,27 @@ MonoBehaviour:
   bullet: {fileID: 7182187736846105632, guid: 1c4785c930c5a4304af8e8f36813fd06, type: 3}
   mOwner: {fileID: 0}
   mCam: {fileID: 0}
+--- !u!114 &-6957842398240006854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5279538864123366378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 0
+  OwnershipTransfer: 0
+  ObservedComponents: []
+  viewIdField: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1001 &6444997093636682032
 PrefabInstance:
   m_ObjectHideFlags: 0

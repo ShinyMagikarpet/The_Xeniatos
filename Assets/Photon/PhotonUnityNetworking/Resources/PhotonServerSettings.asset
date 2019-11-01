@@ -52,5 +52,10 @@ MonoBehaviour:
   - Player_Respawn
   - Match_Countdown_Timer
   - Send_Timer
+  - Shoot_Projectile
+  - Actually_Shoot
+  - Player_Shoot_Projectile
+  - Fire_Projectile
+  - Player_Craft_Weapon
   DisableAutoOpenWizard: 1
   ShowSettings: 1

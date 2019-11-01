@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public abstract class Projectile : MonoBehaviour
+public abstract class Projectile : MonoBehaviourPunCallbacks
 {
 
     public float mSpeed;
@@ -20,7 +21,6 @@ public abstract class Projectile : MonoBehaviour
         
         StartCoroutine(Despawn_Time(mTTL, projectile));
         //Debug.Log("projectile active is " + projectile.gameObject.activeSelf);
-
 
     }
 
@@ -40,8 +40,10 @@ public abstract class Projectile : MonoBehaviour
 
     protected virtual void OnCollisionEnter(Collision collision) {
         if (collision.collider.CompareTag("Player") && collision.gameObject != mOwner) {
-            Debug.Log("Projectile hit player");
-            collision.gameObject.GetComponent<Player>().mCurrentHealth -= mDamage;
+            if (PhotonNetwork.IsConnected)
+                collision.collider.GetComponent<PhotonView>().RPC("Take_Damage", RpcTarget.All, mDamage);
+            else
+                collision.collider.GetComponent<Player>().Take_Damage(mDamage);
             Despawn_Projectile(this);
         }
     }

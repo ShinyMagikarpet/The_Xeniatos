@@ -50,6 +50,7 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
     }
 
     public void Weapon_Setup() {
+        
         objectPool = ObjectPool.Instance;
         mOwner = GetComponentInParent<Player>();
         mOwner.mPlayerWeapon = this;
@@ -57,12 +58,17 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
         mCam = GetComponentInParent<Camera>();
         mAmmoHeld = mMaxAmmo;
         mAmmoLoaded = mMaxAmmoLoaded;
+        
+        
     }
 
     public void Fire_Weapon() {
 
         if (mIsProjectile) {
-            Fire_Projectile();
+            if(PhotonNetwork.IsConnected)
+                photonView.RPC("Fire_Projectile", RpcTarget.All);
+            else
+                Fire_Projectile();
         } 
         else if (mIsParticle) {
             Fire_Particles();
@@ -115,6 +121,7 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
 
     }
 
+    [PunRPC]
     public void Fire_Projectile() {
 
 

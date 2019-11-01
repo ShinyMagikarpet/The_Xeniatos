@@ -104,7 +104,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
 
         if (Input.GetKeyDown(KeyCode.P)) {
-            mPlayerWeapon.Weapon_Setup();
+            Player_Die();
         }
 
         Player_Inputs();
@@ -139,6 +139,14 @@ public class Player : MonoBehaviourPunCallbacks
                 Cursor.visible = false;
                 mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Pause_Menu();
             }
+
+        }
+
+        if (mIsDead && Input.GetKeyDown(KeyCode.U)) {
+            if (PhotonNetwork.IsConnected)
+                photonView.RPC("Player_Respawn", RpcTarget.All);
+            else
+                Player_Respawn();
 
         }
 
@@ -202,6 +210,8 @@ public class Player : MonoBehaviourPunCallbacks
             else
                 Player_Switch_Weapons();
         }
+
+
 
     }
 
@@ -331,20 +341,33 @@ public class Player : MonoBehaviourPunCallbacks
 
     [PunRPC]
     public void Player_Die() {
+        mIsDead = true;
+        state = PlayerState.Dead;
         GetComponent<CharacterController>().enabled = false;
         mArmsMesh.SetActive(false);
         mFullBodyMesh.SetActive(false);
         mRagdoll.SetActive(true);
         mPlayerWeapon.mCam.transform.Translate(0, 0, -2);
-        mPlayerWeapon.mCam.transform.Rotate(10, 0, 0);
         mPlayerWeapon.gameObject.SetActive(false);
-        mIsDead = true;
-        state = PlayerState.Dead;
+
     }
 
     [PunRPC]
     public void Player_Respawn() {
-
+        GetComponent<CharacterController>().enabled = true;
+        if (PhotonNetwork.IsConnected && !photonView.IsMine) {
+            mArmsMesh.SetActive(false);
+            mFullBodyMesh.SetActive(true);
+        }
+        else {
+            mArmsMesh.SetActive(true);
+        }
+        mRagdoll.SetActive(false);
+        mPlayerWeapon.mCam.transform.Translate(0, 0, 2);
+        mPlayerWeapon.gameObject.SetActive(true);
+        mIsDead = false;
+        state = PlayerState.Idle;
+        mCurrentHealth = mMaxHealth;
     }
 
     [PunRPC]
@@ -357,6 +380,28 @@ public class Player : MonoBehaviourPunCallbacks
         mPlayerSubWeapon = tempWeapon.GetComponent<Weapon>();
         mPlayerWeapon.gameObject.SetActive(true);
         mPlayerSubWeapon.gameObject.SetActive(false);
+    }
+
+    [PunRPC]
+    public void Player_Craft_Weapon(int weaponindex, string weaponName) {
+
+        if (mPlayerSubWeapon == null) {
+            mPlayerSubWeapon = mPlayerWeapons[weaponindex].GetComponent<Weapon>();
+            mPlayerWeapons[weaponindex].SetActive(true);
+            Player_Switch_Weapons();
+        }
+        else {
+            mPlayerWeapon.gameObject.SetActive(false);
+            mPlayerWeapon = mPlayerWeapons[weaponindex].GetComponent<Weapon>();
+            mPlayerWeapons[weaponindex].SetActive(true);
+        }
+       mPlayerWeapon.Weapon_Setup();
+
+        if (photonView.IsMine) {
+            mResourceDict["Iron"] -= WeaponRecipes.gWeaponRecipes[weaponName][0];
+            mResourceDict["Stone"] -= WeaponRecipes.gWeaponRecipes[weaponName][1];
+            mResourceDict["Wood"] -= WeaponRecipes.gWeaponRecipes[weaponName][2];
+        }
     }
 
     #endregion
