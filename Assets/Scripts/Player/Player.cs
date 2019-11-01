@@ -204,7 +204,7 @@ public class Player : MonoBehaviourPunCallbacks
                 Stop_Particle_System();
         }
 
-        if (Input.GetButtonUp("Fire1") && mPlayerWeapon.mFire_Type == Weapon.Fire_Type.fully_Auto && mPlayerWeapon.mParticleSystem != null && mPlayerWeapon.mParticleSystem.isEmitting) {
+        if (Input.GetButtonUp("Fire1") && (mPlayerWeapon.mFire_Type == Weapon.Fire_Type.fully_Auto || mPlayerWeapon.mFire_Type == Weapon.Fire_Type.single) && mPlayerWeapon.mParticleSystem != null && mPlayerWeapon.mParticleSystem.isEmitting) {
             mPlayerWeapon.mParticleSystem.Stop();
         }
 

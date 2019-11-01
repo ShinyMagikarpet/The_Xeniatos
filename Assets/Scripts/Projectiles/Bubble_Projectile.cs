@@ -12,13 +12,16 @@ public class Bubble_Projectile : Projectile
         mDamage = 10.0f;
     }
 
-    private void Update() {
+    private void FixedUpdate() {
+
+        
 
         if (!isRising) {
-            Arise_Bubble(2f);
+            Debug.Log("Just call me");
+            StartCoroutine(Arise_Bubble(2f));
         }
         else {
-            GetComponent<Rigidbody>().AddForce(0, 10, 0, ForceMode.Acceleration);
+            GetComponent<Rigidbody>().AddForce(0, 0.5f, 0, ForceMode.Acceleration);
             Debug.Log("Arise bubble");
         }
     }
