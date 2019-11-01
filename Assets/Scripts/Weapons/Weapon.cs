@@ -66,7 +66,7 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
 
         if (mIsProjectile) {
             if(PhotonNetwork.IsConnected)
-                photonView.RPC("Fire_Projectile", RpcTarget.All, mCam.transform.forward, mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1.5f)));
+                photonView.RPC("Fire_Projectile", RpcTarget.AllBuffered, mCam.transform.forward, mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1.5f)));
             else
                 Fire_Projectile(mCam.transform.forward, mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1.5f)));
         } 
@@ -93,6 +93,10 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
             mOwner.state = Player.PlayerState.Shooting;
             mTimeToNextFire = Time.time + mROF;
 
+            if(mParticleSystem != null) {
+                mParticleSystem.Play();
+            }
+
             Vector3 rayOrigin = mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
             RaycastHit hit;
 
@@ -104,7 +108,7 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
                     
                     Debug.Log("You hit " + hit.collider.name + "!");
                     if (PhotonNetwork.IsConnected)
-                        hit.collider.GetComponent<PhotonView>().RPC("Take_Damage", RpcTarget.All, mDamage);
+                        hit.collider.GetComponent<PhotonView>().RPC("Take_Damage", RpcTarget.AllBuffered, mDamage);
                     else
                         hit.collider.GetComponent<Player>().Take_Damage(mDamage);
                 }
@@ -163,7 +167,7 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
 
             if (!mParticleProjectile.mParticles.isEmitting) {
                 if (PhotonNetwork.IsConnected)
-                    mOwner.photonView.RPC("Play_Particle_Projectile", RpcTarget.All);
+                    mOwner.photonView.RPC("Play_Particle_Projectile", RpcTarget.AllBuffered);
                 else
                     mOwner.Play_Particle_Projectile();
             }
@@ -187,7 +191,7 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
 
             if (!mParticleSystem.isEmitting) {
                 if (PhotonNetwork.IsConnected)
-                    mOwner.photonView.RPC("Play_Particle_System", RpcTarget.All);
+                    mOwner.photonView.RPC("Play_Particle_System", RpcTarget.AllBuffered);
                 else
                     mOwner.Play_Particle_System();
             }
@@ -205,7 +209,7 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
             if (mFire_Type == Fire_Type.Particle) {
                 if (mParticleProjectile.mParticles.isEmitting) {
                     if (PhotonNetwork.IsConnected)
-                        mOwner.photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
+                        mOwner.photonView.RPC("Stop_Particle_Projectile", RpcTarget.AllBuffered);
                     else
                         mOwner.Stop_Particle_Projectile();
                 }
@@ -213,9 +217,14 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
             else if(mFire_Type == Fire_Type.Beam){
                 if (mParticleSystem.isEmitting) {
                     if (PhotonNetwork.IsConnected)
-                        mOwner.photonView.RPC("Stop_Particle_System", RpcTarget.All);
+                        mOwner.photonView.RPC("Stop_Particle_System", RpcTarget.AllBuffered);
                     else
                         mOwner.Stop_Particle_System();
+                }
+            }
+            else {
+                if(mParticleSystem != null) {
+                    mParticleSystem.Stop();
                 }
             }
             return false;
@@ -225,7 +234,7 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
             if (mFire_Type == Fire_Type.Particle) {
                 if (mParticleProjectile.mParticles.isEmitting) {
                     if (PhotonNetwork.IsConnected)
-                        mOwner.photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
+                        mOwner.photonView.RPC("Stop_Particle_Projectile", RpcTarget.AllBuffered);
                     else
                         mOwner.Stop_Particle_Projectile();
                 }
@@ -233,7 +242,7 @@ public abstract class Weapon : MonoBehaviourPunCallbacks
             else if(mFire_Type == Fire_Type.Beam) {
                 if (mParticleSystem.isEmitting) {
                     if (PhotonNetwork.IsConnected)
-                        mOwner.photonView.RPC("Stop_Particle_System", RpcTarget.All);
+                        mOwner.photonView.RPC("Stop_Particle_System", RpcTarget.AllBuffered);
                     else
                         mOwner.Stop_Particle_System();
                 }

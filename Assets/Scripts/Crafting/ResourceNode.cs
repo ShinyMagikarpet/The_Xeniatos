@@ -58,7 +58,7 @@ public abstract class ResourceNode : MonoBehaviourPunCallbacks
         }
 
         if (PhotonNetwork.IsConnected)
-            mPV.RPC("Remove_Resource_Count", RpcTarget.All, amount);
+            mPV.RPC("Remove_Resource_Count", RpcTarget.AllBuffered, amount);
         else
             Remove_Resource_Count(amount);
 

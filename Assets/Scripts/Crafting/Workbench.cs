@@ -23,7 +23,7 @@ public class Workbench : MonoBehaviour
 
                 if (weaponObject.GetComponent<Weapon>().mName.Equals(weaponName)) {
                     if (PhotonNetwork.IsConnected)
-                        targetPlayer.photonView.RPC("Player_Craft_Weapon", RpcTarget.All, i, weaponName);
+                        targetPlayer.photonView.RPC("Player_Craft_Weapon", RpcTarget.AllBuffered, i, weaponName);
                     else {
 
                         if (targetPlayer.mPlayerSubWeapon == null) {

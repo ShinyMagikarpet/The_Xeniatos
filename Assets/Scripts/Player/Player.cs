@@ -94,7 +94,7 @@ public class Player : MonoBehaviourPunCallbacks
         //TODO: Needs better 3rd person camera to better show rigidbody
         if(mCurrentHealth <= 0 && !mIsDead) {
             if (PhotonNetwork.IsConnected) {
-                photonView.RPC("Player_Die", RpcTarget.All);
+                photonView.RPC("Player_Die", RpcTarget.AllBuffered);
             }
             else {
                 Player_Die();
@@ -144,7 +144,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (mIsDead && Input.GetKeyDown(KeyCode.U)) {
             if (PhotonNetwork.IsConnected)
-                photonView.RPC("Player_Respawn", RpcTarget.All);
+                photonView.RPC("Player_Respawn", RpcTarget.AllBuffered);
             else
                 Player_Respawn();
 
@@ -191,7 +191,7 @@ public class Player : MonoBehaviourPunCallbacks
         if(mPlayerWeapon.mIsParticle && mPlayerWeapon.mParticleProjectile.mParticles.isEmitting && !Input.GetButton("Fire1")) {
             //mPlayerWeapon.mParticleProjectile.mParticles.Stop();
             if (PhotonNetwork.IsConnected)
-                photonView.RPC("Stop_Particle_Projectile", RpcTarget.All);
+                photonView.RPC("Stop_Particle_Projectile", RpcTarget.AllBuffered);
             else
                 Stop_Particle_Projectile();
         }
@@ -199,14 +199,18 @@ public class Player : MonoBehaviourPunCallbacks
         if(mPlayerWeapon.mIsBeam && mPlayerWeapon.mParticleSystem.isEmitting && !Input.GetButton("Fire1")) {
 
             if (PhotonNetwork.IsConnected)
-                photonView.RPC("Stop_Particle_System", RpcTarget.All);
+                photonView.RPC("Stop_Particle_System", RpcTarget.AllBuffered);
             else
                 Stop_Particle_System();
         }
 
+        if (Input.GetButtonUp("Fire1") && mPlayerWeapon.mFire_Type == Weapon.Fire_Type.fully_Auto && mPlayerWeapon.mParticleSystem != null && mPlayerWeapon.mParticleSystem.isEmitting) {
+            mPlayerWeapon.mParticleSystem.Stop();
+        }
+
         if(Input.GetAxis("Mouse ScrollWheel") != 0) {
             if (PhotonNetwork.IsConnected)
-                photonView.RPC("Player_Switch_Weapons", RpcTarget.All);
+                photonView.RPC("Player_Switch_Weapons", RpcTarget.AllBuffered);
             else
                 Player_Switch_Weapons();
         }

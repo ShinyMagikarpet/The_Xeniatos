@@ -50,7 +50,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             int minutes = (int)(timer / 60) % 60;
             string timerText = string.Format("{0:00}:{1:00}", minutes, seconds);
             timeText.text = timerText;
-            //sun.transform.Rotate(0.0008f, 0, 0);
         }
         else {
             Debug.Log("GAME OVER");
