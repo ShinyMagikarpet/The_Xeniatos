@@ -1134,6 +1134,26 @@ PrefabInstance:
       propertyPath: viewIdField
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 4216063218678627272, guid: 0f0602c1e51bcf642bd5654db990787b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6801657998483972577, guid: 0f0602c1e51bcf642bd5654db990787b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9163839173595476919, guid: 0f0602c1e51bcf642bd5654db990787b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7668937120904136979, guid: 0f0602c1e51bcf642bd5654db990787b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f0602c1e51bcf642bd5654db990787b, type: 3}
 --- !u!1 &1435426450
