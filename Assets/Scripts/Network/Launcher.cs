@@ -40,7 +40,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.ConnectUsingSettings();
     }
 
-    public void Connect() {
+    public void Connect(int num) {
 
         isConnecting = true;
         controlPanel.SetActive(false);
@@ -48,7 +48,9 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsConnected) {
             Debug.Log("You are already connected");
-            PhotonNetwork.JoinRandomRoom();
+            PhotonNetwork.JoinRoom(mSceneDict[chosenScene]);
+            if(!PhotonNetwork.InRoom)
+                PhotonNetwork.JoinRandomRoom();
         } else {
             //PhotonNetwork.ConnectUsingSettings();
             
@@ -61,9 +63,9 @@ public class Launcher : MonoBehaviourPunCallbacks
             Debug.Log("Not valid input");
             return;
         }
-        
-        Connect();
+
         chosenScene = sceneNum;
+        Connect(sceneNum);
         PhotonNetwork.NickName = input.text;
     }
 
@@ -96,16 +98,21 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinRandomFailed(short returnCode, string message) {
         Debug.Log("PUN Basics Tutorial/Launcher:OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
-
         RoomOptions roomOptions = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = maxPlayersPerRoom };
         // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
-        PhotonNetwork.CreateRoom(null, roomOptions);
+        PhotonNetwork.CreateRoom(mSceneDict[chosenScene], roomOptions);
     }
 
     public override void OnJoinedRoom() {
-        Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
+        //Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
         PhotonNetwork.LoadLevel(mSceneDict[chosenScene]);
         //PhotonNetwork.Instantiate("player", spawnSpot.transform.position, spawnSpot.transform.rotation, 0);
     }
 
+    public override void OnJoinRoomFailed(short returnCode, string message) {
+
+        RoomOptions roomOptions = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = maxPlayersPerRoom };
+        // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
+        PhotonNetwork.CreateRoom(mSceneDict[chosenScene], roomOptions);
+    }
 }
