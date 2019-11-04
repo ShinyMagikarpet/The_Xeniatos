@@ -8,7 +8,12 @@ public class SunCycle : MonoBehaviour
     public Gradient sunColor;
     public float sunDirection;
     public float totalSunRotation;
-    void Start(){
+    public bool isGameScene;
+    public float totalTime;
+    public float xDir;
+    public float yDir;
+    public float zDir;
+    void Awake(){
 
         sun = this.gameObject;
         sun.transform.rotation = Quaternion.Euler(sunDirection, 0, 0);
@@ -17,16 +22,25 @@ public class SunCycle : MonoBehaviour
     // Update is called once per frame
     void Update(){
 
-        if(GameManager.Instance.Get_Timer() > 0.0f) {
+        if (isGameScene) {
+
+            if (GameManager.Instance.Get_Timer() > 0.0f) {
 
 
                 float gameTime = GameManager.Instance.Get_Match_Time();
 
                 sun.transform.Rotate((totalSunRotation / gameTime) * Time.deltaTime, 0, 0);
 
+            }
+            else {
+                this.enabled = false;
+            }
         }
         else {
-            this.enabled = false;
+            
+
+            sun.transform.Rotate((totalSunRotation / totalTime) * Time.deltaTime * xDir, (totalSunRotation / totalTime) * Time.deltaTime * yDir, (totalSunRotation / totalTime) * Time.deltaTime * zDir);
+
         }
 
 

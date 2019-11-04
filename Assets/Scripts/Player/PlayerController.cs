@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private Vector3 movement = Vector3.zero;
 
     public Camera cam;
+    [SerializeField] GameObject meshRotateWithCam;
     private Player mPlayer;
     #endregion
 
@@ -57,6 +58,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         mouseVertical -= Input.GetAxis("Mouse Y") * mouseSensitivity;
         mouseVertical = Mathf.Clamp(mouseVertical, -lookUpRange, lookUpRange);
         cam.transform.localRotation = Quaternion.Euler(mouseVertical, 0, 0);
+        meshRotateWithCam.transform.localRotation = Quaternion.Euler(mouseVertical, 0, 0);
 
         float forwardMovement = Input.GetAxis("Vertical") * speed;
         float sideMovement = Input.GetAxis("Horizontal") * speed;
