@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Debug.unity
     guid: 35fd9b43d2f6dec479fd1645ad6f1b31
+  - enabled: 1
+    path: Assets/Scenes/Pillow_Fight.unity
+    guid: a23ce8bc41ac03c418190e6a86985cac
   m_configObjects: {}

@@ -17,9 +17,18 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     private bool isConnecting;
 
+
+    private Dictionary<int, string> mSceneDict = new Dictionary<int, string>() {
+        { 0, "Main_Menu" },
+        { 1, "Debug" },
+        { 2, "Pillow_Fight" }
+    };
+
     //public Player_Spawn spawnSpot;
     [SerializeField]
     private byte maxPlayersPerRoom = 8;
+
+    private int chosenScene = 0;
 
     private void Awake() {
         Screen.fullScreenMode = FullScreenMode.Windowed;
@@ -46,14 +55,15 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
-    public void Find_Game() {
+    public void Find_Game(int sceneNum) {
 
         if (!Valid_Input(input.text)) {
             Debug.Log("Not valid input");
             return;
         }
-
+        
         Connect();
+        chosenScene = sceneNum;
         PhotonNetwork.NickName = input.text;
     }
 
@@ -94,7 +104,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom() {
         Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
-        PhotonNetwork.LoadLevel("Debug");
+        PhotonNetwork.LoadLevel(mSceneDict[chosenScene]);
         //PhotonNetwork.Instantiate("player", spawnSpot.transform.position, spawnSpot.transform.rotation, 0);
     }
 

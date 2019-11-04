@@ -788,6 +788,11 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   sunDirection: 50
   totalSunRotation: 180
+  isGameScene: 1
+  totalTime: 0
+  xDir: 0
+  yDir: 0
+  zDir: 0
 --- !u!1 &897880274
 GameObject:
   m_ObjectHideFlags: 0
