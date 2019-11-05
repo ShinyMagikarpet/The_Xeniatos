@@ -61,7 +61,7 @@ public class Player : MonoBehaviourPunCallbacks
             mArmsMesh.SetActive(false);
             mFullBodyMesh.SetActive(true);
             GetComponent<PlayerController>().enabled = false;
-            this.name = PhotonNetwork.NickName;
+            this.name = photonView.Owner.NickName;
             return;
         }
         Cursor.lockState = CursorLockMode.Locked;

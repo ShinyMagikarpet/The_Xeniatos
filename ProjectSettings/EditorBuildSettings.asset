@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Main_Menu.unity
     guid: 8fd058c5e5dccf347b5e73eb94bfdb57
   - enabled: 1
+    path: Assets/Scenes/Team_Wait_Lobby.unity
+    guid: 758776755f471dc489c0de26cc7ee928
+  - enabled: 1
     path: Assets/Scenes/Debug.unity
     guid: 35fd9b43d2f6dec479fd1645ad6f1b31
   - enabled: 1

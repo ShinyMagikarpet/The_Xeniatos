@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4433055457537064130}
   - component: {fileID: 6481994124746250377}
-  - component: {fileID: -6957842398240006854}
+  - component: {fileID: 495285053018229959}
   m_Layer: 0
   m_Name: Sniper
   m_TagString: Untagged
@@ -64,7 +64,7 @@ MonoBehaviour:
   bullet: {fileID: 7182187736846105632, guid: 1c4785c930c5a4304af8e8f36813fd06, type: 3}
   mOwner: {fileID: 0}
   mCam: {fileID: 0}
---- !u!114 &-6957842398240006854
+--- !u!114 &495285053018229959
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

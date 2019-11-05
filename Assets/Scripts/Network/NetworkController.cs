@@ -18,9 +18,16 @@ public class NetworkController : MonoBehaviourPunCallbacks
         else {
             if (Player.LocalPlayerInstance == null) {
 
+                
                 PhotonNetwork.Instantiate(mPlayerPrefab.name, new Vector3(0, 1, 0), Quaternion.identity);
             }
         }
+    }
+
+    public override void OnDisconnected(DisconnectCause cause) {
+        base.OnDisconnected(cause);
+        Debug.Log("Disconnected");
+        PhotonNetwork.LeaveRoom();
     }
 
     public override void OnLeftRoom() {

@@ -20,8 +20,9 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     private Dictionary<int, string> mSceneDict = new Dictionary<int, string>() {
         { 0, "Main_Menu" },
-        { 1, "Debug" },
-        { 2, "Pillow_Fight" }
+        { 1, "Team_Wait_Lobby" },
+        { 2, "Debug" },
+        { 3, "Pillow_Fight" }
     };
 
     //public Player_Spawn spawnSpot;
@@ -47,13 +48,14 @@ public class Launcher : MonoBehaviourPunCallbacks
         progressLabel.SetActive(true);
 
         if (PhotonNetwork.IsConnected) {
-            Debug.Log("You are already connected");
             PhotonNetwork.JoinRoom(mSceneDict[chosenScene]);
-            if(!PhotonNetwork.InRoom)
-                PhotonNetwork.JoinRandomRoom();
+            //if(!PhotonNetwork.InRoom)
+            //    PhotonNetwork.JoinRandomRoom();
         } else {
-            //PhotonNetwork.ConnectUsingSettings();
-            
+            //Offline mode
+            PhotonNetwork.OfflineMode = true;
+            PhotonNetwork.LoadLevel(mSceneDict[chosenScene]);
+
         }
     }
 
@@ -106,11 +108,9 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom() {
         //Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
         PhotonNetwork.LoadLevel(mSceneDict[chosenScene]);
-        //PhotonNetwork.Instantiate("player", spawnSpot.transform.position, spawnSpot.transform.rotation, 0);
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message) {
-
         RoomOptions roomOptions = new RoomOptions() { IsVisible = true, IsOpen = true, MaxPlayers = maxPlayersPerRoom };
         // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
         PhotonNetwork.CreateRoom(mSceneDict[chosenScene], roomOptions);
