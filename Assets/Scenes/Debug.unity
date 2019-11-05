@@ -597,6 +597,7 @@ GameObject:
   - component: {fileID: 883110179}
   - component: {fileID: 883110180}
   - component: {fileID: 883110181}
+  - component: {fileID: 883110182}
   m_Layer: 0
   m_Name: _GameManager
   m_TagString: Untagged
@@ -653,6 +654,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeText: {fileID: 1435426452}
+--- !u!114 &883110182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 883110178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d06466c03d263624786afa88b52928b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statsWindowOn: 1
+  statsOn: 1
+  healthStatsVisible: 0
+  trafficStatsOn: 0
+  buttonsOn: 0
+  statsRect:
+    serializedVersion: 2
+    x: 0
+    y: 100
+    width: 200
+    height: 50
+  WindowId: 100
 --- !u!1 &896424359
 GameObject:
   m_ObjectHideFlags: 0
@@ -1158,6 +1183,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4231620336748107195, guid: 0f0602c1e51bcf642bd5654db990787b,
+        type: 3}
+      propertyPath: viewIdField
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f0602c1e51bcf642bd5654db990787b, type: 3}
