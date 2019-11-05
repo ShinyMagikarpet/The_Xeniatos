@@ -58,5 +58,6 @@ MonoBehaviour:
   - Fire_Projectile
   - Player_Craft_Weapon
   - Player_Fire_Projectile
+  - Send_Team_Names
   DisableAutoOpenWizard: 1
   ShowSettings: 1
