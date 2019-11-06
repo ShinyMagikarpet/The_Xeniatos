@@ -21,21 +21,24 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             team1[0].text = PhotonNetwork.NickName;
             team1Count++;
             playerCount++;
+            PhotonNetwork.LocalPlayer.TagObject = 1;
         }
     }
 
-    // Update is called once per frame
-    void Update(){
-
-        Debug.Log("team 1: " + team1Count);
-        Debug.Log("team 2: " + team2Count);
-        Debug.Log("player count: " + playerCount);
+    private void Update() {
+        foreach(Photon.Realtime.Player player in PhotonNetwork.PlayerList) {
+            Debug.Log(player.NickName + " " + player.TagObject);
+        }
     }
 
-    
     public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient) {
         //If we are switching master clients, we should pass values to new master from old to continue matchmaking
         base.OnMasterClientSwitched(newMasterClient);
+    }
+
+    public override void OnDisconnected(DisconnectCause cause) {
+        base.OnDisconnected(cause);
+        SceneManager.LoadScene(0);
     }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer) {
@@ -52,6 +55,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                         break;
                     }
                 }
+                newPlayer.TagObject = 1;
                 team1Count++;
             }
             else
@@ -64,6 +68,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
                         break;
                     }
                 }
+                newPlayer.TagObject = 2;
                 team2Count++;
             }
 
@@ -72,6 +77,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             photonView.RPC("Send_Team_Names", RpcTarget.Others, team1Names, team2Names);
             playerCount++;
         }
+        
+        //if(playerCount >= 2) {
+        //    Start_Game();
+        //}
 
     }
 
@@ -125,6 +134,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             photonView.RPC("Send_New_Master_Data", RpcTarget.Others, team1Count, team2Count, playerCount);
         }
         PhotonNetwork.LeaveRoom();
+    }
+
+    public void Start_Game() {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.LoadLevel(2);
     }
 
     [PunRPC]

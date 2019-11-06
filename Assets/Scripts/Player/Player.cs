@@ -48,6 +48,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     [SerializeField] private Camera mCam;
     [SerializeField] private Camera mMinimapCam;
+    public byte myTeamNum;
     public GameObject[] mPlayerWeapons;
 
     void Start(){
@@ -104,7 +105,7 @@ public class Player : MonoBehaviourPunCallbacks
         }
 
         if (Input.GetKeyDown(KeyCode.P)) {
-            Player_Die();
+            transform.position = Vector3.zero;
         }
 
         Player_Inputs();
