@@ -14,28 +14,35 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     private byte team1Count = 0;
     private byte team2Count = 0;
 
-
+    private byte playerCount = 0;
     private void Start() {
         if (PhotonNetwork.IsMasterClient) {
             //master will always be first to lobby
             team1[0].text = PhotonNetwork.NickName;
-            
+            team1Count++;
+            playerCount++;
         }
     }
 
     // Update is called once per frame
     void Update(){
 
-
+        Debug.Log("team 1: " + team1Count);
+        Debug.Log("team 2: " + team2Count);
+        Debug.Log("player count: " + playerCount);
     }
 
-
-
+    
+    public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient) {
+        //If we are switching master clients, we should pass values to new master from old to continue matchmaking
+        base.OnMasterClientSwitched(newMasterClient);
+    }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer) {
         if (PhotonNetwork.IsMasterClient)
         {
-            if (team1Count < team2Count || team1Count == 0)
+
+            if (team1Count == team2Count || team1Count < team2Count)
             {
                 foreach (Text text in team1)
                 {
@@ -63,7 +70,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             string[] team1Names = Get_Names_From_Text(team1);
             string[] team2Names = Get_Names_From_Text(team2);
             photonView.RPC("Send_Team_Names", RpcTarget.Others, team1Names, team2Names);
+            playerCount++;
         }
+
     }
 
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
@@ -74,14 +83,22 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             if (team1[i].text.Equals(otherPlayer.NickName))
             {
                 team1[i].text = "Looking for player...";
+                team1Count--;
                 break;
             }
 
             if (team2[i].text.Equals(otherPlayer.NickName))
             {
                 team2[i].text = "Looking for player...";
+                team2Count--;
                 break;
             }
+        }
+
+        if (PhotonNetwork.IsMasterClient) {
+            playerCount--;
+
+            Debug.Log("Player left called");
         }
 
     }
@@ -104,7 +121,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     }
 
     public void Leave_Room(){
-
+        if (PhotonNetwork.IsMasterClient) {
+            photonView.RPC("Send_New_Master_Data", RpcTarget.Others, team1Count, team2Count, playerCount);
+        }
         PhotonNetwork.LeaveRoom();
     }
 
@@ -115,6 +134,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             team1[i].text = team1Names[i];
             team2[i].text = team2Names[i];
         }
+    }
+
+    [PunRPC]
+    private void Send_New_Master_Data(byte team1count, byte team2count, byte totalcount) {
+        team1Count = team1count;
+        team2Count = team2count;
+        playerCount = totalcount;
     }
 
 
