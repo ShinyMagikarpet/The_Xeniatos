@@ -5197,6 +5197,7 @@ MonoBehaviour:
   _targetNode: {fileID: 0}
   mCam: {fileID: 7223303875046803886}
   mMinimapCam: {fileID: 7360472579873805000}
+  myTeamNum: 0
   mPlayerWeapons:
   - {fileID: 7136385361475312001}
   - {fileID: 7223303874916487898}

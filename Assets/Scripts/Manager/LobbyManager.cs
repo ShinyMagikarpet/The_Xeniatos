@@ -78,9 +78,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             playerCount++;
         }
         
-        //if(playerCount >= 2) {
-        //    Start_Game();
-        //}
+        if(playerCount >= 2) {
+            Start_Game();
+        }
 
     }
 

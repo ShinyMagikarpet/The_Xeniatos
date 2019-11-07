@@ -5,8 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class Player : MonoBehaviourPunCallbacks
-{
+public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
 
     
 
@@ -63,6 +62,7 @@ public class Player : MonoBehaviourPunCallbacks
             mFullBodyMesh.SetActive(true);
             GetComponent<PlayerController>().enabled = false;
             this.name = photonView.Owner.NickName;
+            PhotonNetwork.LocalPlayer.TagObject = this.gameObject;
             return;
         }
         Cursor.lockState = CursorLockMode.Locked;
@@ -76,9 +76,9 @@ public class Player : MonoBehaviourPunCallbacks
         mResourceDict.Add("Wood", 200);
         mPlayerUIPrefab = Instantiate(mPlayerUIPrefab);
         mPlayerUIPrefab.GetComponent<PlayerUI>().SetTarget(this);
-
         _propblock = new MaterialPropertyBlock();
         mLocalPlayer = this;
+        PhotonNetwork.LocalPlayer.TagObject = this.gameObject;
     }
 
     // Update is called once per frame
@@ -127,7 +127,7 @@ public class Player : MonoBehaviourPunCallbacks
                 mPlayerUIPrefab.GetComponent<PlayerUI>().Use_Craft_Menu();
             }
             else if (state != PlayerState.InMenu) {
-                Debug.Log("Entering menu");
+                //Debug.Log("Entering menu");
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
                 state = PlayerState.InMenu;
@@ -310,6 +310,12 @@ public class Player : MonoBehaviourPunCallbacks
 
     public Player Get_Local_Player() {
         return mLocalPlayer;
+    }
+
+    public void OnPhotonInstantiate(PhotonMessageInfo info) {
+        // e.g. store this gameobject as this player's charater in Player.TagObject
+        transform.SetParent(PlayerManager.Instance.transform);
+        PlayerManager.Instance.Add_Player(this);
     }
 
     #region RPC_Functions

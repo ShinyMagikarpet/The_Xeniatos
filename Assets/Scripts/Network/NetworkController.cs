@@ -20,6 +20,15 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
                 
                 PhotonNetwork.Instantiate(mPlayerPrefab.name, new Vector3(0, 1, 0), Quaternion.identity);
+                //Player player = playerObj.GetComponent<Player>();
+                //if (player) {
+                //    PlayerManager.Instance.Add_Player(player);
+                //    playerObj.transform.SetParent(PlayerManager.Instance.transform);
+                //}
+                //TODO: Make function to set player team from tagobject and then set tagobject to actual player object
+                //Debug.Log("Player team is " + PhotonNetwork.LocalPlayer.TagObject);
+                //PhotonNetwork.LocalPlayer.TagObject = playerObj;
+                //GameObject gameObject = (GameObject)PhotonNetwork.LocalPlayer.TagObject;
             }
         }
     }
@@ -42,11 +51,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player other) {
 
-        Debug.LogFormat("OnPlayerEnteredRoom() {0}", other.NickName); // not seen if you're the player connecting
-
-        if (PhotonNetwork.IsMasterClient) {
-            Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-        }
+        Debug.Log(other.NickName + " has joined the game");
     }
 
 
@@ -62,10 +67,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
         if(PhotonNetwork.InRoom)
             Debug.Log("There are " + PhotonNetwork.CurrentRoom.PlayerCount + " in this room");
 
-        foreach(Photon.Realtime.Player player in PhotonNetwork.PlayerList) {
-            Debug.Log(PhotonNetwork.NickName);
-        }
-    }
+    } 
 
     /*
     void LoadArena() {
