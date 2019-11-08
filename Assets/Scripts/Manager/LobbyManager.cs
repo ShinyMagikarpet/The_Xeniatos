@@ -22,6 +22,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             team1Count++;
             playerCount++;
             PhotonNetwork.LocalPlayer.TagObject = 1;
+            Start_Game();
         }
     }
 
@@ -78,9 +79,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             playerCount++;
         }
         
-        if(playerCount >= 2) {
-            Start_Game();
-        }
+        //if(playerCount >= 2) {
+        //  Start_Game();
+        //}
 
     }
 

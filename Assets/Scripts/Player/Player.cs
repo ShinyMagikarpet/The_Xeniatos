@@ -47,7 +47,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
 
     [SerializeField] private Camera mCam;
     [SerializeField] private Camera mMinimapCam;
-    public byte myTeamNum;
+    public int playerTeamNum;
     public GameObject[] mPlayerWeapons;
 
     void Start(){
@@ -62,7 +62,6 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
             mFullBodyMesh.SetActive(true);
             GetComponent<PlayerController>().enabled = false;
             this.name = photonView.Owner.NickName;
-            PhotonNetwork.LocalPlayer.TagObject = this.gameObject;
             return;
         }
         Cursor.lockState = CursorLockMode.Locked;
@@ -78,7 +77,6 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         mPlayerUIPrefab.GetComponent<PlayerUI>().SetTarget(this);
         _propblock = new MaterialPropertyBlock();
         mLocalPlayer = this;
-        PhotonNetwork.LocalPlayer.TagObject = this.gameObject;
     }
 
     // Update is called once per frame
@@ -314,8 +312,11 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
 
     public void OnPhotonInstantiate(PhotonMessageInfo info) {
         // e.g. store this gameobject as this player's charater in Player.TagObject
+        this.playerTeamNum = (int)PhotonNetwork.LocalPlayer.TagObject;   //The player's tagobject is set from the matchmaking lobby
         transform.SetParent(PlayerManager.Instance.transform);
         PlayerManager.Instance.Add_Player(this);
+        info.Sender.TagObject = this.gameObject;
+        PlayerManager.Instance.Put_Player_On_Team(this);
     }
 
     #region RPC_Functions
