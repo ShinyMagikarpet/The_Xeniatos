@@ -8,21 +8,31 @@ using Photon.Realtime;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
-
-    public Text[] team1 = new Text[4];
-    public Text[] team2  = new Text[4];
+    public byte teamDifference;
+    public Text[] playerNames = new Text[8];
+    public Text[] team1;
+    public Text[] team2;
     private byte team1Count = 0;
     private byte team2Count = 0;
 
     private byte playerCount = 0;
     private void Start() {
+        int i;
+        team1 = new Text[8 - teamDifference];
+        for(i = 0; i < team1.Length; i++) {
+            team1[i] = playerNames[i];
+        }
+        team2 = new Text[8 - team1.Length];
+        for(i = 0; i < team2.Length; i++) {
+            team2[i] = playerNames[8 - team2.Length + i];
+        }
         if (PhotonNetwork.IsMasterClient) {
             //master will always be first to lobby
             team1[0].text = PhotonNetwork.NickName;
             team1Count++;
             playerCount++;
             PhotonNetwork.LocalPlayer.TagObject = 1;
-            Start_Game();
+            //Start_Game();
         }
     }
 

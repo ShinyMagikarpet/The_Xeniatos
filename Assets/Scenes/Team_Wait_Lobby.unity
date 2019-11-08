@@ -241,16 +241,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 464ee2155547c9e4d905fcff8e9c53ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team1:
+  teamDifference: 7
+  playerNames:
   - {fileID: 210456958}
   - {fileID: 1772207706}
   - {fileID: 1270584087}
   - {fileID: 1752687059}
-  team2:
   - {fileID: 466571466}
   - {fileID: 1555333224}
   - {fileID: 156338735}
   - {fileID: 12414494}
+  team1: []
+  team2: []
 --- !u!114 &146284777
 MonoBehaviour:
   m_ObjectHideFlags: 0
