@@ -22,7 +22,8 @@ public class Launcher : MonoBehaviourPunCallbacks
         { 0, "Main_Menu" },
         { 1, "Team_Wait_Lobby" },
         { 2, "Debug" },
-        { 3, "Pillow_Fight" }
+        { 3, "Pillow_Fight_Wait_Lobby" },
+        { 4, "Pillow_Fight" }
     };
 
     //public Player_Spawn spawnSpot;

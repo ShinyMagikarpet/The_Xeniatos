@@ -253,7 +253,7 @@ MonoBehaviour:
   - {fileID: 12414494}
   team1: []
   team2: []
-  nextLevelIndex: 2
+  nextLevelIndex: 4
 --- !u!114 &146284777
 MonoBehaviour:
   m_ObjectHideFlags: 0

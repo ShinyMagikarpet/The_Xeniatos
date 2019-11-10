@@ -6,8 +6,7 @@ using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class LobbyManager : MonoBehaviourPunCallbacks
-{
+public class LobbyManager : MonoBehaviourPunCallbacks{
     public byte teamDifference;
     public Text[] playerNames = new Text[8];
     public Text[] team1;
@@ -16,6 +15,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     private byte team2Count = 0;
 
     private byte playerCount = 0;
+    [SerializeField] private byte nextLevelIndex;
     private void Start() {
         int i;
         team1 = new Text[8 - teamDifference];
@@ -89,9 +89,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             playerCount++;
         }
         
-        //if(playerCount >= 2) {
-        //  Start_Game();
-        //}
+        if(playerCount >= 2) {
+          Start_Game(nextLevelIndex);
+        }
 
     }
 
@@ -147,11 +147,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
     }
 
-    public void Start_Game() {
+    public void Start_Game(int levelNum) {
         if (!PhotonNetwork.IsMasterClient)
             return;
         PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.LoadLevel(2);
+        PhotonNetwork.LoadLevel(levelNum);
     }
 
     [PunRPC]

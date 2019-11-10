@@ -312,10 +312,14 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
 
     public void OnPhotonInstantiate(PhotonMessageInfo info) {
         // e.g. store this gameobject as this player's charater in Player.TagObject
+        if (!PhotonNetwork.IsConnected) {
+            return;
+        }
         this.playerTeamNum = (int)PhotonNetwork.LocalPlayer.TagObject;   //The player's tagobject is set from the matchmaking lobby
         transform.SetParent(PlayerManager.Instance.transform);
         PlayerManager.Instance.Add_Player(this);
         info.Sender.TagObject = this.gameObject;
+        SpawnManager.Instance.Spawn_Player(playerTeamNum, this);
         PlayerManager.Instance.Put_Player_On_Team(this);
     }
 
