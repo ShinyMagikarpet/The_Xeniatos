@@ -311,6 +311,12 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
 
     public void OnPhotonInstantiate(PhotonMessageInfo info) {
         // e.g. store this gameobject as this player's charater in Player.TagObject
+        //Debug.Log("tagobject is of type " + info.Sender.TagObject.GetType());
+        //Debug.Log("This object was already processed");
+        //return;
+        if(info.Sender.TagObject == null) {
+            return;
+        }
         this.playerTeamNum = (int)info.Sender.TagObject;   //The player's tagobject is set from the matchmaking lobby
         transform.SetParent(PlayerManager.Instance.transform);
         PlayerManager.Instance.Add_Player(this);

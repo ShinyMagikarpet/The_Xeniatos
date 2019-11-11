@@ -32,7 +32,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
             team1Count++;
             playerCount++;
             PhotonNetwork.LocalPlayer.TagObject = 1;
-            Start_Game(nextLevelIndex);
+            //Start_Game(nextLevelIndex);
         }
     }
 
@@ -53,8 +53,8 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
     }
 
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer) {
-        if (PhotonNetwork.IsMasterClient)
-        {
+
+        if (PhotonNetwork.IsMasterClient){
 
             if (team1Count == team2Count || team1Count < team2Count)
             {
@@ -85,13 +85,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
 
             string[] team1Names = Get_Names_From_Text(team1);
             string[] team2Names = Get_Names_From_Text(team2);
-            photonView.RPC("Send_Team_Names", RpcTarget.Others, team1Names, team2Names);
+            photonView.RPC("Send_Team_Information", RpcTarget.OthersBuffered, team1Names, team2Names);
             playerCount++;
         }
 
-        //if (playerCount >= 2) {
-        //    Start_Game(nextLevelIndex);
-        //}
+        if (playerCount >= 2) {
+            Start_Game(nextLevelIndex);
+        }
 
     }
 
@@ -161,11 +161,26 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
     }
 
     [PunRPC]
-    private void Send_Team_Names(string[] team1Names, string[] team2Names){
+    private void Send_Team_Information(string[] team1Names, string[] team2Names){
 
         for(int i = 0; i < team1Names.Length; i++){
             team1[i].text = team1Names[i];
             team2[i].text = team2Names[i];
+        }
+
+        foreach(Photon.Realtime.Player player in PhotonNetwork.PlayerList) {
+            for(int i = 0; i < team1.Length; i++) {
+                if (player.NickName.Equals(team1Names[i])) {
+                    player.TagObject = 1;
+                }
+                else if (player.NickName.Equals(team2Names[i])){
+                    player.TagObject = 2;
+                }
+            }
+
+            if(player.TagObject == null) {
+                Debug.LogError(player.NickName + " was not assigned a team!");
+            }
         }
     }
 
