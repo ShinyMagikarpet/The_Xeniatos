@@ -61,5 +61,8 @@ MonoBehaviour:
   - Send_Team_Names
   - Send_New_Master_Data
   - Send_Team_Information
+  - Match_Has_Started
+  - Spawn_All_Players
+  - Spawn_Player_Self
   DisableAutoOpenWizard: 1
   ShowSettings: 1

@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     private float matchTime = 20f * 60;
     private float timer;
     [SerializeField]private Text timeText;
+    private float matchTimerStart = 5f;
+    private bool hasGameStarted = false;
 
     public static GameManager Instance { get; private set; }
     void Awake() {
@@ -21,14 +23,30 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient) {
             timer = matchTime;
             timeText.text = timer.ToString();
-        }else if (!PhotonNetwork.IsConnected) {
+            photonView.RPC("Send_Timer", RpcTarget.AllViaServer, timer);
+        }
+        else if (!PhotonNetwork.IsConnected) {
             timer = matchTime;
             timeText.text = timer.ToString();
         }
     }
 
+    private void Start() {
+        if (PhotonNetwork.IsMasterClient) {
+            StartCoroutine(Start_Match_Timer(2f));
+        }
+    }
+
+    IEnumerator Start_Match_Timer(float timer) {
+        Debug.Log("Timer has started " + timer);
+        photonView.RPC("Spawn_Player_Self", RpcTarget.AllViaServer);
+        yield return new WaitForSeconds(timer);
+        photonView.RPC("Match_Has_Started", RpcTarget.AllViaServer);
+    }
+
     private void Update() {
-        Match_Countdown_Timer();
+        if(hasGameStarted)
+            Match_Countdown_Timer();
     }
 
     // Update is called once per frame
@@ -54,6 +72,34 @@ public class GameManager : MonoBehaviourPunCallbacks
         else {
             Debug.Log("GAME OVER");
         }
+    }
+
+    [PunRPC]
+    void Spawn_Player_Self() {
+
+        foreach (Photon.Realtime.Player punPlayer in PhotonNetwork.PlayerList) {
+
+            if(punPlayer != PhotonNetwork.LocalPlayer) {
+                continue;
+            }
+            GameObject playerObject = punPlayer.TagObject as GameObject;
+            if (playerObject != null) {
+                Player player = playerObject.GetComponent<Player>();
+                if (!player) {
+                    Debug.LogError("This object doesn't have player component");
+                }
+                SpawnManager.Instance.Spawn_Player(player.playerTeamNum, player);
+            }
+            else {
+                Debug.LogError("Object is null for some reason");
+                Debug.LogError("Object is equal to " + punPlayer.TagObject);
+            }
+        }
+    }
+
+    [PunRPC]
+    void Match_Has_Started() {
+        hasGameStarted = true;
     }
 
     public float Get_Timer() {

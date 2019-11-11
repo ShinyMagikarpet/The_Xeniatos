@@ -17,13 +17,7 @@ public class PlayerManager : MonoBehaviour
     }
 
     private void Update() {
-        foreach (Photon.Realtime.Player player in PhotonNetwork.PlayerList) {
-            GameObject playerObj = player.TagObject as GameObject;
-            if (playerObj != null) {
-                Debug.Log("Object is " + playerObj.name);
-            }
-            //Debug.Log(player.NickName);
-        }
+
     }
 
     public void Add_Player(Player player) {
@@ -44,18 +38,6 @@ public class PlayerManager : MonoBehaviour
         else {
             team2Players.Add(player);
         }
-    }
-
-    public Player Get_Player(GameObject playerObj) {
-
-        foreach(Photon.Realtime.Player player in PhotonNetwork.PlayerList) {
-
-            if(player.TagObject as GameObject == playerObj) {
-
-            }
-        }
-
-        return null;
     }
 
 }

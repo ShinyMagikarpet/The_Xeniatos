@@ -9,6 +9,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 {
 
     public GameObject mPlayerPrefab;
+    private int playercount = 0;
 
     private void Start() {
         
@@ -18,17 +19,17 @@ public class NetworkController : MonoBehaviourPunCallbacks
         else {
             if (Player.LocalPlayerInstance == null) {
 
-                GameObject obj = PhotonNetwork.Instantiate(mPlayerPrefab.name, Vector3.zero, Quaternion.identity);
+                PhotonNetwork.Instantiate(mPlayerPrefab.name, Vector3.zero, Quaternion.identity);
                 
-                SpawnManager.Instance.Spawn_Player(obj.GetComponent<Player>().playerTeamNum, obj.GetComponent<Player>());
+                //SpawnManager.Instance.Spawn_Player(obj.GetComponent<Player>().playerTeamNum, obj.GetComponent<Player>());
             }
         }
     }
 
     public override void OnDisconnected(DisconnectCause cause) {
-        base.OnDisconnected(cause);
-        Debug.Log("Disconnected");
-        PhotonNetwork.LeaveRoom();
+        //base.OnDisconnected(cause);
+        //Debug.Log("Disconnected");
+        //PhotonNetwork.LeaveRoom();
     }
 
     public override void OnLeftRoom() {

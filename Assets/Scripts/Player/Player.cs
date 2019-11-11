@@ -315,6 +315,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         //Debug.Log("This object was already processed");
         //return;
         if(info.Sender.TagObject == null) {
+            Debug.LogError("Tag shouldn't be null here");
             return;
         }
         this.playerTeamNum = (int)info.Sender.TagObject;   //The player's tagobject is set from the matchmaking lobby
@@ -322,7 +323,6 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         PlayerManager.Instance.Add_Player(this);
         info.Sender.TagObject = this.gameObject;
         PlayerManager.Instance.Put_Player_On_Team(this);
-        //SpawnManager.Instance.Spawn_Player(this.playerTeamNum, this);
         
     }
 
