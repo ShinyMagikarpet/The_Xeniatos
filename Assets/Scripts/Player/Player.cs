@@ -51,7 +51,6 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
     public GameObject[] mPlayerWeapons;
 
     void Start(){
-        
         //Disable/Enable whatever you want the local client to see for remote users here
         if (!photonView.IsMine && PhotonNetwork.IsConnected == true) {
             mCam.enabled = false;
@@ -208,7 +207,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         }
 
         if(Input.GetAxis("Mouse ScrollWheel") != 0) {
-            if (PhotonNetwork.IsConnected)
+            if (PhotonNetwork.IsConnected && this.mPlayerSubWeapon != null)
                 photonView.RPC("Player_Switch_Weapons", RpcTarget.AllBuffered);
             else
                 Player_Switch_Weapons();
@@ -312,15 +311,13 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
 
     public void OnPhotonInstantiate(PhotonMessageInfo info) {
         // e.g. store this gameobject as this player's charater in Player.TagObject
-        if (!PhotonNetwork.IsConnected) {
-            return;
-        }
-        this.playerTeamNum = (int)PhotonNetwork.LocalPlayer.TagObject;   //The player's tagobject is set from the matchmaking lobby
+        this.playerTeamNum = (int)info.Sender.TagObject;   //The player's tagobject is set from the matchmaking lobby
         transform.SetParent(PlayerManager.Instance.transform);
         PlayerManager.Instance.Add_Player(this);
         info.Sender.TagObject = this.gameObject;
-        SpawnManager.Instance.Spawn_Player(playerTeamNum, this);
         PlayerManager.Instance.Put_Player_On_Team(this);
+        //SpawnManager.Instance.Spawn_Player(this.playerTeamNum, this);
+        
     }
 
     #region RPC_Functions

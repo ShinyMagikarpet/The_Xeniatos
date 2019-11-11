@@ -32,7 +32,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
             team1Count++;
             playerCount++;
             PhotonNetwork.LocalPlayer.TagObject = 1;
-            //Start_Game();
+            Start_Game(nextLevelIndex);
         }
     }
 
@@ -88,10 +88,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
             photonView.RPC("Send_Team_Names", RpcTarget.Others, team1Names, team2Names);
             playerCount++;
         }
-        
-        if(playerCount >= 2) {
-          Start_Game(nextLevelIndex);
-        }
+
+        //if (playerCount >= 2) {
+        //    Start_Game(nextLevelIndex);
+        //}
 
     }
 
@@ -150,6 +150,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
     public void Start_Game(int levelNum) {
         if (!PhotonNetwork.IsMasterClient)
             return;
+        StartCoroutine(Game_Start_Timer(2f, levelNum));
+        
+    }
+
+    IEnumerator Game_Start_Timer(float timer, int levelNum) {
+        yield return new WaitForSeconds(timer);
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.LoadLevel(levelNum);
     }

@@ -18,7 +18,9 @@ public class NetworkController : MonoBehaviourPunCallbacks
         else {
             if (Player.LocalPlayerInstance == null) {
 
-                PhotonNetwork.Instantiate(mPlayerPrefab.name, Vector3.zero, Quaternion.identity);
+                GameObject obj = PhotonNetwork.Instantiate(mPlayerPrefab.name, Vector3.zero, Quaternion.identity);
+                
+                SpawnManager.Instance.Spawn_Player(obj.GetComponent<Player>().playerTeamNum, obj.GetComponent<Player>());
             }
         }
     }
