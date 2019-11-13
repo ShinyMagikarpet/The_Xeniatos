@@ -5,8 +5,7 @@ using Photon.Pun;
 
 
 
-public abstract class Weapon : MonoBehaviourPunCallbacks
-{
+public abstract class Weapon : MonoBehaviourPunCallbacks {
 
     public enum Fire_Type{
         single,
