@@ -12,13 +12,21 @@ public class TwitchChatManager : MonoBehaviour
     private TcpClient twitchClient;
     private StreamWriter reader;
     private StreamReader writer;
+    private bool isConnected = false;
 
     public string username, password, channelName; // https://twitchapps.com/tmi
 
-
+    public static TwitchChatManager Instance { get; private set; }
 
     // Start is called before the first frame update
-    void Start(){
+    void Awake(){
+        if(Instance == null) {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else {
+            Destroy(this.gameObject);
+        }
         
     }
 
@@ -30,5 +38,10 @@ public class TwitchChatManager : MonoBehaviour
     private void Connect()
     {
         
+    }
+
+    public bool IsConnected() {
+
+        return isConnected;
     }
 }

@@ -5163,7 +5163,7 @@ MonoBehaviour:
   speed: 6
   dashSpeed: 2.1
   airSpeed: 2
-  jumpSpeed: 5.5
+  jumpSpeed: 5
   gravity: -12
   mouseSensitivity: 5
   mouseHorizontal: 0

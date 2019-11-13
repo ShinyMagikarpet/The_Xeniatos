@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
 using UnityEditor.SceneManagement;
+#endif
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
 public class CreateMapSceneTool : MonoBehaviour {
 
     [MenuItem("Map/Create Multiplayer Map")]
     static void CreateMap() {
         Debug.Log("Creating Scene!");
-        if(EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+        //if(SceneManager.
             CreateScene();
     }
 
