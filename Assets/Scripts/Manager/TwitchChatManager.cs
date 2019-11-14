@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 using System.ComponentModel;
 using System.Net.Sockets;
 using System.IO;
@@ -13,7 +12,7 @@ public class TwitchChatManager : MonoBehaviour
     private StreamReader reader;
     private StreamWriter writer;
     private bool isConnected = false;
-
+    private string sendMessagePrefix;
     public string username, password, channelName; // https://twitchapps.com/tmi
 
     public static TwitchChatManager Instance { get; private set; }
@@ -23,7 +22,6 @@ public class TwitchChatManager : MonoBehaviour
         if(Instance == null) {
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
-            Connect();
         }
         else {
             Destroy(this.gameObject);
@@ -34,16 +32,16 @@ public class TwitchChatManager : MonoBehaviour
     // Update is called once per frame
     void Update(){
 
-        if (!twitchClient.Connected) {
-                
-            Connect();
+        if (twitchClient != null && twitchClient.Connected) {
+
+            ReadChat();
         }
 
-        ReadChat();
+        
         
     }
 
-    private void Connect(){
+    public void Connect(){
 
         twitchClient = new TcpClient("irc.chat.twitch.tv", 6667);
         reader = new StreamReader(twitchClient.GetStream());
@@ -53,7 +51,7 @@ public class TwitchChatManager : MonoBehaviour
         writer.WriteLine("NICK " + username);
         writer.WriteLine("USER " + username + " 8 * :" + username);
         writer.WriteLine("JOIN #" + channelName);
-
+        sendMessagePrefix = string.Format(":{0}!{0}@{0}.tmi.twitch.tv PRIVMSG #{1} :", username, channelName);
         writer.Flush();
         
     }
@@ -71,10 +69,15 @@ public class TwitchChatManager : MonoBehaviour
                 chatName = chatName.Substring(1);
 
                 splitPoint = message.IndexOf(':', 1);
-                message = message.Substring(splitPoint + 1);
-                print(string.Format("{0}: {1}", chatName, message));
+                //message = message.Substring(splitPoint + 1);
+                //print(string.Format("{0}: {1}", chatName, message));
             }
             print(message);
+            if(message.Equals("PING :tmi.twitch.tv")) {
+                Debug.Log("Respornding to twitch ping");
+                writer.WriteLine("PONG :tmi.twitch.tv");
+                writer.Flush();
+            }
             //Debug.Log(message);
         }
     }
@@ -82,5 +85,15 @@ public class TwitchChatManager : MonoBehaviour
     public bool IsConnected() {
 
         return isConnected;
+    }
+
+    public TcpClient GetTwitchClient() {
+        return twitchClient;
+    }
+
+    public void SendMessageToTwitch(string message) {
+
+        writer.WriteLine(sendMessagePrefix + message);
+        writer.Flush();
     }
 }

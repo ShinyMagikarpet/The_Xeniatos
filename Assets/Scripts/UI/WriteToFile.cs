@@ -2,31 +2,68 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
+using System;
 
 public class WriteToFile : MonoBehaviour
 {
-
-    public InputField inputField;
-    [SerializeField] private TwitchChatManager twitchChat;
-
-    private void Awake() {
-        twitchChat = FindObjectOfType<TwitchChatManager>();
-    }
+    
+    public InputField username, password, channelName;
+    DateTime lastMessage;
 
     public void Set_Twitch_Username() {
-
-        if (inputField.text.Length > 0) {
-            Debug.Log("Writing out " + "\"" + inputField.text + "\" to file.");
+        
+        if (username.text.Length > 0) {
 
             //string message = HashString(inputField.text);
 
-            twitchChat.username = inputField.text;
+            TwitchChatManager.Instance.username = username.text;
 
-            inputField.text = "";
+            username.text = "";
         }
         else
             Debug.Log("Write something in the field dummy");
+    }
+
+    public void Set_Twitch_Password() {
+
+        if (password.text.Length > 0) {
+
+            //string message = HashString(inputField.text);
+
+            TwitchChatManager.Instance.password = password.text;
+
+            password.text = "";
+        }
+        else
+            Debug.Log("Write something in the field dummy");
+    }
+
+    public void Set_Twitch_ChannelName() {
+        
+        if (channelName.text.Length > 0) {
+
+            //string message = HashString(inputField.text);
+
+            TwitchChatManager.Instance.channelName = channelName.text;
+
+            channelName.text = "";
+        }
+        else
+            Debug.Log("Write something in the field dummy");
+    }
+
+    public void ConnectToTwitch() {
+
+        if(TwitchChatManager.Instance != null) {
+            TwitchChatManager.Instance.Connect();
+        }
+    }
+
+    public void MessageTwitch() {
+        if (DateTime.Now - lastMessage > TimeSpan.FromSeconds(2)) {
+            TwitchChatManager.Instance.SendMessageToTwitch("Hi Chat!");
+            lastMessage = DateTime.Now;
+        }
     }
 
     /* File stuff
