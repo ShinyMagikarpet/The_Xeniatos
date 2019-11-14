@@ -1656,7 +1656,6 @@ MonoBehaviour:
   username: {fileID: 727210642}
   password: {fileID: 447424884}
   channelName: {fileID: 1857169843}
-  twitchChat: {fileID: 0}
 --- !u!1 &1743921099
 GameObject:
   m_ObjectHideFlags: 0

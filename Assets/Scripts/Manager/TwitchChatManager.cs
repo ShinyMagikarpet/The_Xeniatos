@@ -13,7 +13,7 @@ public class TwitchChatManager : MonoBehaviour
     private StreamWriter writer;
     private bool isConnected = false;
     private string sendMessagePrefix;
-    private bool isVotingEventOn = false;
+    private bool isVotingEventOn;
     private Dictionary<string, int> voteDict;
     public string username, password, channelName; // https://twitchapps.com/tmi
 
@@ -23,6 +23,8 @@ public class TwitchChatManager : MonoBehaviour
     void Awake(){
         if(Instance == null) {
             Instance = this;
+            isVotingEventOn = false;
+            Dictionary<string, int> voteDict = new Dictionary<string, int>();
             DontDestroyOnLoad(this.gameObject);
         }
         else {
@@ -40,16 +42,22 @@ public class TwitchChatManager : MonoBehaviour
             ReadChat();
         }
 
-        if (Input.GetKeyDown(KeyCode.V)) {
+        if (Input.GetKeyDown(KeyCode.B)) {
             if (isVotingEventOn) {
                 Debug.Log("Voting is over");
                 isVotingEventOn = false;
+                SendMessageToTwitch("The voting period has now ended!");
             }
             else {
                 Debug.Log("Voting has started");
                 isVotingEventOn = true;
-                voteDict = new Dictionary<string, int>();
+                voteDict.Clear();
+                SendMessageToTwitch("A New vote has started! Type \"!vote $arg (1, 2, or 3)\" to join in on the vote! \n Pancakes!");
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.P)) {
+            PrintVotes(voteDict);
         }
         
     }
@@ -71,6 +79,46 @@ public class TwitchChatManager : MonoBehaviour
 
     void VoteSystem(string message, string chatname) {
 
+        string[] commands = message.Split(' ');
+
+        if (isVotingEventOn && commands[0].ToLower().Equals("!vote")) {
+
+            if(commands.Length > 2) {
+                //SendMessageToTwitch("@" + chatname + " You have entered too many arguments for the vote o_O");
+                return;
+            }
+            else if (voteDict.ContainsKey(chatname)) {
+                SendMessageToTwitch("@" + chatname + " You have already submitted your vote :)");
+                Debug.Log(chatname + " tried voting again");
+                return;
+            }
+
+            int voteNum = 0;
+            if(!int.TryParse(commands[1], out voteNum)){
+
+                //SendMessageToTwitch("@" + chatname + " You can only input the given numbers to vote :)");
+                return;
+            }
+
+            if(voteNum > 3 || voteNum < 1) {
+                return;
+            }
+
+            Debug.Log(chatname + " has voted " + message);
+            //SendMessageToTwitch(string.Format("@{0} you voted for {1} :D", chatname, commands[1]));
+            voteDict.Add(chatname, voteNum);
+        }
+        else if (!isVotingEventOn && commands[0].ToLower().Equals("!vote")) {
+            SendMessageToTwitch("@" + chatname + " there is no vote happening right now :\\");
+        }
+    }
+
+    void PrintVotes(Dictionary<string, int> dict) {
+
+        foreach (KeyValuePair<string, int> entry in dict) {
+            Debug.Log(entry.Key + entry.Value);
+        }
+
     }
 
     void ReadChat() {
@@ -91,10 +139,7 @@ public class TwitchChatManager : MonoBehaviour
                 int splitPoint = message.IndexOf(':', 1);
                 message = message.Substring(splitPoint + 1);
 
-                if (isVotingEventOn && message.Substring(0, 5).Equals("!vote")) {
-                    Debug.Log(chatname + " has voted");
-                    SendMessageToTwitch(string.Format("@{0} you voted for {1}", chatname, message));
-                }
+                VoteSystem(message, chatname);
             }
             print(message);
             if(message.Equals("PING :tmi.twitch.tv")) {
@@ -102,7 +147,6 @@ public class TwitchChatManager : MonoBehaviour
                 writer.WriteLine("PONG :tmi.twitch.tv");
                 writer.Flush();
             }
-            //Debug.Log(message);
         }
     }
 
@@ -121,6 +165,12 @@ public class TwitchChatManager : MonoBehaviour
     public void SendMessageToTwitch(string message) {
 
         writer.WriteLine(sendMessagePrefix + message);
+        writer.Flush();
+    }
+
+    public void SendMessageToTwitch(string message, string command) {
+
+        writer.WriteLine(sendMessagePrefix + command + ' ' + message);
         writer.Flush();
     }
 }
