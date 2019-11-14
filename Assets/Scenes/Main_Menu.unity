@@ -3076,17 +3076,17 @@ PrefabInstance:
     - target: {fileID: 715720610340297610, guid: e2cd6ff37295a294c814db37716f9460,
         type: 3}
       propertyPath: password
-      value: oauth:t3lfupcjs1q3nuys188xfbtpsmns0p
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 715720610340297610, guid: e2cd6ff37295a294c814db37716f9460,
         type: 3}
       propertyPath: username
-      value: shiny_magikarpet
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 715720610340297610, guid: e2cd6ff37295a294c814db37716f9460,
         type: 3}
       propertyPath: channelName
-      value: shiny_magikarpet
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2cd6ff37295a294c814db37716f9460, type: 3}

@@ -55,13 +55,16 @@ public class WriteToFile : MonoBehaviour
     public void ConnectToTwitch() {
 
         if(TwitchChatManager.Instance != null) {
+            Set_Twitch_Username();
+            Set_Twitch_Password();
+            Set_Twitch_ChannelName();
             TwitchChatManager.Instance.Connect();
         }
     }
 
     public void MessageTwitch() {
         if (DateTime.Now - lastMessage > TimeSpan.FromSeconds(2)) {
-            TwitchChatManager.Instance.SendMessageToTwitch("Hi Chat!");
+            TwitchChatManager.Instance.SendMessageToTwitch("!vote 1");
             lastMessage = DateTime.Now;
         }
     }

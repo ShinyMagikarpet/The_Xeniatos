@@ -13,6 +13,8 @@ public class TwitchChatManager : MonoBehaviour
     private StreamWriter writer;
     private bool isConnected = false;
     private string sendMessagePrefix;
+    private bool isVotingEventOn = false;
+    private Dictionary<string, int> voteDict;
     public string username, password, channelName; // https://twitchapps.com/tmi
 
     public static TwitchChatManager Instance { get; private set; }
@@ -32,12 +34,23 @@ public class TwitchChatManager : MonoBehaviour
     // Update is called once per frame
     void Update(){
 
+
         if (twitchClient != null && twitchClient.Connected) {
 
             ReadChat();
         }
 
-        
+        if (Input.GetKeyDown(KeyCode.V)) {
+            if (isVotingEventOn) {
+                Debug.Log("Voting is over");
+                isVotingEventOn = false;
+            }
+            else {
+                Debug.Log("Voting has started");
+                isVotingEventOn = true;
+                voteDict = new Dictionary<string, int>();
+            }
+        }
         
     }
 
@@ -56,6 +69,10 @@ public class TwitchChatManager : MonoBehaviour
         
     }
 
+    void VoteSystem(string message, string chatname) {
+
+    }
+
     void ReadChat() {
 
         if(twitchClient.Available > 0) {
@@ -64,13 +81,20 @@ public class TwitchChatManager : MonoBehaviour
 
             if (message.Contains("PRIVMSG")) {
 
-                var splitPoint = message.IndexOf('!', 1);
-                var chatName = message.Substring(0, splitPoint);
-                chatName = chatName.Substring(1);
+                //var splitPoint = message.IndexOf('!', 1);
+                //var chatName = message.Substring(0, splitPoint);
+                //chatName = chatName.Substring(1);
 
-                splitPoint = message.IndexOf(':', 1);
-                //message = message.Substring(splitPoint + 1);
-                //print(string.Format("{0}: {1}", chatName, message));
+                string chatname = GetUsernameFromTwitch(message);
+                Debug.Log(chatname + " sent this message");
+
+                int splitPoint = message.IndexOf(':', 1);
+                message = message.Substring(splitPoint + 1);
+
+                if (isVotingEventOn && message.Substring(0, 5).Equals("!vote")) {
+                    Debug.Log(chatname + " has voted");
+                    SendMessageToTwitch(string.Format("@{0} you voted for {1}", chatname, message));
+                }
             }
             print(message);
             if(message.Equals("PING :tmi.twitch.tv")) {
@@ -82,9 +106,12 @@ public class TwitchChatManager : MonoBehaviour
         }
     }
 
-    public bool IsConnected() {
+    string GetUsernameFromTwitch(string message) {
 
-        return isConnected;
+        int splitPoint = message.IndexOf('!', 1);
+        string chatName = message.Substring(0, splitPoint);
+        chatName = chatName.Substring(1);
+        return chatName;
     }
 
     public TcpClient GetTwitchClient() {
