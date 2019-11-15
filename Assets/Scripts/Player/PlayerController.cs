@@ -106,4 +106,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         controller.Move(movement * Time.deltaTime);
         #endregion
     }
+
+    public void SetVerticalVelocity(float value) {
+        verticalVelocity = value;
+    }
 }
