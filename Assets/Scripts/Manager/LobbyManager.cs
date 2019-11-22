@@ -11,7 +11,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
     public Text[] playerNames = new Text[8];
     public Text[] team1;
     public Text[] team2;
-    public bool IsTeamMatch = true;
+    public int IsTeamMatch = 1;
     private byte team1Count = 0;
     private byte team2Count = 0;
 
@@ -32,9 +32,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
             team1[0].text = PhotonNetwork.NickName;
             team1Count++;
             playerCount++;
-            PhotonNetwork.LocalPlayer.TagObject = 1;
+            //int array will be carry 2 values in a specific order, [0]=team number/[1]=what gamemode they're playing
+            PhotonNetwork.LocalPlayer.TagObject = new int[2] { 1, IsTeamMatch};
+            Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber);
             //Start_Game(nextLevelIndex);
         }
+
     }
 
     private void Update() {
@@ -57,7 +60,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
 
         if (PhotonNetwork.IsMasterClient){
 
-            if(IsTeamMatch) {
+            if(IsTeamMatch == 1) {
                 Match_Making_Teams(newPlayer);
             }
             else {

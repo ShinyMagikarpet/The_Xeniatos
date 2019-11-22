@@ -319,6 +319,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
             Debug.LogError("Tag shouldn't be null here");
             return;
         }
+        //TODO: extract int array from tagobject
         this.playerTeamNum = (int)info.Sender.TagObject;   //The player's tagobject is set from the matchmaking lobby
         transform.SetParent(PlayerManager.Instance.transform);
         PlayerManager.Instance.Add_Player(this);

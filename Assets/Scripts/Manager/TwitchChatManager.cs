@@ -41,22 +41,24 @@ public class TwitchChatManager : MonoBehaviour {
             ReadChat();
         }
 
-        if (Input.GetKeyDown(KeyCode.B)) {
-            if (isVotingEventOn) {
-                Debug.Log("Voting is over");
-                isVotingEventOn = false;
-                SendMessageToTwitch("The voting period has now ended!");
+        if (twitchClient != null) {
+            if (Input.GetKeyDown(KeyCode.B)) {
+                if (isVotingEventOn) {
+                    Debug.Log("Voting is over");
+                    isVotingEventOn = false;
+                    SendMessageToTwitch("The voting period has now ended!");
+                }
+                else {
+                    Debug.Log("Voting has started");
+                    isVotingEventOn = true;
+                    voteDict.Clear();
+                    SendMessageToTwitch("A New vote has started! Type \"!vote $arg (1, 2, or 3)\" to join in on the vote! \n Pancakes!");
+                }
             }
-            else {
-                Debug.Log("Voting has started");
-                isVotingEventOn = true;
-                voteDict.Clear();
-                SendMessageToTwitch("A New vote has started! Type \"!vote $arg (1, 2, or 3)\" to join in on the vote! \n Pancakes!");
-            }
-        }
 
-        if (Input.GetKeyDown(KeyCode.P)) {
-            PrintVotes(voteDict);
+            if (Input.GetKeyDown(KeyCode.P)) {
+                PrintVotes(voteDict);
+            }
         }
         
     }
