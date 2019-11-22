@@ -5,8 +5,7 @@ using System.ComponentModel;
 using System.Net.Sockets;
 using System.IO;
 
-public class TwitchChatManager : MonoBehaviour
-{
+public class TwitchChatManager : MonoBehaviour {
 
     private TcpClient twitchClient;
     private StreamReader reader;
