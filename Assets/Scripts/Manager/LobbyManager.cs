@@ -11,6 +11,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
     public Text[] playerNames = new Text[8];
     public Text[] team1;
     public Text[] team2;
+    public bool IsTeamMatch = true;
     private byte team1Count = 0;
     private byte team2Count = 0;
 
@@ -37,9 +38,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
     }
 
     private void Update() {
-        foreach(Photon.Realtime.Player player in PhotonNetwork.PlayerList) {
-            Debug.Log(player.NickName + " " + player.TagObject);
-        }
+        //foreach(Photon.Realtime.Player player in PhotonNetwork.PlayerList) {
+        //    Debug.Log(player.NickName + " " + player.TagObject);
+        //}
     }
 
     public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient) {
@@ -56,43 +57,77 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
 
         if (PhotonNetwork.IsMasterClient){
 
-            if (team1Count == team2Count || team1Count < team2Count)
-            {
-                foreach (Text text in team1)
-                {
-                    if (text.text.ToLower().Equals("looking for player..."))
-                    {
-                        text.text = newPlayer.NickName;
-                        break;
-                    }
-                }
-                newPlayer.TagObject = 1;
-                team1Count++;
+            if(IsTeamMatch) {
+                Match_Making_Teams(newPlayer);
             }
-            else
-            {
-                foreach (Text text in team2)
-                {
-                    if (text.text.ToLower().Equals("looking for player..."))
-                    {
-                        text.text = newPlayer.NickName;
-                        break;
-                    }
-                }
-                newPlayer.TagObject = 2;
-                team2Count++;
+            else {
+                Match_Making_Pillow_Fight(newPlayer);
             }
-
-            string[] team1Names = Get_Names_From_Text(team1);
-            string[] team2Names = Get_Names_From_Text(team2);
-            photonView.RPC("Send_Team_Information", RpcTarget.OthersBuffered, team1Names, team2Names);
-            playerCount++;
+            
         }
 
         if (playerCount >= 2) {
             Start_Game(nextLevelIndex);
         }
 
+    }
+
+    private void Match_Making_Teams(Photon.Realtime.Player newPlayer) {
+
+        if (team1Count == team2Count || team1Count < team2Count) {
+            foreach (Text text in team1) {
+                if (text.text.ToLower().Equals("looking for player...")) {
+                    text.text = newPlayer.NickName;
+                    break;
+                }
+            }
+            newPlayer.TagObject = 1;
+            team1Count++;
+        }
+        else {
+            foreach (Text text in team2) {
+                if (text.text.ToLower().Equals("looking for player...")) {
+                    text.text = newPlayer.NickName;
+                    break;
+                }
+            }
+            newPlayer.TagObject = 2;
+            team2Count++;
+        }
+
+        string[] team1Names = Get_Names_From_Text(team1);
+        string[] team2Names = Get_Names_From_Text(team2);
+        photonView.RPC("Send_Team_Information", RpcTarget.OthersBuffered, team1Names, team2Names);
+        playerCount++;
+    }
+
+    private void Match_Making_Pillow_Fight(Photon.Realtime.Player newPlayer) {
+
+        if (team1Count == team2Count || team1Count < team2Count) {
+            foreach (Text text in team1) {
+                if (text.text.ToLower().Equals("looking for player...")) {
+                    text.text = newPlayer.NickName;
+                    break;
+                }
+            }
+            newPlayer.TagObject = 1;
+            team1Count++;
+        }
+        else {
+            foreach (Text text in team2) {
+                if (text.text.ToLower().Equals("looking for player...")) {
+                    text.text = newPlayer.NickName;
+                    break;
+                }
+            }
+            newPlayer.TagObject = 2;
+            team2Count++;
+        }
+
+        string[] team1Names = Get_Names_From_Text(team1);
+        string[] team2Names = Get_Names_From_Text(team2);
+        photonView.RPC("Send_Team_Information", RpcTarget.OthersBuffered, team1Names, team2Names);
+        playerCount++;
     }
 
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)

@@ -11,6 +11,7 @@ TagManager:
   - Ground
   - Hitbox
   - Workbench
+  - Weeb
   layers:
   - Default
   - TransparentFX

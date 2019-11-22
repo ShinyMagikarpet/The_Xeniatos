@@ -47,6 +47,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
 
     [SerializeField] private Camera mCam;
     [SerializeField] private Camera mMinimapCam;
+    private bool IsWeeb = false;
     public int playerTeamNum;
     public GameObject[] mPlayerWeapons;
 

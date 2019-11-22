@@ -9,7 +9,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 {
 
     public GameObject mPlayerPrefab;
-    private int playercount = 0;
+    public GameObject mWeebPrefab;
 
     private void Start() {
         

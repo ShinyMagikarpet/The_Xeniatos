@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 464ee2155547c9e4d905fcff8e9c53ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teamDifference: 4
+  teamDifference: 7
   playerNames:
   - {fileID: 210456958}
   - {fileID: 1772207706}
@@ -253,6 +253,7 @@ MonoBehaviour:
   - {fileID: 12414494}
   team1: []
   team2: []
+  IsTeamMatch: 0
   nextLevelIndex: 4
 --- !u!114 &146284777
 MonoBehaviour:
@@ -920,7 +921,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &725193531
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1088,7 +1089,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1117490271
 RectTransform:
   m_ObjectHideFlags: 0

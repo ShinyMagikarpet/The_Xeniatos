@@ -806,6 +806,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mPlayerPrefab: {fileID: 7223303876890418520, guid: 0f0602c1e51bcf642bd5654db990787b,
     type: 3}
+  mWeebPrefab: {fileID: 0}
 --- !u!1 &1298189127
 GameObject:
   m_ObjectHideFlags: 0
