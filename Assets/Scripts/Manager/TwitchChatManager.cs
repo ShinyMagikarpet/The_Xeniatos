@@ -7,12 +7,17 @@ using System.IO;
 
 public class TwitchChatManager : MonoBehaviour {
 
+    public enum TwitchState { IDLE, VOTE_BEGIN, VOTING, VOTE_ENDING};
+
+
     private TcpClient twitchClient;
     private StreamReader reader;
     private StreamWriter writer;
     private bool isConnected = false;
     private string sendMessagePrefix;
-    private bool isVotingEventOn;
+    private bool isVotingEventOn = false;
+    [SerializeField]private TwitchState state = TwitchState.IDLE;
+    private float votingTimer = -1f;
     private Dictionary<string, int> voteDict;
     public string username, password, channelName; // https://twitchapps.com/tmi
 
@@ -35,30 +40,45 @@ public class TwitchChatManager : MonoBehaviour {
     // Update is called once per frame
     void Update(){
 
-
         if (twitchClient != null && twitchClient.Connected) {
 
             ReadChat();
         }
 
-        if (twitchClient != null) {
-            if (Input.GetKeyDown(KeyCode.B)) {
-                if (isVotingEventOn) {
-                    Debug.Log("Voting is over");
-                    isVotingEventOn = false;
-                    SendMessageToTwitch("The voting period has now ended!");
-                }
-                else {
-                    Debug.Log("Voting has started");
-                    isVotingEventOn = true;
-                    voteDict.Clear();
-                    SendMessageToTwitch("A New vote has started! Type \"!vote $arg (1, 2, or 3)\" to join in on the vote! \n Pancakes!");
-                }
-            }
+        if (Input.GetKeyDown(KeyCode.U)) {
+            Set_Timer(120f);
+        }
 
-            if (Input.GetKeyDown(KeyCode.P)) {
-                PrintVotes(voteDict);
+        if(votingTimer > 0) {
+            isVotingEventOn = true;
+            votingTimer -= Time.deltaTime;
+            if (state != TwitchState.VOTING) {
+                state = TwitchState.VOTE_BEGIN;
             }
+        }
+        else if(votingTimer < 0f && votingTimer > -1f){
+            isVotingEventOn = false;
+            state = TwitchState.VOTE_ENDING;
+            votingTimer = -1f;
+        }
+        else {
+            state = TwitchState.IDLE;
+        }
+
+        if (twitchClient != null) {
+
+            if (!isVotingEventOn && state == TwitchState.VOTE_ENDING) {
+                SendMessageToTwitch("The voting period has now ended!");
+            }
+            else if(isVotingEventOn && state == TwitchState.VOTE_BEGIN){
+                SendMessageToTwitch("A New vote has started! Type \"!vote $arg (1, 2, or 3)\" to join in on the vote! \n pancakes", votingTimer);
+                state = TwitchState.VOTING;
+            }
+            
+
+            //if (Input.GetKeyDown(KeyCode.P)) {
+            //    PrintVotes(voteDict);
+            //}
         }
         
     }
@@ -88,6 +108,7 @@ public class TwitchChatManager : MonoBehaviour {
                 //SendMessageToTwitch("@" + chatname + " You have entered too many arguments for the vote o_O");
                 return;
             }
+            //TODO: Null here
             else if (voteDict.ContainsKey(chatname)) {
                 SendMessageToTwitch("@" + chatname + " You have already submitted your vote :)");
                 Debug.Log(chatname + " tried voting again");
@@ -112,6 +133,10 @@ public class TwitchChatManager : MonoBehaviour {
         else if (!isVotingEventOn && commands[0].ToLower().Equals("!vote")) {
             SendMessageToTwitch("@" + chatname + " there is no vote happening right now :\\");
         }
+    }
+
+    public void Set_Timer(float timer) {
+        votingTimer = timer;
     }
 
     void PrintVotes(Dictionary<string, int> dict) {
@@ -166,6 +191,12 @@ public class TwitchChatManager : MonoBehaviour {
     public void SendMessageToTwitch(string message) {
 
         writer.WriteLine(sendMessagePrefix + message);
+        writer.Flush();
+    }
+
+    public void SendMessageToTwitch(string message, float timer) {
+
+        writer.WriteLine(sendMessagePrefix + message + timer + " seconds remaining");
         writer.Flush();
     }
 
