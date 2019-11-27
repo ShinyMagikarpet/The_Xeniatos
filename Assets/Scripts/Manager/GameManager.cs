@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField]private Text timeText;
     private float matchTimerStart = 5f;
     private bool hasGameStarted = false;
+    [SerializeField]private bool isTeamMatch = false;
 
     public static GameManager Instance { get; private set; }
     void Awake() {
@@ -108,5 +109,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public float Get_Match_Time() {
         return matchTime;
+    }
+
+    public void Set_Game_Mode(bool mode) {
+        isTeamMatch = mode;
     }
 }

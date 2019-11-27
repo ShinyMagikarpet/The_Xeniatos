@@ -18,7 +18,8 @@ public class NetworkController : MonoBehaviourPunCallbacks
         } 
         else {
             if (Player.LocalPlayerInstance == null) {
-
+                int[] matchInfo = PhotonNetwork.LocalPlayer.TagObject as int[];
+                GameManager.Instance.Set_Game_Mode(matchInfo[1] == 1);
                 PhotonNetwork.Instantiate(mPlayerPrefab.name, Vector3.zero, Quaternion.identity);
                 
                 //SpawnManager.Instance.Spawn_Player(obj.GetComponent<Player>().playerTeamNum, obj.GetComponent<Player>());

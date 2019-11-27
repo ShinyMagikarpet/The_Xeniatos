@@ -84,7 +84,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
                     break;
                 }
             }
-            newPlayer.TagObject = 1;
+            newPlayer.TagObject = new int[2] { 1, IsTeamMatch };
             team1Count++;
         }
         else {
@@ -94,7 +94,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
                     break;
                 }
             }
-            newPlayer.TagObject = 2;
+            newPlayer.TagObject = new int[2] { 2, IsTeamMatch };
             team2Count++;
         }
 
@@ -106,14 +106,14 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
 
     private void Match_Making_Pillow_Fight(Photon.Realtime.Player newPlayer) {
 
-        if (team1Count == team2Count || team1Count < team2Count) {
+        if (team1Count != 1) {
             foreach (Text text in team1) {
                 if (text.text.ToLower().Equals("looking for player...")) {
                     text.text = newPlayer.NickName;
                     break;
                 }
             }
-            newPlayer.TagObject = 1;
+            newPlayer.TagObject = new int[2] { 1, IsTeamMatch };
             team1Count++;
         }
         else {
@@ -123,7 +123,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
                     break;
                 }
             }
-            newPlayer.TagObject = 2;
+            newPlayer.TagObject = new int[2] { 2, IsTeamMatch };
             team2Count++;
         }
 
@@ -209,10 +209,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
         foreach(Photon.Realtime.Player player in PhotonNetwork.PlayerList) {
             for(int i = 0; i < team1.Length; i++) {
                 if (player.NickName.Equals(team1Names[i])) {
-                    player.TagObject = 1;
+                    player.TagObject = new int[2] { 1, IsTeamMatch };
                 }
                 else if (player.NickName.Equals(team2Names[i])){
-                    player.TagObject = 2;
+                    player.TagObject = new int[2] { 2, IsTeamMatch };
                 }
             }
 

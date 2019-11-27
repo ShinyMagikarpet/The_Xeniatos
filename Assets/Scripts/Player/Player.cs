@@ -320,7 +320,9 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
             return;
         }
         //TODO: extract int array from tagobject
-        this.playerTeamNum = (int)info.Sender.TagObject;   //The player's tagobject is set from the matchmaking lobby
+        //this.playerTeamNum = (int)info.Sender.TagObject;   //The player's tagobject is set from the matchmaking lobby
+        int[] matchInfo = info.Sender.TagObject as int[];
+        this.playerTeamNum = matchInfo[0];
         transform.SetParent(PlayerManager.Instance.transform);
         PlayerManager.Instance.Add_Player(this);
         info.Sender.TagObject = this.gameObject;
