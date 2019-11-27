@@ -7,7 +7,7 @@ using System.IO;
 
 public class TwitchChatManager : MonoBehaviour {
 
-    public enum TwitchState { IDLE, VOTE_BEGIN, VOTING, VOTE_ENDING};
+    public enum TwitchState { IDLE, VOTE_BEGIN, VOTING, VOTE_ENDING };
 
 
     private TcpClient twitchClient;
@@ -18,9 +18,12 @@ public class TwitchChatManager : MonoBehaviour {
     private bool isVotingEventOn = false;
     [SerializeField]private TwitchState state = TwitchState.IDLE;
     private float votingTimer = -1f;
+    private float messageDelay = 0f;
+    private float remindTimer;
+    private TwitchFunctions twitchFunctions = new TwitchFunctions();
     private Dictionary<string, int> voteDict;
     public string username, password, channelName; // https://twitchapps.com/tmi
-
+    
     public static TwitchChatManager Instance { get; private set; }
 
     // Start is called before the first frame update
@@ -28,7 +31,7 @@ public class TwitchChatManager : MonoBehaviour {
         if(Instance == null) {
             Instance = this;
             isVotingEventOn = false;
-            Dictionary<string, int> voteDict = new Dictionary<string, int>();
+            voteDict = new Dictionary<string, int>();
             DontDestroyOnLoad(this.gameObject);
         }
         else {
@@ -40,13 +43,16 @@ public class TwitchChatManager : MonoBehaviour {
     // Update is called once per frame
     void Update(){
 
+        Debug.Log(Random.Range(1, 3));
+
         if (twitchClient != null && twitchClient.Connected) {
 
             ReadChat();
         }
 
         if (Input.GetKeyDown(KeyCode.U)) {
-            Set_Timer(120f);
+            Set_Timer(60f);
+            remindTimer = votingTimer / 4;
         }
 
         if(votingTimer > 0) {
@@ -54,7 +60,16 @@ public class TwitchChatManager : MonoBehaviour {
             votingTimer -= Time.deltaTime;
             if (state != TwitchState.VOTING) {
                 state = TwitchState.VOTE_BEGIN;
+                messageDelay = 2f;
             }
+
+            if(Time.time > messageDelay && (Mathf.CeilToInt(votingTimer)) % (int)remindTimer == 0 && Mathf.CeilToInt(votingTimer) != 0) {
+
+                messageDelay = Time.time + 2f;
+                SendMessageToTwitch("Time remaining for the vote:", Mathf.CeilToInt(votingTimer));
+            }
+            
+
         }
         else if(votingTimer < 0f && votingTimer > -1f){
             isVotingEventOn = false;
@@ -69,9 +84,17 @@ public class TwitchChatManager : MonoBehaviour {
 
             if (!isVotingEventOn && state == TwitchState.VOTE_ENDING) {
                 SendMessageToTwitch("The voting period has now ended!");
+                GetResults();
+                voteDict.Clear();
             }
             else if(isVotingEventOn && state == TwitchState.VOTE_BEGIN){
-                SendMessageToTwitch("A New vote has started! Type \"!vote $arg (1, 2, or 3)\" to join in on the vote! \n pancakes", votingTimer);
+                SendMessageToTwitch("A New vote has started! Type \"!vote $arg (1, 2, or 3)\" to join in on the vote!", Mathf.CeilToInt(votingTimer));
+                string[] functions = GetTwitchFunctionNames();
+                
+                SendMessageToTwitch(string.Format("Avaiable Voting Options! 1. {0}                   2. {1}                              3. {2}",
+                    functions[0],
+                    functions[1],
+                    functions[2]));
                 state = TwitchState.VOTING;
             }
             
@@ -108,7 +131,6 @@ public class TwitchChatManager : MonoBehaviour {
                 //SendMessageToTwitch("@" + chatname + " You have entered too many arguments for the vote o_O");
                 return;
             }
-            //TODO: Null here
             else if (voteDict.ContainsKey(chatname)) {
                 SendMessageToTwitch("@" + chatname + " You have already submitted your vote :)");
                 Debug.Log(chatname + " tried voting again");
@@ -144,6 +166,101 @@ public class TwitchChatManager : MonoBehaviour {
         foreach (KeyValuePair<string, int> entry in dict) {
             Debug.Log(entry.Key + entry.Value);
         }
+
+    }
+
+    string[] GetTwitchFunctionNames() {
+
+        string[] names = new string[3];
+
+        for (int i = 0; i < names.Length; i++) {
+
+            foreach(KeyValuePair<string, TwitchFunctionsEnum> pair in twitchFunctions.dict) {
+                if(pair.Value == (TwitchFunctionsEnum)i) {
+                    names[i] = pair.Key;
+                    Debug.Log(names[i]);
+                }
+            }
+        }
+
+        return names;
+
+    }
+
+    void GetResults() {
+
+        int winningVote = TallyVotes();
+
+        switch (winningVote) {
+
+            case 1:
+                Debug.Log("Vote 1 has won the vote");
+                break;
+            case 2:
+                Debug.Log("vote 2 has won the vote");
+                break;
+            case 3:
+                Debug.Log("vote 3 has won the vote");
+                break;
+            default:
+                Debug.Log("no vote has won");
+                break;
+        }
+    }
+
+    int TallyVotes() {
+
+        int total1 = 0, total2 = 0, total3 = 0;
+
+        foreach(KeyValuePair<string, int> valuePair in voteDict) {
+
+            switch (valuePair.Value) {
+
+                case 1:
+                    total1++;
+                    break;
+                case 2:
+                    total2++;
+                    break;
+                case 3:
+                    total3++;
+                    break;
+                default:
+                    continue;
+            }
+
+        }
+
+        if (total1 > total2 && total1 > total3) {
+            return 1;
+        }
+        else if (total2 > total1 && total2 > total3) {
+            return 2;
+        }
+        else if (total3 > total1 && total3 > total2) {
+            return 3;
+        }
+        else if (total1 == total2 && total1 == total3 && total2 == total3) {
+            return 0;
+        }
+        else if (total1 == total2) {
+            return Random.Range(1, 3);
+        }
+        else if (total1 == total3) {
+
+            int value = Random.Range(1, 3);
+
+            if (value == 1)
+                return 1;
+            else
+                return 3;
+
+        }
+        else if (total2 == total3) {
+            return Random.Range(2, 4);
+        }
+
+        return 0;
 
     }
 
@@ -194,9 +311,9 @@ public class TwitchChatManager : MonoBehaviour {
         writer.Flush();
     }
 
-    public void SendMessageToTwitch(string message, float timer) {
+    public void SendMessageToTwitch(string message, int timer) {
 
-        writer.WriteLine(sendMessagePrefix + message + timer + " seconds remaining");
+        writer.WriteLine(sendMessagePrefix + message + " " + timer + " seconds remaining");
         writer.Flush();
     }
 
