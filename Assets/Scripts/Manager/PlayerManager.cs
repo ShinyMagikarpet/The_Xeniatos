@@ -40,4 +40,16 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public Player Get_Player_By_Name(string playerName) {
+
+        foreach(Player player in players) {
+
+            if (player.name.Equals(playerName)) {
+                return player;
+            }
+        }
+
+        return null;
+    }
+
 }

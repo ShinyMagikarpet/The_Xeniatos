@@ -20,8 +20,8 @@ public class TwitchFunctions : MonoBehaviour{
         dict.Add("Player_Freeze", TwitchFunctionsEnum.PLAYER_FREEZE);
     }
 
-    public void Player_Health() {
-        Debug.Log("Do something with player health");
+    public void Player_Health(int health) {
+        Debug.Log("Do something with player health and the number " + health);
     }
 
     public void Player_Ammo() {

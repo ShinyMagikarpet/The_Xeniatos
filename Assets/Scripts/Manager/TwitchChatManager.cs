@@ -4,11 +4,13 @@ using UnityEngine;
 using System.ComponentModel;
 using System.Net.Sockets;
 using System.IO;
+using System.Reflection;
 
 public class TwitchChatManager : MonoBehaviour {
 
     public enum TwitchState { IDLE, VOTE_BEGIN, VOTING, VOTE_ENDING };
 
+    public GameObject twitchFunctionsPrefab;
 
     private TcpClient twitchClient;
     private StreamReader reader;
@@ -20,7 +22,8 @@ public class TwitchChatManager : MonoBehaviour {
     private float votingTimer = -1f;
     private float messageDelay = 0f;
     private float remindTimer;
-    private TwitchFunctions twitchFunctions = new TwitchFunctions();
+    private TwitchFunctions twitchFunctions;
+    string[] functions;
     private Dictionary<string, int> voteDict;
     public string username, password, channelName; // https://twitchapps.com/tmi
     
@@ -32,6 +35,7 @@ public class TwitchChatManager : MonoBehaviour {
             Instance = this;
             isVotingEventOn = false;
             voteDict = new Dictionary<string, int>();
+            twitchFunctions = twitchFunctionsPrefab.GetComponent<TwitchFunctions>();
             DontDestroyOnLoad(this.gameObject);
         }
         else {
@@ -42,8 +46,6 @@ public class TwitchChatManager : MonoBehaviour {
 
     // Update is called once per frame
     void Update(){
-
-        Debug.Log(Random.Range(1, 3));
 
         if (twitchClient != null && twitchClient.Connected) {
 
@@ -89,7 +91,7 @@ public class TwitchChatManager : MonoBehaviour {
             }
             else if(isVotingEventOn && state == TwitchState.VOTE_BEGIN){
                 SendMessageToTwitch("A New vote has started! Type \"!vote $arg (1, 2, or 3)\" to join in on the vote!", Mathf.CeilToInt(votingTimer));
-                string[] functions = GetTwitchFunctionNames();
+                functions = GetTwitchFunctionNames();
                 
                 SendMessageToTwitch(string.Format("Avaiable Voting Options! 1. {0}                   2. {1}                              3. {2}",
                     functions[0],
@@ -190,17 +192,19 @@ public class TwitchChatManager : MonoBehaviour {
     void GetResults() {
 
         int winningVote = TallyVotes();
-
+        MethodInfo method;
         switch (winningVote) {
 
             case 1:
-                Debug.Log("Vote 1 has won the vote");
+                method = twitchFunctions.GetType().GetMethod(functions[0]);
+                method.Invoke("Player_Health", new object[] { 5 });
+                //twitchFunctions.Invoke(functions[0], 5f);
                 break;
             case 2:
-                Debug.Log("vote 2 has won the vote");
+                twitchFunctions.Invoke(functions[1], 5f);
                 break;
             case 3:
-                Debug.Log("vote 3 has won the vote");
+                twitchFunctions.Invoke(functions[2], 5f);
                 break;
             default:
                 Debug.Log("no vote has won");
