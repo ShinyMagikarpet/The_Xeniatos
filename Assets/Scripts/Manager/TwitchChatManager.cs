@@ -45,7 +45,7 @@ public class TwitchChatManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() { 
+    void Update() {
 
         if (twitchClient != null && twitchClient.Connected) {
 
@@ -90,7 +90,7 @@ public class TwitchChatManager : MonoBehaviour {
                 voteDict.Clear();
             }
             else if(isVotingEventOn && state == TwitchState.VOTE_BEGIN){
-                SendMessageToTwitch("A New vote has started! Type \"!vote $arg (1, 2, or 3)\" to join in on the vote!", Mathf.CeilToInt(votingTimer));
+                SendMessageToTwitch("A New vote has started! Type \"!vote $arg (1, 2, or 3)\" to join in on the vote!");
                 functions = GetTwitchFunctionNames();
                 
                 SendMessageToTwitch(string.Format("Avaiable Voting Options! 1. {0}                   2. {1}                              3. {2}",
@@ -175,10 +175,12 @@ public class TwitchChatManager : MonoBehaviour {
 
         string[] names = new string[3];
 
+        int[] randFuncNums = GetRandomNumbers();
+
         for (int i = 0; i < names.Length; i++) {
 
             foreach(KeyValuePair<string, TwitchFunctionsEnum> pair in twitchFunctions.dict) {
-                if(pair.Value == (TwitchFunctionsEnum)i) {
+                if(pair.Value == (TwitchFunctionsEnum)randFuncNums[i]) {
                     names[i] = pair.Key;
                     Debug.Log(names[i]);
                 }
@@ -187,6 +189,35 @@ public class TwitchChatManager : MonoBehaviour {
 
         return names;
 
+    }
+
+    int[] GetRandomNumbers() {
+
+        int[] numbers = new int[3] { -1,-1,-1 };
+
+        for(int i = 0; i < numbers.Length; i++) {
+
+            int value = Random.Range(0, twitchFunctions.dict.Count);
+            while(IsIntInArray(numbers, value)) {
+                value = Random.Range(0, twitchFunctions.dict.Count);
+            }
+
+            numbers[i] = value;
+        }
+
+        return numbers;
+    }
+
+    bool IsIntInArray(int[] array, int value) {
+
+        for(int i = 0; i < array.Length; i++) {
+
+            if(value == array[i]) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void GetResults() {
@@ -205,7 +236,7 @@ public class TwitchChatManager : MonoBehaviour {
                 method.Invoke(twitchFunctions, new object[] {  });
                 break;
             case 3:
-                method = twitchFunctions.GetType().GetMethod(functions[0]);
+                method = twitchFunctions.GetType().GetMethod(functions[2]);
                 method.Invoke(twitchFunctions, new object[] {  });
                 break;
             default:
