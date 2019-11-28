@@ -45,7 +45,7 @@ public class TwitchChatManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update(){
+    void Update() { 
 
         if (twitchClient != null && twitchClient.Connected) {
 
@@ -197,14 +197,16 @@ public class TwitchChatManager : MonoBehaviour {
 
             case 1:
                 method = twitchFunctions.GetType().GetMethod(functions[0]);
-                method.Invoke("Player_Health", new object[] { 5 });
+                method.Invoke(twitchFunctions, new object[] {  });
                 //twitchFunctions.Invoke(functions[0], 5f);
                 break;
             case 2:
-                twitchFunctions.Invoke(functions[1], 5f);
+                method = twitchFunctions.GetType().GetMethod(functions[1]);
+                method.Invoke(twitchFunctions, new object[] {  });
                 break;
             case 3:
-                twitchFunctions.Invoke(functions[2], 5f);
+                method = twitchFunctions.GetType().GetMethod(functions[0]);
+                method.Invoke(twitchFunctions, new object[] {  });
                 break;
             default:
                 Debug.Log("no vote has won");
