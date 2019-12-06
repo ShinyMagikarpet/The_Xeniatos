@@ -15,6 +15,7 @@
 		_Displacement("Displacement Texure", 2D) = "white" {}
 		_Magnitude("Magnitude", Range(0, 1)) = 0
 		_Invert("Invert Color", Range(0, 100)) = 0
+		_Transparency("Transparency", Range(0, 1)) = 1
     }
     SubShader
     {
@@ -51,6 +52,7 @@
 			float _Transition;
 			float _Magnitude;
 			float _Invert;
+			float _Transparency;
 
             v2f vert (appdata v)
             {
@@ -70,6 +72,7 @@
 				fixed2 scrollUV = i.uv + fixed2(xScroll, yScroll);
 
                 fixed4 col = lerp(tex2D(_MainTex, i.uv + disp + scrollUV), tex2D(_SecondTex, i.uv), (_Transition/100));
+				col.a = _Transparency * 100;
 				col.rgb = abs((_Invert/100) - col.rgb);
                 return col;
             }

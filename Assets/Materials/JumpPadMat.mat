@@ -50,6 +50,7 @@ Material:
     - _SineWaveY: 7.33
     - _SrcBlend: 1
     - _Transition: 0
+    - _Transparency: 1
     - _VColBlendMode: 0
     - _ZWrite: 1
     m_Colors:

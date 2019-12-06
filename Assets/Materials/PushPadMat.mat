@@ -80,10 +80,10 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _ScrollSinX: 0
-    - _ScrollSinY: 0
+    - _ScrollSinY: -0
     - _ScrollSpeedX: 0
-    - _ScrollSpeedY: 4.3
-    - _SineWaveX: 0
+    - _ScrollSpeedY: 6.1
+    - _SineWaveX: 8.09
     - _SineWaveY: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
