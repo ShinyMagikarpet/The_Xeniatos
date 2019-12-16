@@ -5144,7 +5144,7 @@ CharacterController:
   m_Height: 2
   m_Radius: 0.5
   m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_StepOffset: 0.2
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.01, z: 0}
@@ -7008,16 +7008,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7280650731999950926}
     m_Modifications:
-    - target: {fileID: 5366959320653186117, guid: ccdb59cd354162f43a3f9033e6debc01,
-        type: 3}
-      propertyPath: m_Name
-      value: Rainbow Flamethrower
-      objectReference: {fileID: 0}
-    - target: {fileID: 5366959320653186117, guid: ccdb59cd354162f43a3f9033e6debc01,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8140879985494420323, guid: ccdb59cd354162f43a3f9033e6debc01,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7071,6 +7061,16 @@ PrefabInstance:
     - target: {fileID: 8140879985494420323, guid: ccdb59cd354162f43a3f9033e6debc01,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5366959320653186117, guid: ccdb59cd354162f43a3f9033e6debc01,
+        type: 3}
+      propertyPath: m_Name
+      value: Rainbow Flamethrower
+      objectReference: {fileID: 0}
+    - target: {fileID: 5366959320653186117, guid: ccdb59cd354162f43a3f9033e6debc01,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1168002103227361114, guid: ccdb59cd354162f43a3f9033e6debc01,
@@ -7544,16 +7544,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7280650731999950926}
     m_Modifications:
-    - target: {fileID: 577400882127523900, guid: f8bffba1e2f927c4aa6a4523ef22340b,
-        type: 3}
-      propertyPath: m_Name
-      value: Assault_Rifle
-      objectReference: {fileID: 0}
-    - target: {fileID: 577400882127523900, guid: f8bffba1e2f927c4aa6a4523ef22340b,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 577400882127523901, guid: f8bffba1e2f927c4aa6a4523ef22340b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7609,6 +7599,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -1.2040001
       objectReference: {fileID: 0}
+    - target: {fileID: 577400882127523900, guid: f8bffba1e2f927c4aa6a4523ef22340b,
+        type: 3}
+      propertyPath: m_Name
+      value: Assault_Rifle
+      objectReference: {fileID: 0}
+    - target: {fileID: 577400882127523900, guid: f8bffba1e2f927c4aa6a4523ef22340b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8bffba1e2f927c4aa6a4523ef22340b, type: 3}
 --- !u!1 &7223303874916487898 stripped
@@ -7630,16 +7630,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7280650731999950926}
     m_Modifications:
-    - target: {fileID: 6939417155001638823, guid: 86b3d724990c58d47a30901ecf994e74,
-        type: 3}
-      propertyPath: m_Name
-      value: Confetti_Gun
-      objectReference: {fileID: 0}
-    - target: {fileID: 6939417155001638823, guid: 86b3d724990c58d47a30901ecf994e74,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6939417155001140103, guid: 86b3d724990c58d47a30901ecf994e74,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7719,6 +7709,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 176.75002
+      objectReference: {fileID: 0}
+    - target: {fileID: 6939417155001638823, guid: 86b3d724990c58d47a30901ecf994e74,
+        type: 3}
+      propertyPath: m_Name
+      value: Confetti_Gun
+      objectReference: {fileID: 0}
+    - target: {fileID: 6939417155001638823, guid: 86b3d724990c58d47a30901ecf994e74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6939417155774932119, guid: 86b3d724990c58d47a30901ecf994e74,
         type: 3}
