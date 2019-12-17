@@ -21,7 +21,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
     public float mouseVertical;
     public float lookUpRange = 70.0f;
     private Vector3 movement = Vector3.zero;
-
+    private float startSpeed;
+    private float startJumpSpeed;
     public Camera cam;
     [SerializeField] GameObject meshRotateWithCam;
     private Player mPlayer;
@@ -33,6 +34,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         cam = GetComponentInChildren<Camera>();
         mPlayer = GetComponent<Player>();
         isDashing = false;
+        startSpeed = speed;
+        startJumpSpeed = jumpSpeed;
         if (!photonView.IsMine && PhotonNetwork.IsConnected == true) {
             cam.enabled = false;
         }
@@ -109,5 +112,13 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     public void SetVerticalVelocity(float value) {
         verticalVelocity = value;
+    }
+
+    public float GetPlayerStartSpeed() {
+        return startSpeed;
+    }
+
+    public float GetPlayerStartJumpSpeed() {
+        return startJumpSpeed;
     }
 }

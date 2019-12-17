@@ -18,7 +18,6 @@ public class PushPad : MonoBehaviour{
     private void OnTriggerEnter(Collider other) {
 
         if (other.CompareTag("Weeb")) {
-            Debug.Log("Moo");
             cc = other.GetComponent<CharacterController>();
             PlayerController controller = other.GetComponent<PlayerController>();
             controller.speed = 0f;
