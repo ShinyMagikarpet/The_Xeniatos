@@ -6,7 +6,7 @@
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "Queue"="Transparent" "IceTrap" = "Frozen"}
+        Tags { "RenderType"="Opaque" "Queue"="Transparent" "IceTrap" = "True"}
 		Zwrite On
 		Blend SrcAlpha One
         Pass

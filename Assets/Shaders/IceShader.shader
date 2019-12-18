@@ -9,7 +9,7 @@
     SubShader
     {
 		
-        Tags { "RenderType"="Transparent" "Queue"="Transparent" }
+        Tags { "RenderType"="Transparent" "Queue"="Transparent" "WeebTrap"="Frozen"}
 		Blend SrcAlpha One
 		Zwrite On
         Pass

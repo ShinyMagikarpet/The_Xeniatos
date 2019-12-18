@@ -50,7 +50,7 @@ Shader "VRM/MToon"
     // for SM 3.0
     SubShader
     {
-        Tags { "RenderType" = "Opaque"  "Queue" = "Geometry" "Xray" = "ColoredOutline" "IceTrap"="Frozen"}
+        Tags { "RenderType" = "Opaque"  "Queue" = "Geometry" "Xray" = "ColoredOutline" "IceTrap"="False"}
         
 		Stencil{
 			Ref 0
