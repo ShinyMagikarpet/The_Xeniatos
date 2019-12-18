@@ -45,6 +45,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
     private bool mIsCrafting = false;
     private ObjectPool mObjectPool;
     private GameObject mTrap;
+    private bool mCanPlaceTrap;
     private MaterialPropertyBlock _propblock;
     public static Player mLocalPlayer;
 
@@ -95,6 +96,11 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
             Player_Gather_Resource();
         }
 
+        if(mTrap && state != PlayerState.Trapping) {
+            mTrap.SetActive(false);
+            mTrap = null;
+        }
+
         //TODO: Needs better 3rd person camera to better show rigidbody
         if(mCurrentHealth <= 0 && !mIsDead) {
             if (PhotonNetwork.IsConnected) {
@@ -112,7 +118,8 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         }
 
         if(state == PlayerState.Trapping) {
-            Player_Visual_Trap();
+            if(IsWeeb)
+                Player_Visual_Trap("Freeze Trap");
         }
 
         Player_Inputs();
@@ -150,6 +157,10 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
 
         }
 
+        if(state == PlayerState.InMenu) {
+            return;
+        }
+
         if (mIsDead && Input.GetKeyDown(KeyCode.U)) {
             if (PhotonNetwork.IsConnected)
                 photonView.RPC("Player_Respawn", RpcTarget.AllBuffered);
@@ -181,7 +192,9 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
 
         //Placing Trap
         if(Input.GetButtonDown("Fire1") && state == PlayerState.Trapping) {
-
+            if(mCanPlaceTrap)
+                Player_Place_Trap();
+            return;
         }
 
         //Single fire
@@ -333,11 +346,11 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         }
     }
 
-    public void Player_Visual_Trap() {
+    public void Player_Visual_Trap(string trapName) {
 
         
         if (!mTrap) {
-            mTrap = mObjectPool.SpawnFromPool("Freeze Trap");
+            mTrap = mObjectPool.SpawnFromPool(trapName);
             if (!mTrap) {
                 return;
             }
@@ -351,13 +364,22 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
                 Debug.Log("Placing trap on ground at " + ray.point);
                 mTrap.transform.position = ray.point;
                 mTrap.transform.forward = transform.forward;
+                mCanPlaceTrap = true;
             }
             
         }
         else {
             mTrap.transform.forward = mCam.transform.TransformDirection(Vector3.forward);
             mTrap.transform.position = rayOrigin + mCam.transform.TransformDirection(Vector3.forward).normalized * 3;
+            mCanPlaceTrap = false;
         }
+    }
+
+    public void Player_Place_Trap() {
+        state = PlayerState.Idle;
+        mTrap.GetComponent<Collider>().enabled = true;
+        mTrap = null;
+        mCanPlaceTrap = false;
     }
 
     public Player Get_Local_Player() {
