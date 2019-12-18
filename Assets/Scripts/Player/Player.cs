@@ -19,7 +19,8 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         Dead,
         InMenu,
         Collecting,
-        Crafting
+        Crafting,
+        Trapping
     };
 
     [HideInInspector] public bool mIsDead = false;                    
@@ -42,6 +43,8 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
     private float mTimeToNextCollect;
     private bool mIsCollecting = false;
     private bool mIsCrafting = false;
+    private ObjectPool mObjectPool;
+    private GameObject mTrap;
     private MaterialPropertyBlock _propblock;
     public static Player mLocalPlayer;
 
@@ -77,6 +80,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         mPlayerUIPrefab = Instantiate(mPlayerUIPrefab);
         mPlayerUIPrefab.GetComponent<PlayerUI>().SetTarget(this);
         _propblock = new MaterialPropertyBlock();
+        mObjectPool = ObjectPool.Instance;
         mLocalPlayer = this;
     }
 
@@ -105,6 +109,10 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
 
         if (Input.GetKeyDown(KeyCode.P)) {
             transform.position = Vector3.zero;
+        }
+
+        if(state == PlayerState.Trapping) {
+            Player_Visual_Trap();
         }
 
         Player_Inputs();
@@ -171,6 +179,11 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
             return;
         }
 
+        //Placing Trap
+        if(Input.GetButtonDown("Fire1") && state == PlayerState.Trapping) {
+
+        }
+
         //Single fire
         if (Input.GetButtonDown("Fire1") && mPlayerWeapon.mFire_Type == Weapon.Fire_Type.single && state != PlayerState.InMenu) {
             mPlayerWeapon.Fire_Weapon();
@@ -215,7 +228,20 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
                 Player_Switch_Weapons();
         }
 
+        if (Input.GetButtonDown("Trap")) {
 
+            if (state != PlayerState.Trapping) {
+                state = PlayerState.Trapping;
+            }
+            else {
+                state = PlayerState.Idle;
+            }
+        }
+
+        if (Input.GetButtonDown("Fire2")) {
+            if(state != PlayerState.Sprinting && state != PlayerState.Idle)
+                state = PlayerState.Idle;
+        }
 
     }
 
@@ -304,6 +330,33 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
             }
             mResourceDict[_targetNode.Get_Name()] += _targetNode.Give_Resource();
             
+        }
+    }
+
+    public void Player_Visual_Trap() {
+
+        
+        if (!mTrap) {
+            mTrap = mObjectPool.SpawnFromPool("Freeze Trap");
+            if (!mTrap) {
+                return;
+            }
+            mTrap.GetComponent<Collider>().enabled = false;
+        }
+        Vector3 rayOrigin = mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0.5f));
+        Debug.DrawRay(rayOrigin, mCam.transform.TransformDirection(Vector3.forward) * 3, Color.cyan);
+        RaycastHit ray;
+        if (Physics.Raycast(rayOrigin, mCam.transform.TransformDirection(Vector3.forward), out ray, 3)) {
+            if (ray.collider.CompareTag("Ground")) {
+                Debug.Log("Placing trap on ground at " + ray.point);
+                mTrap.transform.position = ray.point;
+                mTrap.transform.forward = transform.forward;
+            }
+            
+        }
+        else {
+            mTrap.transform.forward = mCam.transform.TransformDirection(Vector3.forward);
+            mTrap.transform.position = rayOrigin + mCam.transform.TransformDirection(Vector3.forward).normalized * 3;
         }
     }
 
