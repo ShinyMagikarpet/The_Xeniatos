@@ -1,18 +1,15 @@
-﻿Shader "Unlit/IceShader"
+﻿Shader "Unlit/HideWeebTrap"
 {
-	Properties
-	{
-		_MainTex("Texture", 2D) = "white" {}
-		_Color("Color", Color) = (0, 0, 1, 1)
-	}
-
+    Properties
+    {
+        _MainTex ("Texture", 2D) = "white" {}
+    }
     SubShader
     {
-		
-        Tags { "Queue"="Transparent" "WeebTrap"="Frozen"}
-		Blend SrcAlpha One
+        Tags { "RenderType"="Opaque" "WeebTrap"="Frozen"}
+        LOD 100
 		Zwrite On
-
+		Blend One One
         Pass
         {
             CGPROGRAM
@@ -21,44 +18,36 @@
 
             #include "UnityCG.cginc"
 
-			
-
             struct appdata
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
-				float3 normal : NORMAL;
             };
 
             struct v2f
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
-				float3 normal : NORMAL;
             };
 
-			sampler2D _MainTex;
-			float4 _MainTex_ST;
-			fixed4 _Color;
+            sampler2D _MainTex;
+            float4 _MainTex_ST;
 
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-				o.normal = UnityObjectToWorldNormal(v.normal);
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }
 
-			fixed4 frag(v2f i) : SV_Target
-			{
-				float ndotl = dot(i.normal, _WorldSpaceLightPos0);
-				fixed4 col = tex2D(_MainTex, i.uv);
-                return col  * fixed4(0.13, 0.745283, 1, 1);
+            fixed4 frag (v2f i) : SV_Target
+            {
+                // sample the texture
+                fixed4 col = tex2D(_MainTex, i.uv);
+				return fixed4(-0.13, -0.745283, 0, 1);
             }
             ENDCG
         }
-		
     }
-
 }

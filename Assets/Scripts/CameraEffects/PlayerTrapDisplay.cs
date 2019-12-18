@@ -1,18 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[ExecuteInEditMode]
 public class PlayerTrapDisplay : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Camera mEffectCamera;
+    [SerializeField] private Shader[] mTrapShaders;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    private void OnEnable() {
+        //foreach (Shader shader in mTrapShaders) {
+        //    mEffectCamera.SetReplacementShader(shader, "RenderType");
+        //}
+        mEffectCamera.SetReplacementShader(mTrapShaders[0], "WeebTrap");
     }
 }
