@@ -50,13 +50,19 @@ Shader "VRM/MToon"
     // for SM 3.0
     SubShader
     {
-        Tags { "RenderType" = "Opaque"  "Queue" = "Geometry" }
+        Tags { "RenderType" = "Opaque"  "Queue" = "Geometry" "Xray" = "ColoredOutline" "IceTrap"="Frozen"}
         
+		Stencil{
+			Ref 0
+			Comp Always
+			Pass Replace
+		}
+
         // Forward Base
         Pass 
         {
             Name "FORWARD_BASE"
-            Tags { "LightMode" = "ForwardBase" }
+            Tags { "LightMode" = "ForwardBase"}
 
             Cull [_CullMode]
             Blend [_SrcBlend] [_DstBlend]
@@ -83,7 +89,7 @@ Shader "VRM/MToon"
         Pass 
         {
             Name "FORWARD_BASE_ONLY_OUTLINE"
-            Tags { "LightMode" = "ForwardBase" }
+            Tags { "LightMode" = "ForwardBase"}
 
             Cull [_OutlineCullMode]
             Blend [_SrcBlend] [_DstBlend]

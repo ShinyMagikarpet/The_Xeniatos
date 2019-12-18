@@ -1,15 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 [ExecuteInEditMode]
-public class CameraNormal : MonoBehaviour{
-
+public class CameraFrozen : MonoBehaviour
+{
     public Shader shader;
-    float rotation = 0f;
 
     private void OnEnable() {
-        GetComponent<Camera>().SetReplacementShader(shader, "Xray");
+        GetComponent<Camera>().SetReplacementShader(shader, "IceTrap");
     }
 
     private void OnDisable() {

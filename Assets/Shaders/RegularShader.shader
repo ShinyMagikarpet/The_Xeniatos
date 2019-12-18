@@ -1,4 +1,4 @@
-﻿Shader "Custom/StandardShaderCustom"
+﻿Shader "Custom/RegularShader"
 {
     Properties
     {
@@ -9,16 +9,14 @@
     }
     SubShader
     {
-        Tags { 
-			"RenderType"="Opaque"
-			//"Xray"="ColoredOutline"
-		}
+
+        Tags { "RenderType"="Opaque" "Queue"="Geometry"  "PerformanceChecks"="False" "Xray"="ColoredOutline"}
         LOD 200
-		Stencil{
-				Ref 1
+			Stencil{
+				Ref 0
 				Comp Always
 				Pass Replace
-		}
+			}
         CGPROGRAM
         // Physically based Standard lighting model, and enable shadows on all light types
         #pragma surface surf Standard fullforwardshadows

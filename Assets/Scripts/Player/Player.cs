@@ -47,6 +47,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
 
     [SerializeField] private Camera mCam;
     [SerializeField] private Camera mMinimapCam;
+    [SerializeField] private Camera mEffectsCamera;
     public bool IsWeeb = false;
     public int playerTeamNum;
     public GameObject[] mPlayerWeapons;
@@ -308,6 +309,10 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
 
     public Player Get_Local_Player() {
         return mLocalPlayer;
+    }
+
+    public Camera Get_Effects_Camera() {
+        return mEffectsCamera;
     }
 
     public void OnPhotonInstantiate(PhotonMessageInfo info) {
