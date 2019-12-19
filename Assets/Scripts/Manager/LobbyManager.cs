@@ -11,7 +11,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
     public Text[] playerNames = new Text[8];
     public Text[] team1;
     public Text[] team2;
-    public int IsTeamMatch = 1;
+    public int IsTeamMatch = 0;
     private byte team1Count = 0;
     private byte team2Count = 0;
 
@@ -34,7 +34,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
             playerCount++;
             //int array will be carry 2 values in a specific order, [0]=team number/[1]=what gamemode they're playing
             PhotonNetwork.LocalPlayer.TagObject = new int[2] { 1, IsTeamMatch};
-            Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber);
             //Start_Game(nextLevelIndex);
         }
 
@@ -117,6 +116,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
             team1Count++;
         }
         else {
+            Debug.Log("Making player 2");
             foreach (Text text in team2) {
                 if (text.text.ToLower().Equals("looking for player...")) {
                     text.text = newPlayer.NickName;
@@ -129,7 +129,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
 
         string[] team1Names = Get_Names_From_Text(team1);
         string[] team2Names = Get_Names_From_Text(team2);
-        photonView.RPC("Send_Team_Information", RpcTarget.OthersBuffered, team1Names, team2Names);
+        photonView.RPC("Send_Team_Information", RpcTarget.Others, team1Names, team2Names);
         playerCount++;
     }
 
@@ -203,6 +203,9 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
 
         for(int i = 0; i < team1Names.Length; i++){
             team1[i].text = team1Names[i];
+        }
+
+        for(int i = 0; i < team2Names.Length; i++) {
             team2[i].text = team2Names[i];
         }
 
@@ -211,7 +214,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
                 if (player.NickName.Equals(team1Names[i])) {
                     player.TagObject = new int[2] { 1, IsTeamMatch };
                 }
-                else if (player.NickName.Equals(team2Names[i])){
+            }
+
+            for(int i = 0; i < team2.Length; i++) {
+                if (player.NickName.Equals(team2Names[i])) {
                     player.TagObject = new int[2] { 2, IsTeamMatch };
                 }
             }

@@ -95,7 +95,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
         }
 
         if (isDashing && mPlayer.state == Player.PlayerState.Sprinting) {
-            movement *= dashSpeed;
+            movement.z *= dashSpeed;
         }
 
         if(mPlayer.state != Player.PlayerState.Sprinting) {

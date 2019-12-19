@@ -29,6 +29,8 @@ public abstract class Weapon : MonoBehaviourPunCallbacks {
     public bool mIsProjectile;              /*<Does weapon shoot projectiles*/
     public bool mIsParticle;                /*<Does the weapon shoot particles*/
     public bool mIsBeam;                    /*<Is the weapon a Beam Type*/
+    public bool mIsMelee;                    /*<Is the weapon a Melee Type*/
+    public float mSwingSpeed;                    /*<Is the weapon a Melee Type*/
     public ParticleSystem mParticleSystem;  /*<Particle system that the weapon will use for visual effects*/
     public ParticleProjectile mParticleProjectile;  /*<Particle system that the weapon will be firing*/
     public Projectile bullet;               /*<What projectile the weapon will be firing*/
@@ -48,6 +50,15 @@ public abstract class Weapon : MonoBehaviourPunCallbacks {
 
     }
 
+    private void Update() {
+        if (this.GetType() == typeof(PillowWeapon)) {
+            PillowWeapon weapon = (PillowWeapon)this;
+            if (weapon.mIsSwinging) {
+                weapon.mPivot.transform.Rotate(0, weapon.mSwingSpeed, 0);
+            }
+        }
+    }
+
     public void Weapon_Setup() {
         
         objectPool = ObjectPool.Instance;
@@ -63,6 +74,11 @@ public abstract class Weapon : MonoBehaviourPunCallbacks {
 
     public void Fire_Weapon() {
 
+        if (!this.isActiveAndEnabled) {
+            Debug.Log("Something is not active");
+            return;
+        }
+
         if (mIsProjectile) {
             if(PhotonNetwork.IsConnected)
                 photonView.RPC("Fire_Projectile", RpcTarget.AllBuffered, mCam.transform.forward, mCam.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 1.5f)));
@@ -74,6 +90,9 @@ public abstract class Weapon : MonoBehaviourPunCallbacks {
         }
         else if (mIsBeam) {
             Fire_Beam();
+        }
+        else if (mIsMelee) {
+            Swing_Melee();
         }
         else {
             Fire_Hitscan();
@@ -199,6 +218,25 @@ public abstract class Weapon : MonoBehaviourPunCallbacks {
             mAmmoLoaded--;
         }
 
+    }
+
+    void Swing_Melee() {
+
+        if (Time.time > mTimeToNextFire) {
+
+            mTimeToNextFire = Time.time + mROF;
+            PillowWeapon weapon = (PillowWeapon)this;
+            weapon.mIsSwinging = true;
+            GetComponent<BoxCollider>().enabled = true;
+            StartCoroutine(StopSwining(mROF / 4, weapon));
+        }
+    }
+
+    IEnumerator StopSwining(float cooldown, PillowWeapon weapon) {
+        yield return new WaitForSeconds(cooldown);
+        GetComponent<BoxCollider>().enabled = false;
+        weapon.mIsSwinging = false;
+        weapon.mPivot.transform.localRotation = Quaternion.Euler(0, 0, 0);
     }
 
     bool Can_Fire() {

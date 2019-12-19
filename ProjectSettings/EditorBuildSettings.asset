@@ -18,11 +18,11 @@ EditorBuildSettings:
     path: Assets/Scenes/Pillow_Fight_Wait_Lobby.unity
     guid: c08c6b95c1e124d309b078685a343dab
   - enabled: 1
-    path: Assets/Scenes/Test.unity
-    guid: 0e77d22d1dfb0f548946fa8459ea01e9
-  - enabled: 1
     path: Assets/Scenes/Pillow_Fight.unity
     guid: a23ce8bc41ac03c418190e6a86985cac
+  - enabled: 1
+    path: Assets/Scenes/Test.unity
+    guid: 0e77d22d1dfb0f548946fa8459ea01e9
   - enabled: 1
     path: Assets/Scenes/TwitchTest.unity
     guid: bc37932b2ba73ad479da61c858c30d28

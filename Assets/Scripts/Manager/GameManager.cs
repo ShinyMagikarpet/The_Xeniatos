@@ -22,13 +22,17 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
         if (PhotonNetwork.IsMasterClient) {
-            timer = matchTime;
-            timeText.text = timer.ToString();
-            photonView.RPC("Send_Timer", RpcTarget.AllViaServer, timer);
+            if (!isTeamMatch) {
+                timer = matchTime;
+                timeText.text = timer.ToString();
+                photonView.RPC("Send_Timer", RpcTarget.AllViaServer, timer);
+            }
         }
         else if (!PhotonNetwork.IsConnected) {
-            timer = matchTime;
-            timeText.text = timer.ToString();
+            if (!isTeamMatch) {
+                timer = matchTime;
+                timeText.text = timer.ToString();
+            }
         }
     }
 
@@ -46,8 +50,17 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     private void Update() {
-        if(hasGameStarted)
-            Match_Countdown_Timer();
+        if (hasGameStarted) {
+            if (isTeamMatch) {
+                Match_Countdown_Timer();
+            }
+            else {
+                if (HasWeebWon()) {
+                    Debug.Log("Weeb Wins");
+                }
+            }
+        }
+            
     }
 
     // Update is called once per frame
@@ -73,6 +86,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         else {
             Debug.Log("GAME OVER");
         }
+    }
+
+    private bool HasWeebWon() {
+        foreach(Player player in PlayerManager.Instance.Get_Players_Team2()) {
+            if (player.mIsDead) continue;
+            return false;
+        }
+        return true;
     }
 
     [PunRPC]
@@ -113,5 +134,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void Set_Game_Mode(bool mode) {
         isTeamMatch = mode;
+    }
+
+    public bool IsTeamMode() {
+        return isTeamMatch;
     }
 }

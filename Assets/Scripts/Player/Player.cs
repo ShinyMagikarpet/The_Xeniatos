@@ -118,8 +118,10 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         }
 
         if(state == PlayerState.Trapping) {
-            if(IsWeeb)
+            if (IsWeeb)
                 Player_Visual_Trap("Freeze Trap");
+            else
+                Player_Visual_Trap("Glue Trap");
         }
 
         Player_Inputs();
@@ -195,6 +197,10 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
             if(mCanPlaceTrap)
                 Player_Place_Trap();
             return;
+        }
+
+        if (Input.GetButtonDown("Fire1") && mPlayerWeapon.mIsMelee && state != PlayerState.InMenu) {
+            mPlayerWeapon.Fire_Weapon();
         }
 
         //Single fire
@@ -361,7 +367,6 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         RaycastHit ray;
         if (Physics.Raycast(rayOrigin, mCam.transform.TransformDirection(Vector3.forward), out ray, 3)) {
             if (ray.collider.CompareTag("Ground")) {
-                Debug.Log("Placing trap on ground at " + ray.point);
                 mTrap.transform.position = ray.point;
                 mTrap.transform.forward = transform.forward;
                 mCanPlaceTrap = true;
@@ -378,6 +383,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
     public void Player_Place_Trap() {
         state = PlayerState.Idle;
         mTrap.GetComponent<Collider>().enabled = true;
+        mTrap.transform.position += new Vector3(0, 0.001f, 0);
         mTrap = null;
         mCanPlaceTrap = false;
     }

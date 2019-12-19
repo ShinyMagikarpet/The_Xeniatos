@@ -70,6 +70,11 @@ public class PlayerUI : MonoBehaviour
             return;
         }
 
+        if (_target.IsWeeb) {
+            playerMiniMap.SetActive(false);
+            playerCraftMenu.SetActive(false);
+        }
+
         target = _target;
 
     }

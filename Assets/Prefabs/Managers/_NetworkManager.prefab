@@ -45,3 +45,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mPlayerPrefab: {fileID: 7223303876890418520, guid: 0f0602c1e51bcf642bd5654db990787b,
     type: 3}
+  mWeebPrefab: {fileID: 5395446241718753547, guid: 096e210daa9f1214c906c1a27bc1ad1b,
+    type: 3}

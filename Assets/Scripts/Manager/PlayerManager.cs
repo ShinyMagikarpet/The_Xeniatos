@@ -52,4 +52,12 @@ public class PlayerManager : MonoBehaviour
         return null;
     }
 
+    public List<Player> Get_Players_Team1() {
+        return team1Players;
+    }
+
+    public List<Player> Get_Players_Team2() {
+        return team2Players;
+    }
+
 }
