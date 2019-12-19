@@ -10,6 +10,8 @@ public class Teleporter : MonoBehaviour{
     private bool isOnCooldown = false;
     private float hackedCooldownRate = 60.0f;
     private bool isHacked = false;
+    public int ID;
+    public int linkedID = -1;
 
     public void OnTriggerStay(Collider other) {
 
@@ -30,5 +32,11 @@ public class Teleporter : MonoBehaviour{
         yield return new WaitForSeconds(timer);
         isOnCooldown = false;
         linkedTeleporter.isOnCooldown = false;
+    }
+
+    public int Get_Linked_ID() {
+        if(linkedTeleporter)
+            return linkedTeleporter.linkedID;
+        return -1;
     }
 }

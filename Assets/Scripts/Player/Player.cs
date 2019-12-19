@@ -61,6 +61,7 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         if (!photonView.IsMine && PhotonNetwork.IsConnected == true) {
             mCam.enabled = false;
             mCam.GetComponent<AudioListener>().enabled = false;
+            mEffectsCamera.enabled = false;
             mMinimapCam.enabled = false;
             mPlayerWeapon = mCam.gameObject.GetComponentInChildren<Weapon>();
             mArmsMesh.SetActive(false);
@@ -194,8 +195,10 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
 
         //Placing Trap
         if(Input.GetButtonDown("Fire1") && state == PlayerState.Trapping) {
-            if(mCanPlaceTrap)
-                Player_Place_Trap();
+            if (mCanPlaceTrap) {
+                Player_Place_Trap_Local();
+            }
+                
             return;
         }
 
@@ -380,12 +383,26 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         }
     }
 
-    public void Player_Place_Trap() {
+    public void Player_Place_Trap_Local() {
         state = PlayerState.Idle;
         mTrap.GetComponent<Collider>().enabled = true;
         mTrap.transform.position += new Vector3(0, 0.001f, 0);
+        if (PhotonNetwork.IsConnected) {
+            photonView.RPC("Player_Place_Trap_Network", RpcTarget.OthersBuffered, "Freeze Trap", mTrap.transform.position, mTrap.transform.rotation);
+        }
         mTrap = null;
         mCanPlaceTrap = false;
+    }
+
+    [PunRPC]
+    public void Player_Place_Trap_Network(string trapName, Vector3 trapPos, Quaternion trapRot) {
+        mTrap = ObjectPool.Instance.SpawnFromPool(trapName);
+        if (!mTrap) {
+            Debug.Log("Trap is null");
+            return;
+        }
+        mTrap.transform.position = trapPos;
+        mTrap.transform.rotation = trapRot;
     }
 
     public Player Get_Local_Player() {

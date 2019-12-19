@@ -3723,7 +3723,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4703507210976648686}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &322597897620455300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5297,7 +5297,7 @@ MonoBehaviour:
   _targetNode: {fileID: 0}
   mCam: {fileID: 7223303875046803886}
   mMinimapCam: {fileID: 7360472579873805000}
-  mEffectsCamera: {fileID: 0}
+  mEffectsCamera: {fileID: 2115971849885868103}
   IsWeeb: 0
   playerTeamNum: 0
   mPlayerWeapons:
