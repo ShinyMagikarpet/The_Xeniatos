@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField]private bool isTeamMatch = false;
     [SerializeField] private PlayerPickup[] playerPickups;
     [SerializeField] GameObject pickups;
+    private int collectCount = 0;
 
     public static GameManager Instance { get; private set; }
     void Awake() {
@@ -121,6 +122,21 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
         }
         return true;
+    }
+
+    public int GetCollectedTotal() {
+        collectCount = 0;
+        foreach (PlayerPickup pickup in playerPickups) {
+            if (pickup.GetCollectedStatus() == false) {
+                continue;
+            }
+            collectCount++;
+        }
+        return collectCount;
+    }
+
+    public int GetPickupCount() {
+        return playerPickups.Length;
     }
 
     [PunRPC]

@@ -44,8 +44,15 @@ public class PlayerUI : MonoBehaviour
         }
 
         if(playerAmmoText != null) {
-            playerAmmoText.text = target.mPlayerWeapon.mAmmoLoaded.ToString() + '/' +
-            target.mPlayerWeapon.mAmmoHeld.ToString();
+            if (GameManager.Instance.IsTeamMode()) {
+                playerAmmoText.text = target.mPlayerWeapon.mAmmoLoaded.ToString() + '/' +
+                target.mPlayerWeapon.mAmmoHeld.ToString();
+            }
+            else {
+                playerAmmoText.text = GameManager.Instance.GetCollectedTotal().ToString() + '/' +
+                GameManager.Instance.GetPickupCount().ToString();
+            }
+            
         }
 
         if (playerHealthText != null) {
@@ -86,7 +93,7 @@ public class PlayerUI : MonoBehaviour
             woodUIObject.SetActive(false);
             stoneUIObject.SetActive(false);
             ironUIObject.SetActive(false);
-            playerAmmoText.gameObject.SetActive(false);
+            //playerAmmoText.gameObject.SetActive(false);
         }
 
         target = _target;
