@@ -67,5 +67,6 @@ MonoBehaviour:
   - Player_Place_Trap
   - Player_Player_Trap_Network
   - Player_Place_Trap_Network
+  - FreezeAllPlayers
   DisableAutoOpenWizard: 1
   ShowSettings: 1

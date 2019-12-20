@@ -293,6 +293,11 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
                 state = PlayerState.Idle;
         }
 
+        if (Input.GetKeyDown(KeyCode.I)) {
+            if(PhotonNetwork.IsConnected)
+                photonView.RPC("FreezeAllPlayers", RpcTarget.AllViaServer);
+        }
+
     }
 
 
@@ -581,6 +586,12 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
             mResourceDict["Stone"] -= WeaponRecipes.gWeaponRecipes[weaponName][1];
             mResourceDict["Wood"] -= WeaponRecipes.gWeaponRecipes[weaponName][2];
         }
+    }
+
+    [PunRPC]
+    public void FreezeAllPlayers() {
+        FreezeTrap trap = ObjectPool.Instance.SpawnFromPool("Freeze Trap").GetComponent<FreezeTrap>();
+        trap.FreezeAllPlayers();
     }
 
     #endregion
