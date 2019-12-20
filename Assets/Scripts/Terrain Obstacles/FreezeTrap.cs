@@ -35,8 +35,8 @@ public class FreezeTrap : MonoBehaviour{
 
     IEnumerator FreezePlayer(float timer, PlayerController playerController, SkinnedMeshRenderer[] meshes) {
         FreezePlayerShader(meshes);
-        if (!freezeOverlay)
-            freezeOverlay = GetFreezeImage();
+        //if (!freezeOverlay)
+        //    freezeOverlay = GetFreezeImage();
         //freezeOverlay.gameObject.SetActive(true);
         yield return new WaitForSeconds(timer);
         playerController.speed = playerController.GetPlayerStartSpeed();

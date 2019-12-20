@@ -68,7 +68,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks{
             
         }
 
-        if (playerCount >= 2) {
+        if (playerCount == 8) {
             Start_Game(nextLevelIndex);
         }
 

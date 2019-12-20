@@ -36,6 +36,7 @@ public class TwitchChatManager : MonoBehaviour {
             isVotingEventOn = false;
             voteDict = new Dictionary<string, int>();
             twitchFunctions = twitchFunctionsPrefab.GetComponent<TwitchFunctions>();
+            remindTimer = 15f;
             DontDestroyOnLoad(this.gameObject);
         }
         else {
@@ -52,10 +53,10 @@ public class TwitchChatManager : MonoBehaviour {
             ReadChat();
         }
 
-        if (Input.GetKeyDown(KeyCode.U)) {
-            Set_Timer(60f);
-            remindTimer = votingTimer / 4;
-        }
+        //if (Input.GetKeyDown(KeyCode.U)) {
+        //    Set_Timer(60f);
+        //    remindTimer = votingTimer / 4;
+        //}
 
         if(votingTimer > 0) {
             isVotingEventOn = true;
@@ -120,7 +121,9 @@ public class TwitchChatManager : MonoBehaviour {
         writer.WriteLine("JOIN #" + channelName);
         sendMessagePrefix = string.Format(":{0}!{0}@{0}.tmi.twitch.tv PRIVMSG #{1} :", username, channelName);
         writer.Flush();
-        
+        if(twitchClient != null) {
+            isConnected = true;
+        }
     }
 
     void VoteSystem(string message, string chatname) {
@@ -193,17 +196,17 @@ public class TwitchChatManager : MonoBehaviour {
 
     int[] GetRandomNumbers() {
 
-        int[] numbers = new int[3] { -1,-1,-1 };
+        int[] numbers = new int[3] { 0,1,2 };
 
-        for(int i = 0; i < numbers.Length; i++) {
+        //for(int i = 0; i < numbers.Length; i++) {
 
-            int value = Random.Range(0, twitchFunctions.dict.Count);
-            while(IsIntInArray(numbers, value)) {
-                value = Random.Range(0, twitchFunctions.dict.Count);
-            }
+        //    int value = Random.Range(0, twitchFunctions.dict.Count);
+        //    while(IsIntInArray(numbers, value)) {
+        //        value = Random.Range(0, twitchFunctions.dict.Count);
+        //    }
 
-            numbers[i] = value;
-        }
+        //    numbers[i] = value;
+        //}
 
         return numbers;
     }
@@ -358,5 +361,9 @@ public class TwitchChatManager : MonoBehaviour {
 
         writer.WriteLine(sendMessagePrefix + command + ' ' + message);
         writer.Flush();
+    }
+
+    public bool IsConnected() {
+        return isConnected;
     }
 }

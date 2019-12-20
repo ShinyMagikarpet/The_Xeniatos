@@ -43,6 +43,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient) {
             StartCoroutine(Start_Match_Timer(2f));
         }
+
+        if(TwitchChatManager.Instance.IsConnected()) {
+            TwitchChatManager.Instance.Set_Timer(60f);
+        }
     }
 
     IEnumerator Start_Match_Timer(float timer) {
@@ -63,6 +67,14 @@ public class GameManager : MonoBehaviourPunCallbacks
                 }
                 else if (HavePlayersWon()) {
                     Debug.Log("Players win");
+                }
+                if(PlayersRemaining() <= 2) {
+                    foreach(Player player in PlayerManager.Instance.Get_Players_Team1()) {
+                        if (!player) return;
+                        if(player.Get_Effects_Camera().GetComponent<CameraXray>().enabled == false) {
+                            player.Get_Effects_Camera().GetComponent<CameraXray>().enabled = true;
+                        }
+                    }
                 }
             }
         }
@@ -132,6 +144,15 @@ public class GameManager : MonoBehaviourPunCallbacks
                 Debug.LogError("Object is equal to " + punPlayer.TagObject);
             }
         }
+    }
+
+    private int PlayersRemaining() {
+        int total = 0;
+        foreach (Player player in PlayerManager.Instance.Get_Players_Team2()) {
+            if (player.mIsDead) continue;
+            total++;
+        }
+        return total;
     }
 
     [PunRPC]

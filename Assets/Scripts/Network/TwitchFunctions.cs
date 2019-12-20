@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 
 public enum TwitchFunctionsEnum {
-    PLAYER_HEALTH, PLAYER_AMMO, PLAYER_SPEED, PLAYER_FREEZE
+    PLAYER_XRAY, PLAYER_SPEED, PLAYER_FREEZE
 }
 
 public class TwitchFunctions : MonoBehaviour{
@@ -14,14 +14,17 @@ public class TwitchFunctions : MonoBehaviour{
     public TwitchFunctions() {
 
         dict = new Dictionary<string, TwitchFunctionsEnum>();
-        dict.Add("Player_Health", TwitchFunctionsEnum.PLAYER_HEALTH);
-        dict.Add("Player_Ammo", TwitchFunctionsEnum.PLAYER_AMMO);
+        dict.Add("Player_Xray", TwitchFunctionsEnum.PLAYER_XRAY);
         dict.Add("Player_Speed", TwitchFunctionsEnum.PLAYER_SPEED);
         dict.Add("Player_Freeze", TwitchFunctionsEnum.PLAYER_FREEZE);
     }
 
-    public void Player_Health() {
-        Debug.Log("Do something with player health and the number ");
+    public void Player_Xray() {
+        List<Player> playerList = PlayerManager.Instance.Get_Players_Team1();
+        foreach (Player player in playerList) {
+            if (!player) return;
+            player.Get_Effects_Camera().GetComponent<CameraXray>().enabled = true;
+        }
     }
 
     public void Player_Ammo() {
@@ -29,11 +32,17 @@ public class TwitchFunctions : MonoBehaviour{
     }
 
     public void Player_Speed() {
-        Debug.Log("Do something with player speed");
+        List<Player> playerList = PlayerManager.Instance.Get_Players_Team1();
+        foreach (Player player in playerList) {
+            player.GetComponent<PlayerController>().speed += 2f;
+        }
     }
 
     public void Player_Freeze() {
-        Debug.Log("Freeze a player");
+        List<Player> playerList = PlayerManager.Instance.Get_Players_Team1();
+        foreach(Player player in playerList) {
+            player.CallFreezePlayers();
+        }
     }
 
 }

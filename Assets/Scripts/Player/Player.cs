@@ -183,13 +183,13 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
             return;
         }
 
-        if (mIsDead && Input.GetKeyDown(KeyCode.U)) {
-            if (PhotonNetwork.IsConnected)
-                photonView.RPC("Player_Respawn", RpcTarget.AllBuffered);
-            else
-                Player_Respawn();
+        //if (mIsDead && Input.GetKeyDown(KeyCode.U)) {
+        //    if (PhotonNetwork.IsConnected)
+        //        photonView.RPC("Player_Respawn", RpcTarget.AllBuffered);
+        //    else
+        //        Player_Respawn();
 
-        }
+        //}
 
         if (mIsDead) {
             return;
@@ -293,10 +293,10 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
                 state = PlayerState.Idle;
         }
 
-        if (Input.GetKeyDown(KeyCode.I)) {
-            if(PhotonNetwork.IsConnected)
-                photonView.RPC("FreezeAllPlayers", RpcTarget.AllViaServer);
-        }
+        //if (Input.GetKeyDown(KeyCode.I)) {
+        //    if(PhotonNetwork.IsConnected)
+        //        photonView.RPC("FreezeAllPlayers", RpcTarget.AllViaServer);
+        //}
 
     }
 
@@ -586,6 +586,10 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
             mResourceDict["Stone"] -= WeaponRecipes.gWeaponRecipes[weaponName][1];
             mResourceDict["Wood"] -= WeaponRecipes.gWeaponRecipes[weaponName][2];
         }
+    }
+
+    public void CallFreezePlayers() {
+        photonView.RPC("FreezeAllPlayers", RpcTarget.AllViaServer);
     }
 
     [PunRPC]
