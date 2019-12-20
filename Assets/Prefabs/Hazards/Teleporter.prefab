@@ -106,6 +106,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   linkedTeleporter: {fileID: 0}
+  ID: 0
+  linkedID: -1
 --- !u!1 &192201591530639317
 GameObject:
   m_ObjectHideFlags: 0
@@ -166,7 +168,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 559324409f2293745bfeaffc2c9b58a2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

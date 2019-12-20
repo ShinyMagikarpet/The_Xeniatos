@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PushPad : MonoBehaviour{
 
+    float cooldown = 75f;
     float force = 10.0f;
     bool isPushing = false;
     CharacterController cc;
@@ -31,5 +32,9 @@ public class PushPad : MonoBehaviour{
         yield return new WaitForSeconds(time);
         controller.speed = 8f;
         isPushing = false;
+    }
+
+    public float Get_Cooldown() {
+        return cooldown;
     }
 }

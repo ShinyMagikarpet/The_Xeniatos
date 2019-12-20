@@ -16,6 +16,9 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] private GameObject playerPauseMenu;
     [SerializeField] private GameObject playerMiniMap;
     [SerializeField] private GameObject playerCraftMenu;
+    [SerializeField] private GameObject woodUIObject;
+    [SerializeField] private GameObject stoneUIObject;
+    [SerializeField] private GameObject ironUIObject;
     private Player target;
 
     void Awake()
@@ -70,9 +73,20 @@ public class PlayerUI : MonoBehaviour
             return;
         }
 
-        if (_target.IsWeeb) {
-            playerMiniMap.SetActive(false);
+        if (!GameManager.Instance.IsTeamMode()) {
+            if (_target.IsWeeb) {
+                playerMiniMap.SetActive(false);
+                playerHealthText.gameObject.SetActive(false);
+            }
+            else {
+                playerMiniMap.SetActive(true);
+            }
+
             playerCraftMenu.SetActive(false);
+            woodUIObject.SetActive(false);
+            stoneUIObject.SetActive(false);
+            ironUIObject.SetActive(false);
+            playerAmmoText.gameObject.SetActive(false);
         }
 
         target = _target;

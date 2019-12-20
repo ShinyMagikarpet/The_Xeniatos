@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GlueTrap : MonoBehaviour{
-
+    float cooldown = 60f;
     float playerBaseSpeed = 6.0f;
     float weebBaseSpeed = 8.0f;
     float weebBaseJumpSpeed = 5.0f;
@@ -27,5 +27,9 @@ public class GlueTrap : MonoBehaviour{
             controller.jumpSpeed = weebBaseJumpSpeed;
             controller.dashSpeed = weebBaseSprint;
         }
+    }
+
+    public float Get_Glue_Cooldown() {
+        return cooldown;
     }
 }

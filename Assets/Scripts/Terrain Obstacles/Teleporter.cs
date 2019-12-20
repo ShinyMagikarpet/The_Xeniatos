@@ -5,19 +5,22 @@ using UnityEngine;
 public class Teleporter : MonoBehaviour{
 
     public Teleporter linkedTeleporter;
-    private float cooldown = 0.0f;
     private float cooldownRate = 5.0f;
     private bool isOnCooldown = false;
-    private float hackedCooldownRate = 60.0f;
-    private bool isHacked = false;
     public int ID;
     public int linkedID = -1;
 
-    public void OnTriggerStay(Collider other) {
+    public void OnTriggerEnter(Collider other) {
 
         if (isOnCooldown) return;
 
-        if (other.CompareTag("Weeb") || other.CompareTag("Player")) {
+        if (other.CompareTag("Weeb")) {
+            other.GetComponent<CharacterController>().enabled = false;
+            other.transform.position = linkedTeleporter.transform.position;
+            other.GetComponent<CharacterController>().enabled = true;
+        }
+
+        if (other.CompareTag("Player")) {
             linkedTeleporter.isOnCooldown = true;
             other.GetComponent<CharacterController>().enabled = false;
             other.transform.position = linkedTeleporter.transform.position;

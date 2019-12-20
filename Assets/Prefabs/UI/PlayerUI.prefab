@@ -612,6 +612,9 @@ MonoBehaviour:
     type: 3}
   playerCraftMenu: {fileID: 6357952479238508196, guid: 55055c994ac516e4dbe21a602ce1dca1,
     type: 3}
+  woodUIObject: {fileID: 7115904163349454402}
+  stoneUIObject: {fileID: 7965096056865264249}
+  ironUIObject: {fileID: 6408208028608855018}
 --- !u!1 &6408208028608855018
 GameObject:
   m_ObjectHideFlags: 0

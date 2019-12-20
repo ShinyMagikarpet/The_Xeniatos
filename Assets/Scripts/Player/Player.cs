@@ -45,7 +45,9 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
     private bool mIsCrafting = false;
     private ObjectPool mObjectPool;
     private GameObject mTrap;
+    private int trapChoice = 0;
     private bool mCanPlaceTrap;
+    private bool mCanMakeTrap = true;
     private MaterialPropertyBlock _propblock;
     public static Player mLocalPlayer;
 
@@ -84,6 +86,10 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         _propblock = new MaterialPropertyBlock();
         mObjectPool = ObjectPool.Instance;
         mLocalPlayer = this;
+        if(!GameManager.Instance.IsTeamMode() && !IsWeeb) {
+            GetComponent<PlayerController>().dashSpeed = 1f;
+            mPlayerWeapon.gameObject.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -121,8 +127,21 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         if(state == PlayerState.Trapping) {
             if (IsWeeb)
                 Player_Visual_Trap("Freeze Trap");
-            else
-                Player_Visual_Trap("Glue Trap");
+            else {
+                switch (trapChoice) {
+                    case 0:
+                        Player_Visual_Trap("Glue Floor");
+                        break;
+                    case 1:
+                        Player_Visual_Trap("Push Pad");
+                        break;
+                    default:
+                        Player_Visual_Trap("Glue Floor");
+                        break;
+                }
+                
+            }
+                
         }
 
         Player_Inputs();
@@ -244,20 +263,29 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         }
 
         if(Input.GetAxis("Mouse ScrollWheel") != 0) {
-            if (PhotonNetwork.IsConnected && this.mPlayerSubWeapon != null)
-                photonView.RPC("Player_Switch_Weapons", RpcTarget.AllBuffered);
-            else
-                Player_Switch_Weapons();
-        }
-
-        if (Input.GetButtonDown("Trap")) {
-
-            if (state != PlayerState.Trapping) {
-                state = PlayerState.Trapping;
+            if (GameManager.Instance.IsTeamMode()) {
+                if (PhotonNetwork.IsConnected && this.mPlayerSubWeapon != null)
+                    photonView.RPC("Player_Switch_Weapons", RpcTarget.AllBuffered);
+                else
+                    Player_Switch_Weapons();
             }
             else {
-                state = PlayerState.Idle;
+                if (trapChoice == 0)
+                    trapChoice = 1;
+                else
+                    trapChoice = 0;
             }
+        }
+
+        if (Input.GetButtonDown("Trap") && mCanMakeTrap) {
+
+                if (state != PlayerState.Trapping) {
+                    state = PlayerState.Trapping;
+                }
+                else {
+                    state = PlayerState.Idle;
+                }
+            
         }
 
         if (Input.GetButtonDown("Fire2")) {
@@ -388,8 +416,26 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         mTrap.GetComponent<Collider>().enabled = true;
         mTrap.transform.position += new Vector3(0, 0.001f, 0);
         if (PhotonNetwork.IsConnected) {
-            photonView.RPC("Player_Place_Trap_Network", RpcTarget.OthersBuffered, "Freeze Trap", mTrap.transform.position, mTrap.transform.rotation);
+            photonView.RPC("Player_Place_Trap_Network", RpcTarget.OthersBuffered, mTrap.name.Substring(0, mTrap.name.Length - 7), mTrap.transform.position, mTrap.transform.rotation);
         }
+        if (!IsWeeb) {
+            GlueTrap glueTrap;
+            PushPad pushPad;
+            glueTrap = mTrap.GetComponent<GlueTrap>();
+            if (glueTrap) {
+                Debug.Log("Building glue trap");
+                Debug.Log(glueTrap.Get_Glue_Cooldown());
+                StartCoroutine(TrapCooldown(glueTrap.Get_Glue_Cooldown()));
+            }
+            else {
+                pushPad = mTrap.GetComponent<PushPad>();
+                Debug.Log("Building push trap");
+                Debug.Log(pushPad.Get_Cooldown());
+                StartCoroutine(TrapCooldown(pushPad.Get_Cooldown()));
+            }
+            
+        }
+        
         mTrap = null;
         mCanPlaceTrap = false;
     }
@@ -403,6 +449,13 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback {
         }
         mTrap.transform.position = trapPos;
         mTrap.transform.rotation = trapRot;
+    }
+
+    IEnumerator TrapCooldown(float cooldown) {
+        mCanMakeTrap = false;
+        yield return new WaitForSeconds(cooldown);
+        Debug.Log("player can make traps again");
+        mCanMakeTrap = true;
     }
 
     public Player Get_Local_Player() {
