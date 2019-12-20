@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     private float matchTimerStart = 5f;
     private bool hasGameStarted = false;
     [SerializeField]private bool isTeamMatch = false;
+    [SerializeField] private PlayerPickup[] playerPickups;
+    [SerializeField] GameObject pickups;
 
     public static GameManager Instance { get; private set; }
     void Awake() {
@@ -34,6 +36,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 timeText.text = timer.ToString();
             }
         }
+        playerPickups = pickups.GetComponentsInChildren<PlayerPickup>();
     }
 
     private void Start() {
@@ -57,6 +60,9 @@ public class GameManager : MonoBehaviourPunCallbacks
             else {
                 if (HasWeebWon()) {
                     Debug.Log("Weeb Wins");
+                }
+                else if (HavePlayersWon()) {
+                    Debug.Log("Players win");
                 }
             }
         }
@@ -92,6 +98,15 @@ public class GameManager : MonoBehaviourPunCallbacks
         foreach(Player player in PlayerManager.Instance.Get_Players_Team2()) {
             if (player.mIsDead) continue;
             return false;
+        }
+        return true;
+    }
+
+    private bool HavePlayersWon() {
+        foreach(PlayerPickup pickup in playerPickups) {
+            if (pickup.GetCollectedStatus() == false) {
+                return false;
+            }
         }
         return true;
     }

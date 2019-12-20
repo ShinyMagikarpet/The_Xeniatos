@@ -12,6 +12,7 @@ TagManager:
   - Hitbox
   - Workbench
   - Weeb
+  - PlayerPickup
   layers:
   - Default
   - TransparentFX
