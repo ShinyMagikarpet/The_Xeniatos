@@ -41,7 +41,7 @@ public class Teleporter : MonoBehaviour{
 
     IEnumerator TeleportCooldownPlayer(float timer) {
         yield return new WaitForSeconds(timer);
-        isOnCooldownWeeb = false;
+        isOnCooldownPlayer = false;
         linkedTeleporter.isOnCooldownWeeb = false;
     }
 
